@@ -7,7 +7,6 @@ using namespace sf;
 using namespace std;
 
 int main(int, char const**) {
-    cout << "hi github" << endl;
     RenderWindow window(VideoMode(800, 600), "SFML window");
 
 
