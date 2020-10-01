@@ -46,7 +46,7 @@ vector3 &triangle::operator[](int i) {
 }
 
 double triangle::area() {
-    return 0.5 * ((v2-v1).cross_product(v3-v1).magnitude());
+    return 0.5 * cross_product(v2-v1, v3-v1).magnitude();
 }
 
 std::string triangle::to_string() {
