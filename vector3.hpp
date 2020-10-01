@@ -31,8 +31,7 @@ public:
     vector3 &operator=(const vector3 &v);
     double &operator[](int i);
     
-    double dot_product(const vector3 &v);
-    vector3 cross_product(const vector3 &v);            //cross_product
+    void cross(const vector3 &v);                    //vector becomes the cross product of the vector and the parameter
     
     void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
     vector3 rotated(vector3 axis, double theta);        //returns rotated vector
@@ -114,23 +113,31 @@ double &vector3::operator[](int i) {
     }
 }
 
-double vector3::dot_product(const vector3 &v) {
-    return x*v.x + y*v.y + z*v.z;
+double dot_product(const vector3 &v1, const vector3 &v2) {
+    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
 }
 
-vector3 vector3::cross_product(const vector3 &v) {
+void vector3::cross(const vector3 &v) {
     double i = y*v.z - z*v.y;
     double j = z*v.x - x*v.z;
     double k = x*v.y - y*v.x;
+    x = i;
+    y = j;
+    z = k;
+}
+
+vector3 cross_product(const vector3 &v1, const vector3 &v2) {
+    double i = v1.y*v2.z - v1.z*v2.y;
+    double j = v1.z*v2.x - v1.x*v2.z;
+    double k = v1.x*v2.y - v1.y*v2.x;
     return vector3(i, j, k);
 }
 
 vector3 vector3::rotated(vector3 axis, double theta) {
-    vector3 copy(*this);
     axis.normalize();
-    double sin_theta = sin(theta);
-    double cos_theta = cos(theta);
-    return *this*cos_theta + sin_theta*(axis.cross_product(*this)) + dot_product(axis)*(1-cos_theta); //dont question the stack overflow gods
+    double _sin = sin(theta);
+    double _cos = cos(theta);
+    return *this*_cos + _sin*cross_product(axis, *this) + dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
 }
 
 void vector3::rotate(vector3 axis, double theta) {
