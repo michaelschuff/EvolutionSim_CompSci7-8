@@ -31,6 +31,7 @@ public:
     vector3 operator/(double k);
     vector3 &operator/=(double k);
     vector3 &operator=(const vector3 &v);
+    double &operator[](int i);
     
     double dot_product(const vector3 &v);
     vector3 cross_product(const vector3 &v);            //cross_product
@@ -41,6 +42,7 @@ public:
     vector3 normalize();                                //sets magnitude to 1
     double magnitude();
     double distance(const vector3 &v);                  //distance between two vectors
+    std::string to_string();
     void print();
 };
 
@@ -102,6 +104,18 @@ vector3 &vector3::operator=(const vector3 &v) {
     return *this;
 }
 
+double &vector3::operator[](int i) {
+    assert(i>=0 && i<3);
+    switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+    }
+}
+
 double vector3::dot_product(const vector3 &v) {
     return x*v.x + y*v.y + z*v.z;
 }
@@ -142,8 +156,11 @@ double vector3::distance(const vector3 &v) {
     return (*this-v).magnitude();
 }
 
-void vector3::print() {
-    std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl;
+std::string vector3::to_string() {
+    return ("<" + std::to_string((int) x) + ", " + std::to_string((int) y) + ", " + std::to_string((int) z) + ">");
 }
 
+void vector3::print() {
+    std::cout << (*this).to_string() << std::endl;
+}
 #endif /* vector3_hpp */
