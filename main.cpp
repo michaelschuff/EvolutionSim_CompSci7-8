@@ -4,6 +4,7 @@
 #include <math.h>
 #include "vector3.hpp"
 #include "triangle.hpp"
+#include "mesh.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;

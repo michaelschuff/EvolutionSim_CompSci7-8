@@ -9,8 +9,6 @@
 #ifndef vector3_hpp
 #define vector3_hpp
 
-#include <stdio.h>
-
 #include <iostream>
 #include <math.h>
 #include <assert.h>
