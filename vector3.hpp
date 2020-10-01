@@ -34,8 +34,8 @@ public:
     double dot_product(const vector3 &v);
     vector3 cross_product(const vector3 &v);            //cross_product
     
-    void rotate(vector3 axis, double theta);  //rotates vector, clockwise by right-hand-rule
-    vector3 rotated(vector3 axis, double theta);    //returns rotated vector
+    void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
+    vector3 rotated(vector3 axis, double theta);        //returns rotated vector
     
     vector3 normalize();                                //sets magnitude to 1
     double magnitude();
