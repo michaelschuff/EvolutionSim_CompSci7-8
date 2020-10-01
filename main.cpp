@@ -1,7 +1,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "ResourcePath.hpp"
+#include <math.h>
+#include "vector3.hpp"
+//#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
