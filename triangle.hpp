@@ -6,8 +6,8 @@
 //  Copyright © 2020 Michael Schuff. All rights reserved.
 //
 
-#ifndef triangle_h
-#define triangle_h
+#ifndef triangle_hpp
+#define triangle_hpp
 
 #include "vector3.hpp"
 #include <iostream>
@@ -57,4 +57,4 @@ void triangle::print() {
     std::cout << (*this).to_string() << std::endl;
 }
 
-#endif /* triangle_h */
+#endif /* triangle_hpp */

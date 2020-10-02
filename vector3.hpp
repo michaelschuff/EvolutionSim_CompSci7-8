@@ -17,7 +17,8 @@ class vector3 {
 public:
     double x, y, z;
 
-    vector3(double x1=0, double y1=0, double z1=0) : x(x1), y(y1), z(z1) {}
+    vector3() : x(0), y(0), z(0) {}
+    vector3(double x1, double y1, double z1) : x(x1), y(y1), z(z1) {}
     vector3(const vector3 &v) : x(v.x), y(v.y), z(v.z) {}//copy constructor
     
     vector3 operator+(const vector3 &v);
@@ -31,16 +32,18 @@ public:
     vector3 &operator=(const vector3 &v);
     double &operator[](int i);
     
-    void cross(const vector3 &v);                    //vector becomes the cross product of the vector and the parameter
+    void cross(const vector3 &v);                       //vector becomes the cross product of the vector and the parameter
+    void project_onto(vector3 v);
     
     void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
     vector3 rotated(vector3 axis, double theta);        //returns rotated vector
     
-    vector3 normalize();                                //sets magnitude to 1
-    double magnitude();
+    void normalize();                                   //sets magnitude to 1
+    vector3 normalized();                               //returns vector with magnitude 1
+    double magnitude() const;
     double distance(const vector3 &v);                  //distance between two vectors
-    std::string to_string();
-    void print();
+    std::string to_string() const;
+    void print() const;
 };
 
 vector3 vector3::operator+(const vector3 &v) {
@@ -69,8 +72,8 @@ vector3 vector3::operator*(double k) {      //for vector * double
     return vector3(k*x, k*y, k*z);
 }
 
-vector3 operator*(double k, vector3 v) {    //for double * vector
-    return v * k;
+vector3 operator*(double k, const vector3 v) {    //for double * vector
+    return vector3(k*v.x, k*v.y, k*v.z);
 }
 
 vector3 &vector3::operator*=(double k) {
@@ -93,7 +96,6 @@ vector3 &vector3::operator/=(double k) {
     return *this;
 }
 
-
 vector3 &vector3::operator=(const vector3 &v) {
     x = v.x;
     y = v.y;
@@ -111,6 +113,25 @@ double &vector3::operator[](int i) {
         case 2:
             return z;
     }
+}
+
+double vector3::magnitude() const {
+    return sqrt(x*x + y*y + z*z);
+}
+
+void vector3::normalize() {
+    assert(magnitude()!=0);
+    *this /= magnitude();
+}
+
+vector3 vector3::normalized() {
+    double m = magnitude();
+    assert(m!=0);
+    return vector3(x/m, y/m, z/m);
+}
+
+double vector3::distance(const vector3 &v) {
+    return (*this-v).magnitude();
 }
 
 double dot_product(const vector3 &v1, const vector3 &v2) {
@@ -133,11 +154,22 @@ vector3 cross_product(const vector3 &v1, const vector3 &v2) {
     return vector3(i, j, k);
 }
 
+vector3 projection(vector3 v1, vector3 v2) { //project v1 onto v2
+    return v2 * (dot_product(v1, v2)/pow(v2.magnitude(), 2));
+}
+
+void vector3::project_onto(vector3 v) { //project v1 onto v2
+    vector3 temp = v * dot_product(*this, v)/pow(v.magnitude(), 2);
+    x = temp.x;
+    y = temp.y;
+    z = temp.z;
+}
+
 vector3 vector3::rotated(vector3 axis, double theta) {
     axis.normalize();
     double _sin = sin(theta);
     double _cos = cos(theta);
-    return *this*_cos + _sin*cross_product(axis, *this) + dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
+    return *this*_cos + _sin*cross_product(axis, *this) + axis*dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
 }
 
 void vector3::rotate(vector3 axis, double theta) {
@@ -147,25 +179,12 @@ void vector3::rotate(vector3 axis, double theta) {
     z = v.z;
 }
 
-double vector3::magnitude() {
-    return sqrt(x*x + y*y + z*z);
+
+std::string vector3::to_string() const {
+    return ("<" + std::to_string((int) (10*x)) + ", " + std::to_string((int) (10*y)) + ", " + std::to_string((int) (10*z)) + ">");
 }
 
-vector3 vector3::normalize() {
-    assert(magnitude()!=0);
-    *this /= magnitude();
-    return *this;
-}
-
-double vector3::distance(const vector3 &v) {
-    return (*this-v).magnitude();
-}
-
-std::string vector3::to_string() {
-    return ("<" + std::to_string((int) x) + ", " + std::to_string((int) y) + ", " + std::to_string((int) z) + ">");
-}
-
-void vector3::print() {
+void vector3::print() const {
     std::cout << (*this).to_string() << std::endl;
 }
 #endif /* vector3_hpp */

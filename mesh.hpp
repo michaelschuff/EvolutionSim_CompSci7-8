@@ -6,8 +6,8 @@
 //  Copyright © 2020 Michael Schuff. All rights reserved.
 //
 
-#ifndef mesh_h
-#define mesh_h
+#ifndef mesh_hpp
+#define mesh_hpp
 
 #include <vector>
 #include <assert.h>
@@ -34,4 +34,4 @@ triangle &mesh::operator[](int i) {
     return triangles[i];
 }
 
-#endif /* mesh_h */
+#endif /* mesh_hpp */
