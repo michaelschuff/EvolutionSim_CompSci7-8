@@ -12,14 +12,15 @@
 #include <iostream>
 #include <math.h>
 #include <assert.h>
+#include "object.hpp"
 
-class vector3 {
+class vector3 : public object {
 public:
     double x, y, z;
 
-    vector3() : x(0), y(0), z(0) {}
-    vector3(double x1, double y1, double z1) : x(x1), y(y1), z(z1) {}
-    vector3(const vector3 &v) : x(v.x), y(v.y), z(v.z) {}//copy constructor
+    vector3() : object(), x(0), y(0), z(0) {}
+    vector3(double x1, double y1, double z1, bool visable = true) : object(visable), x(x1), y(y1), z(z1) {}
+    vector3(const vector3 &v, bool visable = true) : object(visable), x(v.x), y(v.y), z(v.z) {}//copy constructor
     
     vector3 operator+(const vector3 &v);
     vector3 &operator+=(const vector3 &v);
@@ -30,6 +31,7 @@ public:
     vector3 operator/(double k);
     vector3 &operator/=(double k);
     vector3 &operator=(const vector3 &v);
+    vector3 operator-();
     double &operator[](int i);
     
     void cross(const vector3 &v);                       //vector becomes the cross product of the vector and the parameter
@@ -42,8 +44,8 @@ public:
     vector3 normalized();                               //returns vector with magnitude 1
     double magnitude() const;
     double distance(const vector3 &v);                  //distance between two vectors
-    std::string to_string() const;
-    void print() const;
+    std::string to_string();
+    void print();
 };
 
 vector3 vector3::operator+(const vector3 &v) {
@@ -101,6 +103,10 @@ vector3 &vector3::operator=(const vector3 &v) {
     y = v.y;
     z = v.z;
     return *this;
+}
+
+vector3 vector3::operator-() {
+    return vector3(-x, -y, -z);
 }
 
 double &vector3::operator[](int i) {
@@ -180,11 +186,11 @@ void vector3::rotate(vector3 axis, double theta) {
 }
 
 
-std::string vector3::to_string() const {
-    return ("<" + std::to_string((int) (10*x)) + ", " + std::to_string((int) (10*y)) + ", " + std::to_string((int) (10*z)) + ">");
+std::string vector3::to_string() {
+    return ("<" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ">");
 }
 
-void vector3::print() const {
+void vector3::print() {
     std::cout << (*this).to_string() << std::endl;
 }
 #endif /* vector3_hpp */
