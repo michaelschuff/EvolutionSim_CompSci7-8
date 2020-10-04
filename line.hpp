@@ -22,10 +22,10 @@ public:
     line(double x1, double y1, double z1, vector3 _head, color _c = color(), bool visable = true) : object(visable), c(_c), tail(vector3(x1, y1, z1)), head(_head), body(vector3(_head.x-x1, _head.y-y1, _head.z-z1)) {}
     line(vector3 _tail, vector3 _head, color _c = color(), bool visable = true) : object(visable), c(_c), tail(_tail), head(_head), body(_head-_tail) {}
     
-    line rotated(vector3 axis, double theta);        //returns rotated vector
+    line rotated(vector3 axis, double theta);           //returns rotated vector
     void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
-    line rotated(line axis, double theta);        //returns rotated vector
-    void rotate(line axis, double theta);            //rotates vector, clockwise by right-hand-rule
+    line rotated(line axis, double theta);              //returns rotated vector
+    void rotate(line axis, double theta);               //rotates vector, clockwise by right-hand-rule
     double magnitude() const;
     std::string to_string();
     void print();

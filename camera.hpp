@@ -46,7 +46,6 @@ camera::camera(vector3 pos, int _width, int _height, double _theta = 0, double _
     normal.x = sin(_phi)*cos(_theta);
     normal.y = sin(_phi)*sin(_theta);
     normal.z = cos(_phi);
-//    screen = plane(pos, normal, _width, _height, _roll, false);
 }
 
 std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
@@ -83,21 +82,27 @@ std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
             shapes.push_back(new rectangle(400+200*Q.x, 400+200*Q.y, sqrt(pow(200*(P.x-Q.x), 2) + pow(200*(P.y-Q.y), 2)), 1, atan2(P.y-Q.y, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
             
         } else if ((_plane = dynamic_cast<plane*>(objects[i]))) {
-            double th = normal.theta(), ph = normal.phi();
+            double th = _plane->normal.theta(), ph = _plane->normal.phi();
             vector3 P(_plane->width / 2, _plane->height / 2, 0);
             vector3 Q(-_plane->width / 2, _plane->height / 2, 0);
             vector3 R(-_plane->width / 2, -_plane->height / 2, 0);
             vector3 S(_plane->width / 2, -_plane->height / 2, 0);
             
             
+            
             P.rotate(vector3(0, 0, 1), th);
-            P.rotate(vector3(0, 1, 0), ph);
+//            P.rotate(vector3(0, 1, 0), ph);
             Q.rotate(vector3(0, 0, 1), th);
-            Q.rotate(vector3(0, 1, 0), ph);
+//            Q.rotate(vector3(0, 1, 0), ph);
             R.rotate(vector3(0, 0, 1), th);
-            R.rotate(vector3(0, 1, 0), ph);
+//            R.rotate(vector3(0, 1, 0), ph);
             S.rotate(vector3(0, 0, 1), th);
-            S.rotate(vector3(0, 1, 0), ph);
+//            S.rotate(vector3(0, 1, 0), ph);
+            
+            P += _plane->position;
+            Q += _plane->position;
+            R += _plane->position;
+            S += _plane->position;
             
             P -= (*this).position;
             P -= projection(P, normal);
@@ -123,7 +128,7 @@ std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
             S.rotate(vector3(0, 1, 0), -phi);
             S.rotate(vector3(0, 0, 1), roll);
             
-//            shapes.push_back(new convexshape(std::vector<std::vector<double>> {{P.x, P.y}, {Q.x, Q.y}, {R.x, R.y}, {S.x, S.y}}, sf::Color(255, 255, 255)));
+            shapes.push_back(new convexshape(std::vector<std::vector<double>> {{P.x, P.y}, {Q.x, Q.y}, {R.x, R.y}, {S.x, S.y}}, sf::Color(255, 255, 255)));
         } else if ((_triangle = dynamic_cast<triangle*>(objects[i]))) {
             
         } else if ((_mesh = dynamic_cast<mesh*>(objects[i]))) {
@@ -142,7 +147,7 @@ void camera::set_position(vector3 pos) {
 
 void camera::look_at(vector3 point) {
     normal = (point - position);
-    theta = atan2(normal.y, normal.x);
-    phi = atan2(sqrt(pow(normal.x, 2) + pow(normal.y, 2)), normal.z);
+    theta = normal.theta();
+    phi = normal.phi();
 }
 #endif /* camera_hpp */

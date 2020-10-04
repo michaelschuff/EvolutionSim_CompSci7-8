@@ -78,11 +78,11 @@ vector3 &vector3::operator-=(const vector3 &v) {
     return *this;
 }
 
-vector3 vector3::operator*(double k) {      //for vector * double
+vector3 vector3::operator*(double k) {                  //for vector * double
     return vector3(k*x, k*y, k*z);
 }
 
-vector3 operator*(double k, const vector3 v) {    //for double * vector
+vector3 operator*(double k, const vector3 v) {          //for double * vector
     return vector3(k*v.x, k*v.y, k*v.z);
 }
 
@@ -191,7 +191,7 @@ vector3 vector3::rotated(vector3 axis, double theta) {
     axis.normalize();
     double _sin = sin(theta);
     double _cos = cos(theta);
-    return (*this)*_cos + _sin*cross_product(axis, *this) + axis*dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
+    return (*this)*_cos + _sin*cross_product(axis, *this) + axis*dot_product(*this, axis)*(1-_cos);
 }
 
 void vector3::rotate(vector3 axis, double theta) {
