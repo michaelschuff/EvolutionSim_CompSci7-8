@@ -142,7 +142,7 @@ void camera::set_position(vector3 pos) {
 
 void camera::look_at(vector3 point) {
     normal = (point - position);
-    theta = normal.theta();
-    phi = normal.phi();
+    theta = atan2(normal.y, normal.x);
+    phi = atan2(sqrt(pow(normal.x, 2) + pow(normal.y, 2)), normal.z);
 }
 #endif /* camera_hpp */
