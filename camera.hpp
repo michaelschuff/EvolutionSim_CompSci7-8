@@ -34,12 +34,6 @@ public:
     
     void set_position(vector3);
     void look_at(vector3);
-    void inc_phi(double);
-    void dec_phi(double);
-    void inc_theta(double);
-    void dec_theta(double);
-    void inc_roll(double);
-    void dec_roll(double);
     
     std::vector<object2D*> get_screen(std::vector<object*>);
 };
