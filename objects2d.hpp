@@ -49,4 +49,19 @@ public:
     }
 };
 
+class convexshape : public object2D {
+public:
+    std::vector<std::vector<double>> points;
+    
+    convexshape(std::vector<std::vector<double>> _points, Color _c) : object2D(_c), points(_points) {
+        
+    }
+    
+    void print() {
+        for (int i = 0; i < points.size(); i++) {
+            std::cout << "<" << points[i][0] << ", " << points[i][1] << ">" << std::endl;
+        }
+    }
+};
+
 #endif /* objects2d_hpp */

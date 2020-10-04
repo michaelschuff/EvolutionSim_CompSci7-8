@@ -12,15 +12,21 @@
 #include <iostream>
 #include <math.h>
 #include <assert.h>
+#include "color.hpp"
 #include "object.hpp"
+
+double round(double n, int decimals) {
+    return round(pow(10, decimals) * n) / pow(10, decimals);
+}
 
 class vector3 : public object {
 public:
     double x, y, z;
+    color c;
 
     vector3() : object(), x(0), y(0), z(0) {}
-    vector3(double x1, double y1, double z1, bool visable = true) : object(visable), x(x1), y(y1), z(z1) {}
-    vector3(const vector3 &v, bool visable = true) : object(visable), x(v.x), y(v.y), z(v.z) {}//copy constructor
+    vector3(double x1, double y1, double z1, color _c = color(), bool visable = true) : object(visable), x(x1), y(y1), z(z1), c(_c) {}
+    vector3(const vector3 &v, color _c, bool visable = true) : object(visable), x(v.x), y(v.y), z(v.z), c(_c) {}//copy constructor
     
     vector3 operator+(const vector3 &v);
     vector3 &operator+=(const vector3 &v);
@@ -40,6 +46,8 @@ public:
     void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
     vector3 rotated(vector3 axis, double theta);        //returns rotated vector
     
+    double phi();
+    double theta();
     void normalize();                                   //sets magnitude to 1
     vector3 normalized();                               //returns vector with magnitude 1
     double magnitude() const;
@@ -121,6 +129,14 @@ double &vector3::operator[](int i) {
     }
 }
 
+double vector3::phi() {
+    return atan2(sqrt(x*x + y*y), z);
+}
+
+double vector3::theta() {
+    return atan2(round(y, 8), round(x, 8));
+}
+
 double vector3::magnitude() const {
     return sqrt(x*x + y*y + z*z);
 }
@@ -175,7 +191,7 @@ vector3 vector3::rotated(vector3 axis, double theta) {
     axis.normalize();
     double _sin = sin(theta);
     double _cos = cos(theta);
-    return *this*_cos + _sin*cross_product(axis, *this) + axis*dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
+    return (*this)*_cos + _sin*cross_product(axis, *this) + axis*dot_product(*this, axis)*(1-_cos); //dont question the stack overflow gods
 }
 
 void vector3::rotate(vector3 axis, double theta) {

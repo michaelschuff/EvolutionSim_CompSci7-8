@@ -23,17 +23,11 @@
 #include "mesh.hpp"
 #include "objects2d.hpp"
 
-
-double round(double n, int decimals) {
-    return round(pow(10, decimals) * n) / pow(10, decimals);
-}
-
 class camera {
 public:
     const int width, height;
     double roll, theta, phi;
-    plane screen;
-    vector3 position;
+    vector3 position, normal;
     
     camera(const camera &c);
     camera(vector3, int, int, double, double, double);
@@ -48,11 +42,9 @@ public:
     void dec_roll(double);
     
     std::vector<object2D*> get_screen(std::vector<object*>);
-
-    vector3 normal;
 };
 
-camera::camera(const camera &c) : position(c.position), screen(c.screen), width(c.width), height(c.height), theta(c.theta), phi(c.phi), roll(c.roll) {
+camera::camera(const camera &c) : position(c.position), width(c.width), height(c.height), theta(c.theta), phi(c.phi), roll(c.roll) {
     
 }
 
@@ -60,7 +52,7 @@ camera::camera(vector3 pos, int _width, int _height, double _theta = 0, double _
     normal.x = sin(_phi)*cos(_theta);
     normal.y = sin(_phi)*sin(_theta);
     normal.z = cos(_phi);
-    screen = plane(pos, normal, _width, _height, _roll, false);
+//    screen = plane(pos, normal, _width, _height, _roll, false);
 }
 
 std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
@@ -80,7 +72,7 @@ std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
             P.rotate(vector3(0, 0, 1), -theta);
             P.rotate(vector3(0, 1, 0), -phi);
             P.rotate(vector3(0, 0, 1), roll);
-            shapes.push_back(new circle(400+200*P.x, 400+200*P.y, 2, sf::Color(255, 255, 255)));
+            shapes.push_back(new circle(400+200*P.x, 400+200*P.y, 2, sf::Color(_point->c.r, _point->c.g, _point->c.b)));
             
         } else if ((_line = dynamic_cast<line*>(objects[i]))) {
             vector3 P(_line->tail - (*this).position);
@@ -94,10 +86,50 @@ std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
             Q.rotate(vector3(0, 0, 1), -theta);
             Q.rotate(vector3(0, 1, 0), -phi);
             Q.rotate(vector3(0, 0, 1), roll);
-            shapes.push_back(new rectangle(400+200*Q.x, 400+200*Q.y, sqrt(pow(200*(P.x-Q.x), 2) + pow(200*(P.y-Q.y), 2)), 1, atan2(P.y-Q.y, P.x-Q.x), sf::Color(255, 255, 255)));
+            shapes.push_back(new rectangle(400+200*Q.x, 400+200*Q.y, sqrt(pow(200*(P.x-Q.x), 2) + pow(200*(P.y-Q.y), 2)), 1, atan2(P.y-Q.y, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
             
         } else if ((_plane = dynamic_cast<plane*>(objects[i]))) {
+            double th = normal.theta(), ph = normal.phi();
+            vector3 P(_plane->width / 2, _plane->height / 2, 0);
+            vector3 Q(-_plane->width / 2, _plane->height / 2, 0);
+            vector3 R(-_plane->width / 2, -_plane->height / 2, 0);
+            vector3 S(_plane->width / 2, -_plane->height / 2, 0);
             
+            
+            P.rotate(vector3(0, 0, 1), th);
+            P.rotate(vector3(0, 1, 0), ph);
+            Q.rotate(vector3(0, 0, 1), th);
+            Q.rotate(vector3(0, 1, 0), ph);
+            R.rotate(vector3(0, 0, 1), th);
+            R.rotate(vector3(0, 1, 0), ph);
+            S.rotate(vector3(0, 0, 1), th);
+            S.rotate(vector3(0, 1, 0), ph);
+            
+            P -= (*this).position;
+            P -= projection(P, normal);
+            P.rotate(vector3(0, 0, 1), -theta);
+            P.rotate(vector3(0, 1, 0), -phi);
+            P.rotate(vector3(0, 0, 1), roll);
+            
+            Q -= (*this).position;
+            Q -= projection(Q, normal);
+            Q.rotate(vector3(0, 0, 1), -theta);
+            Q.rotate(vector3(0, 1, 0), -phi);
+            Q.rotate(vector3(0, 0, 1), roll);
+            
+            R -= (*this).position;
+            R -= projection(R, normal);
+            R.rotate(vector3(0, 0, 1), -theta);
+            R.rotate(vector3(0, 1, 0), -phi);
+            R.rotate(vector3(0, 0, 1), roll);
+            
+            S -= (*this).position;
+            S -= projection(S, normal);
+            S.rotate(vector3(0, 0, 1), -theta);
+            S.rotate(vector3(0, 1, 0), -phi);
+            S.rotate(vector3(0, 0, 1), roll);
+            
+//            shapes.push_back(new convexshape(std::vector<std::vector<double>> {{P.x, P.y}, {Q.x, Q.y}, {R.x, R.y}, {S.x, S.y}}, sf::Color(255, 255, 255)));
         } else if ((_triangle = dynamic_cast<triangle*>(objects[i]))) {
             
         } else if ((_mesh = dynamic_cast<mesh*>(objects[i]))) {
@@ -111,73 +143,12 @@ std::vector<object2D*> camera::get_screen(std::vector<object*> objects) {
 
 void camera::set_position(vector3 pos) {
     position = pos;
-    screen.position = pos;
+//    screen.position = pos;
 }
 
 void camera::look_at(vector3 point) {
-    normal = (point - position).normalized();
-    theta = atan2(round(normal.y, 4), round(normal.x, 4));
-    phi = atan2(sqrt(pow(normal.x, 2) + pow(normal.y, 2)), normal.z);
-    screen.normal = normal;
-}
-
-void camera::inc_phi(double k = 1.0 * M_PI / 180.0) {
-    phi += k;
-    while (phi >= 2 * M_PI) {
-        phi -= 2 * M_PI;
-    }
-    normal.x = sin(phi)*cos(theta);
-    normal.y = sin(phi)*sin(theta);
-    normal.z = cos(phi);
-    screen.normal = normal;
-}
-
-void camera::dec_phi(double k = 1.0 * M_PI / 180.0) {
-    phi -= k;
-    while (phi < 0) {
-        phi += 2 * M_PI;
-    }
-    normal.x = sin(phi)*cos(theta);
-    normal.y = sin(phi)*sin(theta);
-    normal.z = cos(phi);
-    screen.normal = normal;
-}
-
-void camera::inc_theta(double k = 1.0 * M_PI / 180.0) {
-    theta += k;
-    while (theta >= 2 * M_PI) {
-        theta -= 2 * M_PI;
-    }
-    normal.x = sin(phi)*cos(theta);
-    normal.y = sin(phi)*sin(theta);
-    normal.z = cos(phi);
-    screen.normal = normal;
-}
-
-void camera::dec_theta(double k = 1.0 * M_PI / 180.0) {
-    theta -= k;
-    while (theta < 0) {
-        theta += 2 * M_PI;
-    }
-    normal.x = sin(phi)*cos(theta);
-    normal.y = sin(phi)*sin(theta);
-    normal.z = cos(phi);
-    screen.normal = normal;
-}
-
-void camera::inc_roll(double k = 0.5 * M_PI / 180.0) {
-    roll += k;
-    while (roll >= 2 * M_PI) {
-        roll -= 2 * M_PI;
-    }
-    screen.roll = roll;
-}
-
-void camera::dec_roll(double k = 0.5 * M_PI / 180.0) {
-    roll -= k;
-    while (roll < 0) {
-        roll += 2 * M_PI;
-    }
-    screen.roll = roll;
+    normal = (point - position);
+    theta = normal.theta();
+    phi = normal.phi();
 }
 #endif /* camera_hpp */

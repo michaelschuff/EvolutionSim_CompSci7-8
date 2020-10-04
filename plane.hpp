@@ -11,7 +11,7 @@
 
 #include "vector3.hpp"
 #include <iostream>
-class plane : object {
+class plane : public object {
 public:
     vector3 position, normal;
     double width, height, roll;

@@ -15,11 +15,12 @@
 class line : public object {
 public:
     vector3 tail, head, body;
+    color c;
     
-    line(double x1, double y1, double z1, double x2, double y2, double z2, bool visable = true) : object(visable), tail(vector3(x1, y1, z1)), head(vector3(x2, y2, z2)), body(vector3(x2-x1, y2-y1, z2-z1)) {}
-    line(vector3 _tail, double x2, double y2, double z2, bool visable = true) : object(visable), tail(_tail), head(vector3(x2, y2, z2)), body(vector3(x2-_tail.x, y2-_tail.y, z2-_tail.z)) {}
-    line(double x1, double y1, double z1, vector3 _head, bool visable = true) : object(visable), tail(vector3(x1, y1, z1)), head(_head), body(vector3(_head.x-x1, _head.y-y1, _head.z-z1)) {}
-    line(vector3 _tail, vector3 _head, bool visable = true) : object(visable), tail(_tail), head(_head), body(_head-_tail) {}
+    line(double x1, double y1, double z1, double x2, double y2, double z2, color _c = color(), bool visable = true) : object(visable), c(_c), tail(vector3(x1, y1, z1)), head(vector3(x2, y2, z2)), body(vector3(x2-x1, y2-y1, z2-z1)) {}
+    line(vector3 _tail, double x2, double y2, double z2, color _c = color(), bool visable = true) : object(visable), c(_c), tail(_tail), head(vector3(x2, y2, z2)), body(vector3(x2-_tail.x, y2-_tail.y, z2-_tail.z)) {}
+    line(double x1, double y1, double z1, vector3 _head, color _c = color(), bool visable = true) : object(visable), c(_c), tail(vector3(x1, y1, z1)), head(_head), body(vector3(_head.x-x1, _head.y-y1, _head.z-z1)) {}
+    line(vector3 _tail, vector3 _head, color _c = color(), bool visable = true) : object(visable), c(_c), tail(_tail), head(_head), body(_head-_tail) {}
     
     line rotated(vector3 axis, double theta);        //returns rotated vector
     void rotate(vector3 axis, double theta);            //rotates vector, clockwise by right-hand-rule
