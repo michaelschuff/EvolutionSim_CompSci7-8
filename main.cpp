@@ -57,7 +57,9 @@ int main(int, char const**) {
     };
     
     double counter = 0;
-    camera cam(vector3(5, 5, 5), width, height);
+//    camera cam(vector3(5, 5, 1), width, height);
+    camera cam(vector3(5, 1, 5), width, height);
+//    camera cam(vector3(1, 5, 5), width, height);
     
     RenderWindow window(VideoMode(width, height), "SFML window");
 
@@ -75,7 +77,9 @@ int main(int, char const**) {
         }
 
         window.clear();
-        cam.position.rotate(vector3(1, 0, 0), 0.5 * M_PI / 180.0);
+//        cam.position.rotate(vector3(0, 0, 1), 0.5 * M_PI / 180.0);
+        cam.position.rotate(vector3(0, 1, 0), 0.5 * M_PI / 180.0);
+//        cam.position.rotate(vector3(1, 0, 0), 0.5 * M_PI / 180.0);
         cam.look_at(vector3(0, 0, 0));
         
         circle* _circ = nullptr;
