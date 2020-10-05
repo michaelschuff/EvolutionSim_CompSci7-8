@@ -1,0 +1,6 @@
+#ifndef AGENT_HPP_INCLUDED
+#define AGENT_HPP_INCLUDED
+
+
+
+#endif // AGENT_HPP_INCLUDED
