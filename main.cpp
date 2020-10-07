@@ -6,6 +6,8 @@
 #include "triangle.hpp"
 #include "mesh.hpp"
 #include "camera.hpp"
+#include "agent.hpp"
+#include "fish.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
@@ -20,28 +22,28 @@ int main(int, char const**) {
         // Front
         triangle(vector3(0, 0, 0), vector3(0, 1, 0), vector3(1, 1, 0)),
         triangle(vector3(0, 0, 0), vector3(1, 1, 0), vector3(1, 0, 0)),
-        
+
         // Right
         triangle(vector3(1, 0, 0), vector3(1, 1, 0), vector3(1, 1, 1)),
         triangle(vector3(1, 0, 0), vector3(1, 1, 1), vector3(1, 0, 1)),
-        
+
         // Back
         triangle(vector3(1, 0, 1), vector3(1, 1, 1), vector3(0, 1, 1)),
         triangle(vector3(1, 0, 1), vector3(0, 1, 1), vector3(0, 0, 1)),
-        
+
         // Left
         triangle(vector3(0, 0, 1), vector3(0, 1, 1), vector3(0, 1, 0)),
         triangle(vector3(0, 0, 1), vector3(0, 1, 0), vector3(0, 0, 0)),
-        
+
         // Top
         triangle(vector3(0, 1, 0), vector3(0, 1, 1), vector3(1, 1, 1)),
         triangle(vector3(0, 1, 0), vector3(1, 1, 1), vector3(1, 1, 0)),
-        
+
         // Bottom
         triangle(vector3(1, 0, 1), vector3(0, 0, 1), vector3(0, 0, 0)),
         triangle(vector3(1, 0, 1), vector3(0, 0, 0), vector3(1, 0, 0))
     });
-    
+
     vector<vector3> verticies = {
         vector3(-0.5, -0.5, -0.5),
         vector3( 0.5, -0.5, -0.5),
@@ -52,13 +54,13 @@ int main(int, char const**) {
         vector3( 0.5,  0.5, -0.5),
         vector3( 0.5,  0.5,  0.5),
     };
-    
+
     camera c(vector3(0, 0, 5), width, height, 0, 0, 0);
     RenderWindow window(VideoMode(width, height), "SFML window");
 
 
     window.setFramerateLimit(60);
-    
+
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -73,7 +75,7 @@ int main(int, char const**) {
 
         window.clear();
         c.position.rotate(vector3(0, 1, 1), .5 * M_PI / 180.0);
-        
+
         c.look_at(vector3(0, 0, 0));
         vector<CircleShape> circles = c.get_screen(verticies);
         for (int i = 0; i < circles.size(); i++) {

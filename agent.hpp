@@ -1,5 +1,5 @@
 #ifndef agent_hpp
-#define AGENT_HPP_INCLUDED
+#define agent_hpp
 
 #include<iostream>
 #include "vector3.hpp"
@@ -12,4 +12,4 @@ public:
     int id;
 };
 
-#endif // AGENT_HPP_INCLUDED
+#endif /* agent_hpp */
