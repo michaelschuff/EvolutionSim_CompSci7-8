@@ -10,6 +10,7 @@
 #include "object.hpp"
 #include "objects2d.hpp"
 #include <math.h>
+#include "quaternion.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
@@ -19,7 +20,6 @@ using namespace std;
 
 int main(int, char const**) {
     const int width = 800, height = 800;
-    vector3 camerapoint;
     vector3 p1(-0.5, -0.5, -0.5),//000
             p2( 0.5, -0.5, -0.5),//100
             p3(-0.5,  0.5, -0.5),//010
@@ -28,84 +28,77 @@ int main(int, char const**) {
             p6( 0.5, -0.5,  0.5),//101
             p7( 0.5,  0.5, -0.5),//110
             p8( 0.5,  0.5,  0.5);//111
-    
-    vector3 aa(1, 0, 1);
-    vector3 bb(1, 0, 0);
-    bb.rotate(aa, M_PI);
-    bb.print();
+//    p1.rotate(vector3(1, 1, 1), M_PI/4);
+//    p2.rotate(vector3(1, 1, 1), M_PI/4);
+//    p3.rotate(vector3(1, 1, 1), M_PI/4);
+//    p4.rotate(vector3(1, 1, 1), M_PI/4);
+//    p5.rotate(vector3(1, 1, 1), M_PI/4);
+//    p6.rotate(vector3(1, 1, 1), M_PI/4);
+//    p7.rotate(vector3(1, 1, 1), M_PI/4);
+//    p8.rotate(vector3(1, 1, 1), M_PI/4);
     vector<object*> verticies = {
-//        &p1,
-//        &p2,
-//        &p3,
-//        &p4,
-//        &p5,
-//        &p6,
-//        &p7,
-//        &p8,
+        &p1,
+        &p2,
+        &p3,
+        &p4,
+        &p5,
+        &p6,
+        &p7,
+        &p8,
         new line(vector3(), vector3(1, 0, 0), color(255, 0, 0)),
         new line(vector3(), vector3(0, 1, 0), color(0, 255, 0)),
         new line(vector3(), vector3(0, 0, 1), color(0, 0, 255)),
-        &camerapoint,
-        new line(p1, p2),
-        new line(p1, p2),
-        new line(p1, p3),
-        new line(p1, p4),
-        new line(p2, p6),
-        new line(p2, p7),
-        new line(p3, p5),
-        new line(p3, p7),
-        new line(p4, p5),
-        new line(p4, p6),
-        new line(p8, p5),
-        new line(p8, p6),
-        new line(p8, p7),
-        new plane(vector3(0, 0, -0.5), vector3(0, 0, 1), 0.25, .25),
+//        new line(p1, p2),
+//        new line(p1, p3),
+//        new line(p1, p4),
+//        new line(p2, p6),
+//        new line(p2, p7),
+//        new line(p3, p5),
+//        new line(p3, p7),
+//        new line(p4, p5),
+//        new line(p4, p6),
+//        new line(p8, p5),
+//        new line(p8, p6),
+//        new line(p8, p7),
 //        new plane(vector3(0, 0, -0.5), vector3(0, 0, 1), 0.25, .25),
     };
     
     double counter = 0;
-//    camera cam(vector3(5, 5, 1), width, height);
-    camera cam(vector3(1, 0, 1), width, height);
-//    camera cam(vector3(1, 5, 5), width, height);
-    
-    
-    camera cam1(vector3(1, 5, 1), width, height);
-    cam1.look_at(vector3());
+    int a = 1;
     
     RenderWindow window(VideoMode(width, height), "SFML window");
-
+    camera cam(vector3(5, 0, 0), vector3(0, 0, 0), vector3(0, 1, 0));
     window.setFramerateLimit(60);
     while (window.isOpen()) {
-        cout << cam.phi << "   " << cam.theta << endl;
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
-            }
-
-            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 window.close();
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::X) {
+                cam.rotate(vector3(a, 0, 0), 1 * M_PI / 180.0);
+                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Y) {
+                cam.rotate(vector3(0, a, 0), 1 * M_PI / 180.0);
+                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Z) {
+                cam.rotate(vector3(0, 0, a), 1 * M_PI / 180.0);
+                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
+                a=-a;
             }
         }
 
         window.clear();
-//        cam1.position.rotate(vector3(0, 0, 1), 0.1 * M_PI / 180.0);
-        cam1.look_at(vector3());
-//        cam.position.rotate(vector3(0, 0, 1), 0.5 * M_PI / 180.0);
-        cam.position.rotate(vector3(0, 1, 0), 0.5 * M_PI / 180.0);
-//        cam.position.rotate(vector3(1, 0, 0), 0.5 * M_PI / 180.0);
-        cam.look_at(vector3(0, 0, 0));
         
         circle* _circ = nullptr;
         rectangle* _rect = nullptr;
         convexshape* _convexshape = nullptr;
         
-        verticies[3] = &cam.position;
-        verticies[4] = new line(cam.position, cam.position+cam.normal.normalized());
         
-//        verticies[verticies.size() - 2] = new plane(cam.position, cam.normal, 0.25, 0.25);
-        verticies[verticies.size() - 1] = new plane(cam.position, vector3(sin(cam.phi)*cos(cam.theta), sin(cam.phi)*sin(cam.theta), cos(cam.phi)), 0.25, 0.25);
-        vector<object2D*> shapes = cam1.get_screen(verticies);
+        
+        vector<object2D*> shapes = cam.get_view(verticies);
         for (int i = 0; i < shapes.size(); i++) {
             if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
                 CircleShape c(_circ->r);

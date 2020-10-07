@@ -22,7 +22,7 @@ public:
     
     triangle &operator=(const triangle &tri);
     vector3 &operator[](int i);
-    double area();
+    float area();
     std::string to_string();
     void print();
 };
@@ -46,7 +46,7 @@ vector3 &triangle::operator[](int i) {
     }
 }
 
-double triangle::area() {
+float triangle::area() {
     return 0.5 * cross_product(v2-v1, v3-v1).magnitude();
 }
 

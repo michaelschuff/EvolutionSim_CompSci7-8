@@ -25,9 +25,9 @@ public:
 
 class circle : public object2D {
 public:
-    double x, y, r;
+    float x, y, r;
     
-    circle(double _x, double _y, double _r, Color _c) : object2D(_c), x(_x), y(_y), r(_r) {
+    circle(float _x, float _y, float _r, Color _c) : object2D(_c), x(_x), y(_y), r(_r) {
         
     }
     
@@ -38,9 +38,9 @@ public:
 
 class rectangle : public object2D {
 public:
-    double x, y, width, height, theta;
+    float x, y, width, height, theta;
     
-    rectangle(double _x, double _y, double _width, double _height, double _theta, Color _c) : object2D(_c), x(_x), y(_y), width(_width), height(_height), theta(_theta) {
+    rectangle(float _x, float _y, float _width, float _height, float _theta, Color _c) : object2D(_c), x(_x), y(_y), width(_width), height(_height), theta(_theta) {
         
     }
     
@@ -51,9 +51,9 @@ public:
 
 class convexshape : public object2D {
 public:
-    std::vector<std::vector<double>> points;
+    std::vector<std::vector<float>> points;
     
-    convexshape(std::vector<std::vector<double>> _points, Color _c) : object2D(_c), points(_points) {
+    convexshape(std::vector<std::vector<float>> _points, Color _c) : object2D(_c), points(_points) {
         
     }
     

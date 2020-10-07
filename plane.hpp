@@ -14,14 +14,14 @@
 class plane : public object {
 public:
     vector3 position, normal;
-    double width, height, roll;
+    float width, height, roll;
     
     plane() : object(false), position(vector3()), normal(vector3()), width(0), height(0), roll(0) {}
-    plane(vector3 _position, vector3 _normal, double _width = 10, double _height = 10, double _roll = 0, bool visable = true) : object(visable), position(_position), normal(_normal), width(_width), height(_height), roll(_roll) {}
-    plane(double px, double py, double pz, vector3 _normal, double _width = 10, double _height = 10, double _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(_normal), width(_width), height(_height), roll(_roll) {}
-    plane(vector3 _position, double nx, double ny, double nz, double _width = 10, double _height = 10, double _roll = 0, bool visable = true) : object(visable), position(_position), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
-    plane(double px, double py, double pz, double nx, double ny, double nz, double _width = 10, double _height = 10, double _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
-    plane(vector3 p1, vector3 p2, vector3 p3, double _width = 10, double _height = 10, double _roll = 0, bool visable = true) : object(visable), position(p1), normal(cross_product(p2-p1, p3-p1)), width(_width), height(_height), roll(_roll) {}
+    plane(vector3 _position, vector3 _normal, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(_position), normal(_normal), width(_width), height(_height), roll(_roll) {}
+    plane(float px, float py, float pz, vector3 _normal, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(_normal), width(_width), height(_height), roll(_roll) {}
+    plane(vector3 _position, float nx, float ny, float nz, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(_position), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
+    plane(float px, float py, float pz, float nx, float ny, float nz, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
+    plane(vector3 p1, vector3 p2, vector3 p3, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(p1), normal(cross_product(p2-p1, p3-p1)), width(_width), height(_height), roll(_roll) {}
     
     plane &operator=(const plane &p);
     
