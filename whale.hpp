@@ -14,26 +14,52 @@ This file sets up the whale class, which is a child of the agent class.
 class whale : public agent
 {
 public:
-    whale(int, int);
+    whale(int, int, vector3, vector3);
     int fishCounter; //how many fish the whale has eaten, used for ranking
     sight (); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
     decision (); //using its traits, decide what to do on a turn
     eatFish (); //reports which fish need to be removed from the list and adds to fishCounter
 
-private:
+//private:
+    //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
 };
 
-whale::whale (int givenTraitClose, int givenTraitDense)
+whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel) : agent(pos, vel)
 {
-    int randChangeClose, randChangeDense;
+    int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
 
-    //set up traits with some randomness
-    randChangeClose = (rand());
+    //set up traits with some randomness, based on a given initial value
+    randChangeClose = (rand() % 5) - 2;
+    randChangeDense = (rand() % 5) - 2;
+
+    eatCloseFish = givenTraitClose + randChangeClose;
+    eatDenseFish = givenTraitDense + randChangeDense;
+
+    if (eatCloseFish > 10)
+    {
+        eatCloseFish = 10;
+    }
+    else if (eatCloseFish < 1)
+    {
+        eatCloseFish = 1;
+    }
+    if (eatDenseFish > 10)
+    {
+        eatDenseFish = 10;
+    }
+    else if (eatDenseFish < 1)
+    {
+        eatDenseFish = 1;
+    }
+
+    //set velocity and position
+    velocity = vel;
+    position = pos;
 }
 
 #endif /*whale_hpp*/
