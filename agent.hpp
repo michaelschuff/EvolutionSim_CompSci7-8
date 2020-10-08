@@ -10,6 +10,9 @@ public:
     vector3 velocity;
 
     int id;
+
+protected:
+    agent(vector3 pos, vector3 vel) : position(pos), velocity(vel){} //agent constructor takes in two vector3's to create instance of agent
 };
 
 #endif /* agent_hpp */

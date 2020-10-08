@@ -17,6 +17,7 @@ using namespace std;
 RectangleShape Line(vector3, vector3);
 
 int main(int, char const**) {
+
     const int width = 800, height = 800;
     mesh cube({
         // Front
