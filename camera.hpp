@@ -27,11 +27,10 @@
 
 class camera {
 public:
-    vector3 position, forward, right, up, target;
-    matrix world_to_cam = matrix(4, 4);
+    vector3 position, forward, up, right, target;
     
-    camera(vector3 _position, vector3 _target, vector3 _up) : position(_position), target(_target), up(_up) { look_at(_position, _target, _up); }
-    camera(const camera &c) : position(c.position), forward(c.forward), right(c.right), up(c.up), target(c.target), world_to_cam(c.world_to_cam) {}
+    camera(vector3 _position, vector3 _forward, vector3 _up, vector3 _right) : position(_position), forward(_forward), up(_up), right(_right) { }
+    camera(const camera &c) : position(c.position), forward(c.forward), right(c.right), up(c.up), target(c.target) { }
     
     std::vector<object2D*> get_view(std::vector<object*>);
     
@@ -39,9 +38,9 @@ public:
     void rotate(const vector3 &axis, float theta);
     
     void look_at(vector3 _position, vector3 _target, vector3 _up);
-    
 private:
-    void update_world_to_cam_matrix();
+    vector3 point_relative_to_camera(vector3);
+    
 };
 
 std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
@@ -55,18 +54,14 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
     mesh* _mesh = nullptr;
     for (int i = 0; i < objects.size(); i++) {
         if ((_point = dynamic_cast<vector3*>(objects[i]))) {
-//            vector3 P(*_point);
-            vector3 P = (world_to_cam * to_1x4_matrix(*_point)).row_vector(0, 0);
-            P.print();
-            shapes.push_back(new circle(400+200*P.z, 400+200*P.y, 2, sf::Color(_point->c.r, _point->c.g, _point->c.b)));
+            vector3 P = point_relative_to_camera(*_point);
+            shapes.push_back(new circle(400+200*P.x, 400+200*P.z, 2, sf::Color(_point->c.r, _point->c.g, _point->c.b)));
             
         } else if ((_line = dynamic_cast<line*>(objects[i]))) {
-//            vector3 P = (world_to_cam * to_1x4_matrix((_line->tail - (*this).position))).row_vector(0, 0);
+            vector3 P = point_relative_to_camera(_line->head);
+            vector3 Q = point_relative_to_camera(_line->tail);
             
-//            vector3 Q = (world_to_cam * to_1x4_matrix((_line->head - (*this).position))).row_vector(0, 0);
-            
-            
-//            shapes.push_back(new rectangle(400+200*Q.x, 400+200*Q.z, sqrt(pow(200*(P.x-Q.x), 2) + pow(200*(P.z-Q.z), 2)), 1, atan2(P.z-Q.z, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
+            shapes.push_back(new rectangle(400+200*Q.x, 400+200*Q.z, sqrt(pow(200*(P.x-Q.x), 2) + pow(200*(P.z-Q.z), 2)), 1, atan2(P.z-Q.z, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
             
         } else if ((_plane = dynamic_cast<plane*>(objects[i]))) {
             
@@ -81,43 +76,29 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
     return shapes;
 }
 
+vector3 camera::point_relative_to_camera(vector3 _point) {
+    quaternion forward_to_y = get_quaternion(forward, vector3(0, 1, 0));
+    return (_point - position).rotated(forward_to_y).rotated(get_quaternion(up.rotated(forward_to_y), vector3(0, 0, 1)));
+}
+
 void camera::rotate(const quaternion &q) {
-    forward.rotate(q);
-    right.rotate(q);
     position.rotate(q);
+    target.rotate(q);
     up.rotate(q);
-    update_world_to_cam_matrix();
+    right.rotate(q);
+    forward.rotate(q);
 }
 
 void camera::rotate(const vector3 &axis, float theta) {
-    forward.rotate(axis, theta);
-    right.rotate(axis, theta);
     position.rotate(axis, theta);
+    target.rotate(axis, theta);
     up.rotate(axis, theta);
-    update_world_to_cam_matrix();
+    right.rotate(axis, theta);
+    forward.rotate(axis, theta);
 }
 
 void camera::look_at(vector3 _position, vector3 _target, vector3 _right) {
-    _right.normalize();
-    target = _target;
-    position = _position;
-    forward = (_target - _position).normalized();
-    right = (_right - dot_product(_right, forward) * forward).normalized();
-    up = cross_product(forward, right);
-    update_world_to_cam_matrix();
+    
 }
 
-void camera::update_world_to_cam_matrix() {
-//        world_to_cam.data = {
-//            {right.x, right.y, right.z, 0},
-//            {up.x, up.y, up.z, 0},
-//            {forward.x, forward.y, forward.z, 0},
-//            {position.x, position.y, position.z, 1},
-//        };
-    world_to_cam.data = {
-            {right.x, up.x, forward.x, 0},
-            {right.y, up.y, forward.y, 0},
-            {right.z, up.z, forward.z, 0},
-            {-dot_product(right, position), -dot_product(up, position), -dot_product(forward, position), 1}};
-}
 #endif /* camera_hpp */

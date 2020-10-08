@@ -48,26 +48,25 @@ int main(int, char const**) {
         new line(vector3(), vector3(1, 0, 0), color(255, 0, 0)),
         new line(vector3(), vector3(0, 1, 0), color(0, 255, 0)),
         new line(vector3(), vector3(0, 0, 1), color(0, 0, 255)),
-//        new line(p1, p2),
-//        new line(p1, p3),
-//        new line(p1, p4),
-//        new line(p2, p6),
-//        new line(p2, p7),
-//        new line(p3, p5),
-//        new line(p3, p7),
-//        new line(p4, p5),
-//        new line(p4, p6),
-//        new line(p8, p5),
-//        new line(p8, p6),
-//        new line(p8, p7),
-//        new plane(vector3(0, 0, -0.5), vector3(0, 0, 1), 0.25, .25),
+        new line(p1, p2),
+        new line(p1, p3),
+        new line(p1, p4),
+        new line(p2, p6),
+        new line(p2, p7),
+        new line(p3, p5),
+        new line(p3, p7),
+        new line(p4, p5),
+        new line(p4, p6),
+        new line(p8, p5),
+        new line(p8, p6),
+        new line(p8, p7),
+        new plane(vector3(0, 0, -0.5), vector3(0, 0, 1), 0.25, .25),
     };
     
     double counter = 0;
     int a = 1;
-    
     RenderWindow window(VideoMode(width, height), "SFML window");
-    camera cam(vector3(5, 0, 0), vector3(0, 0, 0), vector3(0, 1, 0));
+    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0), vector3(0, 1, 0), vector3(0, 0, 1));
     window.setFramerateLimit(60);
     while (window.isOpen()) {
         Event event;
@@ -76,16 +75,17 @@ int main(int, char const**) {
                 window.close();
             } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 window.close();
-            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::X) {
+            }
+            if (Keyboard::isKeyPressed(Keyboard::X)) {
                 cam.rotate(vector3(a, 0, 0), 1 * M_PI / 180.0);
-                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
-            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Y) {
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Y)) {
                 cam.rotate(vector3(0, a, 0), 1 * M_PI / 180.0);
-                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
-            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Z) {
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Z)) {
                 cam.rotate(vector3(0, 0, a), 1 * M_PI / 180.0);
-                cam.look_at(cam.position, vector3(0, 0, 0), vector3(-cam.position.z, 0, cam.position.x).normalized());
-            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
                 a=-a;
             }
         }
