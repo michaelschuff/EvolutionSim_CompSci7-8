@@ -57,6 +57,12 @@ public:
         
     }
     
+    convexshape(std::vector<vector3> _points, Color _c) : object2D(_c) {
+        for (int i = 0; i < _points.size(); i++) {
+            points.push_back({_points[i].x, _points[i].z});
+        }
+    }
+    
     void print() {
         for (int i = 0; i < points.size(); i++) {
             std::cout << "<" << points[i][0] << ", " << points[i][1] << ">" << std::endl;

@@ -13,21 +13,23 @@
 #include <iostream>
 class plane : public object {
 public:
-    vector3 position, normal;
-    float width, height, roll;
+    vector3 position, normal, up, right;
+    float width, height;
+    color c;
     
-    plane() : object(false), position(vector3()), normal(vector3()), width(0), height(0), roll(0) {}
-    plane(vector3 _position, vector3 _normal, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(_position), normal(_normal), width(_width), height(_height), roll(_roll) {}
-    plane(float px, float py, float pz, vector3 _normal, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(_normal), width(_width), height(_height), roll(_roll) {}
-    plane(vector3 _position, float nx, float ny, float nz, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(_position), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
-    plane(float px, float py, float pz, float nx, float ny, float nz, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(vector3(px, py, pz)), normal(vector3(nx, ny, nz)), width(_width), height(_height), roll(_roll) {}
-    plane(vector3 p1, vector3 p2, vector3 p3, float _width = 10, float _height = 10, float _roll = 0, bool visable = true) : object(visable), position(p1), normal(cross_product(p2-p1, p3-p1)), width(_width), height(_height), roll(_roll) {}
+    vector3 top_left, top_right, bottom_left, bottom_right;
+    
+    plane() : object(false), position(vector3()), normal(vector3()), up(vector3()), width(0), height(0), c(color()) {set_corners();}
+    plane(vector3 _position, vector3 _normal, vector3 _up, float _width = 10, float _height = 10, color _c = color(), bool visable = true) : object(visable), position(_position), normal(_normal.normalized()), up(_up.normalized()), width(_width), height(_height), c(_c) {set_corners();}
+    plane(vector3 p1, vector3 p2, vector3 p3, vector3 _up, float _width = 10, float _height = 10, color _c = color(), bool visable = true) : object(visable), position(p1), normal(cross_product(p2-p1, p3-p1).normalized()), up(_up.normalized()), width(_width), height(_height), c(_c) {set_corners();}
     
     plane &operator=(const plane &p);
     
     void flip();
     std::string to_string();
     void print();
+private:
+    void set_corners();
 };
 
 plane &plane::operator=(const plane &p) {
@@ -35,16 +37,24 @@ plane &plane::operator=(const plane &p) {
     normal = p.normal;
     width = p.width;
     height = p.height;
-    roll = p.roll;
     return *this;
+}
+
+void plane::set_corners() {
+    right = cross_product(normal, up).normalized();
+    top_left = position + up * height / 2 - right * width / 2;
+    top_right = position + up * height / 2 + right * width / 2;
+    bottom_left = position - up * height / 2 - right * width / 2;
+    bottom_right = position - up * height / 2 + right * width / 2;
 }
 
 void plane::flip() {
     normal = -normal;
+    right = cross_product(normal, up).normalized();
 }
 
 std::string plane::to_string() {
-    return "Position: " + position.to_string() + "    Normal: " + normal.to_string() + "\nWidth: " + std::to_string(width) + "    Height: " + std::to_string(height) + "    Roll: " + std::to_string(roll);
+    return "Position: " + position.to_string() + "    Normal: " + normal.to_string() + "    Up: " + up.to_string() + "\nWidth: " + std::to_string(width) + "    Height: " + std::to_string(height);
 }
 
 void plane::print() {
