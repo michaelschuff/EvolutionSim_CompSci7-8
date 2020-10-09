@@ -29,8 +29,9 @@ class camera {
 public:
     vector3 position, forward, up, right, target;
     float fov;
+    float clippingPlane;
     
-    camera(vector3 _position, vector3 _forward, vector3 _up, vector3 _right, float _fov = M_PI/4) : position(_position), forward(_forward), up(_up), right(_right), fov(_fov) { }
+    camera(vector3 _position, vector3 _forward, vector3 _up, vector3 _right, float _fov = M_PI/3, float _clippingPlane = 0.5) : position(_position), forward(_forward), up(_up), right(_right), fov(_fov), clippingPlane(_clippingPlane) { }
     camera(const camera &c) : position(c.position), forward(c.forward), right(c.right), up(c.up), target(c.target), fov(c.fov) { }
     
     std::vector<object2D*> get_view(std::vector<object*>);
@@ -58,7 +59,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
         if ((_point = dynamic_cast<vector3*>(objects[i]))) {
             vector3 P = point_relative_to_camera(*_point);
         
-            if (P.y > 0) {
+            if (P.y > clippingPlane) {
                 if (fov != 0) {
                     P /= (P.y*tan(fov/2));
                 }
@@ -69,9 +70,25 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
             vector3 P = point_relative_to_camera(_line->head);
             vector3 Q = point_relative_to_camera(_line->tail);
             
+            if (P.y < clippingPlane) {
+                float scale = (clippingPlane - P.y) / (Q.y - P.y);
+                P = P + scale * (Q-P);
+            }
+            
+            if (Q.y < clippingPlane) {
+                float scale = (clippingPlane - Q.y) / (P.y - Q.y);
+                Q = Q + scale * (P-Q);
+            }
+            
+            
+            
             if (fov != 0) {
-                P /= (abs(P.y)*tan(fov/2));
-                Q /= (abs(Q.y)*tan(fov/2));
+                if (P.y != 0) {
+                    P /= (P.y*tan(fov/2));
+                }
+                if (Q.y != 0) {
+                    Q /= (Q.y*tan(fov/2));
+                }
             }
             shapes.push_back(new rectangle(Q.x, Q.z, sqrt(pow((P.x-Q.x), 2) + pow((P.z-Q.z), 2)), 1, atan2(P.z-Q.z, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
             
@@ -100,8 +117,11 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
 }
 
 vector3 camera::point_relative_to_camera(vector3 _point) {
+    vector3 P(_point - position);
     quaternion forward_to_y = get_quaternion(forward, vector3(0, 1, 0));
-    return (_point - position).rotated(forward_to_y).rotated(get_quaternion(up.rotated(forward_to_y), vector3(0, 0, 1)));
+    quaternion up_to_z = get_quaternion(up.rotated(forward_to_y), vector3(0, 0, 1));
+    quaternion right_to_x = get_quaternion(right.rotated(forward_to_y).rotated(up_to_z), vector3(1, 0, 0));
+    return P.rotated(forward_to_y).rotated(up_to_z).rotated(right_to_x);
 }
 
 void camera::rotate(const quaternion &q) {
