@@ -16,9 +16,10 @@
 class triangle : public object {
 public:
     vector3 v1, v2, v3;
+    color c;
     
-    triangle(vector3 _v1=vector3(), vector3 _v2=vector3(), vector3 _v3=vector3(), bool visable = true) : object(visable), v1(_v1), v2(_v2), v3(_v3) {}
-    triangle(const triangle &tri, bool visable = true) : object(visable), v1(tri.v1), v2(tri.v2), v3(tri.v3) {}//copy constructor
+    triangle(vector3 _v1=vector3(), vector3 _v2=vector3(), vector3 _v3=vector3(), color _c = color(), bool visable = true) : object(visable), v1(_v1), v2(_v2), v3(_v3), c(_c) {}
+    triangle(const triangle &tri, bool visable = true) : object(visable), v1(tri.v1), v2(tri.v2), v3(tri.v3), c(tri.c) {}//copy constructor
     
     triangle &operator=(const triangle &tri);
     vector3 &operator[](int i);

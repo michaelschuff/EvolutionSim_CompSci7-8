@@ -15,6 +15,14 @@
 #include "color.hpp"
 #include "object.hpp"
 
+
+/**
+ * Rounds floating point number to a number of decimal places.
+ *
+ * @param n number
+ * @param decimals number of decimal places. 0 to cast to int, 1 to round to tenths, -1 to round to nearest 10
+ * @return rounded floating point number.
+ */
 float round(float n, int decimals) {
     return round(pow(10, decimals) * n) / pow(10, decimals);
 }

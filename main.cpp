@@ -20,7 +20,6 @@ using namespace std;
 
 int main(int, char const**) {
     const int width = 800, height = 800;
-    
     vector3 p1(-0.5, -0.5, -0.5),
             p2( 0.5, -0.5, -0.5),
             p3(-0.5,  0.5, -0.5),
@@ -29,15 +28,7 @@ int main(int, char const**) {
             p6( 0.5, -0.5,  0.5),
             p7( 0.5,  0.5, -0.5),
             p8( 0.5,  0.5,  0.5);
-    vector3 add(0, 0, 0);
-    p1+=add;
-    p2+=add;
-    p3+=add;
-    p4+=add;
-    p5+=add;
-    p6+=add;
-    p7+=add;
-    p8+=add;
+    
 //    vector3 p1(0,0,0),
 //            p2(1,0,0),
 //            p3(0,1,0),
@@ -47,20 +38,20 @@ int main(int, char const**) {
 //            p7(1,1,0),
 //            p8(1,1,1);
     vector<object*> verticies = {
-        &p1,
-        &p2,
-        &p3,
-        &p4,
-        &p5,
-        &p6,
-        &p7,
-        &p8,
-        new line(vector3(0, 0, 0), vector3(1, 0, 0), color(255, 0, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 1, 0), color(0, 255, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 0, 1), color(0, 0, 255)),
-        new vector3(0.5, 0, 0),
-        new vector3(0, 0.5, 0),
-        new vector3(0, 0, 0.5),
+//        &p1,
+//        &p2,
+//        &p3,
+//        &p4,
+//        &p5,
+//        &p6,
+//        &p7,
+//        &p8,
+//        new line(vector3(0, 0, 0), vector3(1, 0, 0), color(255, 0, 0)),
+//        new line(vector3(0, 0, 0), vector3(0, 1, 0), color(0, 255, 0)),
+//        new line(vector3(0, 0, 0), vector3(0, 0, 1), color(0, 0, 255)),
+//        new vector3(0.5, 0, 0),
+//        new vector3(0, 0.5, 0),
+//        new vector3(0, 0, 0.5),
         new line(p1, p2),
         new line(p1, p3),
         new line(p1, p4),
@@ -73,18 +64,29 @@ int main(int, char const**) {
         new line(p8, p5),
         new line(p8, p6),
         new line(p8, p7),
-//        new plane(vector3(0, -1, 0), vector3(0, 1, 0), vector3(0, 0, 1), 5, 5, color(0.7, 0.7, 0.7, 1.0)),
+        new triangle(p4, p6, p8),
+        new triangle(p4, p8, p5),
+        new triangle(p6, p2, p7),
+        new triangle(p6, p7, p8),
+        new triangle(p2, p1, p3),
+        new triangle(p2, p3, p7),
+        new triangle(p1, p4, p5),
+        new triangle(p1, p5, p3),
+        new triangle(p5, p8, p7),
+        new triangle(p5, p7, p3),
+        new triangle(p6, p1, p2),
+        new triangle(p6, p4, p1),
     };
+    
     
     double sensitivity = 0.1, speed = 0.25;
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
     camera cam(vector3(1, 1, 1), vector3(-1, -1, -1).normalized(), vector3(-1, 1, -1).normalized(), vector3(1, 0, -1).normalized(), M_PI / 3, 0.01);
     window.setFramerateLimit(60);
-    bool active = true;
     
     
-    bool qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false;
+    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false;
     while (window.isOpen()) {
         active = window.hasFocus();
         Event event;
