@@ -43,9 +43,9 @@ int main(int, char const**) {
     int r, g, b;
     vector<color> v;
     for (int i = 0; i < 12; i++) {
-        r = ((int) ((float) 2*rand()/RAND_MAX)) * 255;
-        g = ((int) ((float) 2*rand()/RAND_MAX)) * 255;
-        b = ((int) ((float) 2*rand()/RAND_MAX)) * 255;
+        r = ((float) 255*rand()/RAND_MAX);
+        g = ((float) 255*rand()/RAND_MAX);
+        b = ((float) 255*rand()/RAND_MAX);
         v.push_back(color(r, g, b));
     }
     vector<object*> verticies = {
