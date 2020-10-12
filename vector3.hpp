@@ -174,7 +174,9 @@ void vector3::normalize() {
 
 vector3 vector3::normalized() {
     float m = magnitude();
-    assert(m!=0);
+    if (m == 0) {
+        return vector3();
+    }
     return vector3(x/m, y/m, z/m);
 }
 
@@ -210,13 +212,21 @@ void vector3::project_onto(vector3 v) { //project v1 onto v2
     z = temp.z;
 }
 
-
+std::string remove_terminating_zeros(std::string str) {
+    str.erase(str.find_last_not_of('0') + 1, std::string::npos);
+    str.erase(str.find_last_not_of('7') + 1, std::string::npos);
+    str.erase(str.find_last_not_of('0') + 1, std::string::npos);
+    str.erase(str.find_last_not_of('.') + 1, std::string::npos);
+    return str;
+}
 
 std::string vector3::to_string() {
-    return ("<" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ">");
+    return ("<" + remove_terminating_zeros(std::to_string(x)) + ", " + remove_terminating_zeros(std::to_string(y)) + ", " + remove_terminating_zeros(std::to_string(z)) + ">");
 }
 
 void vector3::print() {
     std::cout << (*this).to_string() << std::endl;
 }
+
+
 #endif /* vector3_hpp */

@@ -11,6 +11,7 @@
 
 #include "vector3.hpp"
 #include "object.hpp"
+#include "line.hpp"
 #include <iostream>
 
 class triangle : public object {
@@ -23,6 +24,7 @@ public:
     
     triangle &operator=(const triangle &tri);
     vector3 &operator[](int i);
+//    void setTexture(sf::Image &image, int x1, int y1, int x2, int y2, int x3, int y3);
     float area();
     std::string to_string();
     void print();
@@ -46,6 +48,13 @@ vector3 &triangle::operator[](int i) {
             return v3;
     }
 }
+
+//void triangle::setTexture(sf::Image &_image, int x1, int y1, int x2, int y2, int x3, int y3) {
+//    image = _image;
+//    p1 = vector3(x1, 0, y1);
+//    p2 = vector3(x2, 0, y2);
+//    p3 = vector3(x3, 0, y3);
+//}
 
 float triangle::area() {
     return 0.5 * cross_product(v2-v1, v3-v1).magnitude();
