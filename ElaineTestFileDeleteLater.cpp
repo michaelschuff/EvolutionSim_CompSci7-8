@@ -12,8 +12,13 @@
 using namespace sf;
 using namespace std;
 
+//global variable. Turn into other type variable once I figure out how
+vector<agent> allAgents = vector<agent>();
+
 int main(int, char const**) {
-    fish MrDarp = fish(vector3(), vector3(20, 0, 0));
+    fish MrDarp(vector3(), vector3(20, 0, 0));
+
+    allAgents.push_back(MrDarp);
 
     cout<<"Mr. Darp's x velocity is "<<MrDarp.velocity.x<<endl;
 
