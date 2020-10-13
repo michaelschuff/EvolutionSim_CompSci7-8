@@ -3,6 +3,11 @@
 #include <math.h>
 #include<time.h>
 #include <vector>
+#include "vector3.hpp"
+#include "triangle.hpp"
+#include "mesh.hpp"
+#include "camera.hpp"
+#include "fish.hpp"
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctime>
