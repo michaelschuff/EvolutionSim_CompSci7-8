@@ -14,32 +14,29 @@
 #include <cstdlib>
 #include <ctime>
 #include "color.hpp"
-//#include "ResourcePath.hpp"
+#include <fstream>
+#include <string>
+#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
 
 
-
+bool is_number(const std::string& s) {
+    return !s.empty() && std::find_if(s.begin(),
+        s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
 int main(int, char const**) {
     srand(time(NULL));
     const int width = 800, height = 800;
-//    vector3 p1(-0.5, -0.5, -0.5),
-//            p2( 0.5, -0.5, -0.5),
-//            p3(-0.5,  0.5, -0.5),
-//            p4(-0.5, -0.5,  0.5),
-//            p5(-0.5,  0.5,  0.5),
-//            p6( 0.5, -0.5,  0.5),
-//            p7( 0.5,  0.5, -0.5),
-//            p8( 0.5,  0.5,  0.5);
-        vector3 p1(0,0,0),
-                p2(1,0,0),
-                p3(0,1,0),
-                p4(0,0,1),
-                p5(0,1,1),
-                p6(1,0,1),
-                p7(1,1,0),
-                p8(1,1,1);
+    vector3 p1(-0.5, -0.5, -0.5),
+            p2( 0.5, -0.5, -0.5),
+            p3(-0.5,  0.5, -0.5),
+            p4(-0.5, -0.5,  0.5),
+            p5(-0.5,  0.5,  0.5),
+            p6( 0.5, -0.5,  0.5),
+            p7( 0.5,  0.5, -0.5),
+            p8( 0.5,  0.5,  0.5);
     int r, g, b;
     vector<color> v;
     for (int i = 0; i < 12; i++) {
@@ -49,17 +46,9 @@ int main(int, char const**) {
         v.push_back(color(r, g, b));
     }
     vector<object*> verticies = {
-//        &p1,
-//        &p2,
-//        &p3,
-//        &p4,
-//        &p5,
-//        &p6,
-//        &p7,
-//        &p8,
-//        new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
-//        new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
-//        new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
+        new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
+        new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
+        new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
 //        new line(p1, p2),
 //        new line(p1, p3),
 //        new line(p1, p4),
@@ -72,25 +61,66 @@ int main(int, char const**) {
 //        new line(p8, p5),
 //        new line(p8, p6),
 //        new line(p8, p7),
-        new triangle(p4, p6, p8, v[0]),
-        new triangle(p4, p8, p5, v[1]),
-        new triangle(p6, p2, p7, v[2]),
-        new triangle(p6, p7, p8, v[3]),
-        new triangle(p2, p1, p3, v[4]),
-        new triangle(p2, p3, p7, v[5]),
-        new triangle(p1, p4, p5, v[6]),
-        new triangle(p1, p5, p3, v[7]),
-        new triangle(p5, p8, p7, v[8]),
-        new triangle(p5, p7, p3, v[9]),
-        new triangle(p6, p1, p2, v[10]),
-        new triangle(p6, p4, p1, v[11]),
+//        new triangle(p4, p6, p8, v[0]),
+//        new triangle(p4, p8, p5, v[1]),
+//        new triangle(p6, p2, p7, v[2]),
+//        new triangle(p6, p7, p8, v[3]),
+//        new triangle(p2, p1, p3, v[4]),
+//        new triangle(p2, p3, p7, v[5]),
+//        new triangle(p1, p4, p5, v[6]),
+//        new triangle(p1, p5, p3, v[7]),
+//        new triangle(p5, p8, p7, v[8]),
+//        new triangle(p5, p7, p3, v[9]),
+//        new triangle(p6, p1, p2, v[10]),
+//        new triangle(p6, p4, p1, v[11]),
     };
+    vector<vector3> points;
+    vector<vector<int>> indicies;
+    ifstream myfile;
+    myfile.open(resourcePath() + "dragon1.obj");
+    string l;
+    int c = 0;
+    while(getline(myfile, l)) {
+        vector<string> split = {""};
+        for (int i = 0; i < l.size(); i++) {
+            if (l[i] == ' ') {
+                split.push_back("");
+            } else {
+                split[split.size() - 1] += l[i];
+            }
+        }
+        if (split[0] == "v") {
+            c++;
+            if (c == 100) {
+                verticies.push_back(new vector3(stof(split[1]), -stof(split[2]), stof(split[3])));
+                c=0;
+            }
+//            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
+        } else if (split[0] == "f") {
+//            split.erase(split.begin());
+//            indicies.push_back(vector<int>());
+//            for (int i = 0; i < split.size(); i++) {
+//                if (is_number(split[i])) {
+//                    indicies[indicies.size() - 1].push_back(stoi(split[i]));
+//                }
+//            }
+        }
+    }
     
+    myfile.close();
     
-    double sensitivity = 0.1, speed = 0.25;
+//    for (int i = 0; i < indicies.size(); i+=10) {
+//        for (int j = 1; j + 1 < indicies[i].size(); j++) {
+//            r = ((float) 255*rand()/RAND_MAX);
+//            g = ((float) 255*rand()/RAND_MAX);
+//            b = ((float) 255*rand()/RAND_MAX);
+//            verticies.push_back(new triangle(vector3(points[indicies[i][0]]), vector3(points[indicies[i][j]]), vector3(points[indicies[i][j+1]]), color(r, g, b)));
+//        }
+//    }
+    double sensitivity = 0.1, speed = 5;
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
-    camera cam(vector3(1.07, 0, 1), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), M_PI / 3, 0.01);
+    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), M_PI / 3, 1);
     window.setFramerateLimit(60);
     
     
@@ -182,6 +212,13 @@ int main(int, char const**) {
                     default:
                         break;
                 }
+            } else if (event.type == Event::MouseWheelScrolled) {
+                for (int i = 0; i < event.mouseWheelScroll.delta; i++) {
+                    speed *= 1.01;
+                }
+                for (int i = 0; i > event.mouseWheelScroll.delta; i--) {
+                    speed /= 1.01;
+                }
             }
         }
         
@@ -195,11 +232,6 @@ int main(int, char const**) {
             }
             Mouse::setPosition(Vector2i(width/2, height/2), window);
             
-            if (lcontrolDown) {
-                speed = 1;
-            } else {
-                speed = 0.25;
-            }
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
             }

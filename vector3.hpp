@@ -116,6 +116,9 @@ vector3 vector3::operator/(float k){
 }
 
 vector3 &vector3::operator/=(float k) {
+    if (k == 0) {
+        return;
+    }
     assert(k!=0);
     x /= k;
     y /= k;

@@ -78,7 +78,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                 if (fov != 0) {
                     P /= (P.y*tan(fov/2));
                 }
-                shapes.push_back(new circle(P.x, P.z, 2, sf::Color(_point->c.r, _point->c.g, _point->c.b)));
+                shapes.push_back(new circle(P.x, P.z, 1, sf::Color(_point->c.r, _point->c.g, _point->c.b)));
             }
             
         } else if ((_line = dynamic_cast<line*>(objects[i]))) {
@@ -105,6 +105,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     Q /= (Q.y*tan(fov/2));
                 }
             }
+            
             shapes.push_back(new rectangle(Q.x, Q.z, sqrt(pow((P.x-Q.x), 2) + pow((P.z-Q.z), 2)), 1, atan2(P.z-Q.z, P.x-Q.x), sf::Color(_line->c.r, _line->c.g, _line->c.b)));
             
         } else if ((_plane = dynamic_cast<plane*>(objects[i]))) {
