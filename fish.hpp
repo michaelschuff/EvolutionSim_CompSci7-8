@@ -10,7 +10,7 @@
 
 class fish : public agent{
 public:
-    fish(vector3, vector3);
+    fish(vector3, vector3, int);
 
     //the id, but that was in the parent class
 
@@ -32,7 +32,7 @@ private:
 };
 
 //constructor. Right now it's the same as the agent
-fish :: fish(vector3 pos = vector3(), vector3 vel = vector3()): agent(pos, vel)
+fish :: fish(vector3 pos = vector3(), vector3 vel = vector3(), int id = 0): agent(pos, vel, id)
 {
 
 }
@@ -41,11 +41,13 @@ fish :: fish(vector3 pos = vector3(), vector3 vel = vector3()): agent(pos, vel)
 std :: vector <agent> fish :: otherFishList(std::vector<agent> allAgents)
 {
     std::vector<agent> test = allAgents;
-
-    /*for(agent in test)
+    //not working right now
+    /*for(int ii = test.size()-1; ii >= 0; ii --)
     {
         //if (test.id == my id) { remove test}
+        if(test[ii].id == id) { test.erase(ii); }
         //if (test is a whale) { remove test}
+
     }*/
 
     return test;
