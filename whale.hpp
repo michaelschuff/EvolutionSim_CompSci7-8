@@ -16,12 +16,13 @@ class whale : public agent
 public:
     whale(int, int, vector3, vector3);
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    sight (); //see the fish around them and determine which ones are in a distance of them
+    updatePosition(double); //update position every frame based on velocity and time
+    //sight (vector<fish>)); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
     decision (); //using its traits, decide what to do on a turn
     eatFish (); //reports which fish need to be removed from the list and adds to fishCounter
 
-//private:
+private:
     //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
@@ -33,7 +34,7 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
 
     fishCounter = 0;
 
-    //set up traits with some randomness, based on a given initial value
+//set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
     randChangeDense = (rand() % 5) - 2;
 
@@ -57,9 +58,16 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
         eatDenseFish = 1;
     }
 
-    //set velocity and position
+//set velocity and position
     velocity = vel;
     position = pos;
+}
+
+updatePosition (double timeDiff)
+{
+    position.x += velocity.x * timeDiff;
+    position.y += velocity.y * timeDiff;
+    position.z += velocity.z * timeDiff;
 }
 
 #endif /*whale_hpp*/
