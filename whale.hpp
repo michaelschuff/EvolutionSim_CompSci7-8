@@ -17,7 +17,7 @@ public:
     whale(int, int, vector3, vector3);
     int fishCounter; //how many fish the whale has eaten, used for ranking
     void updatePosition(double); //update position every frame based on velocity and time
-    //sight (vector<fish>)); //see the fish around them and determine which ones are in a distance of them
+    //void sight (vector<fish>); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
     decision (); //using its traits, decide what to do on a turn
     eatFish (); //reports which fish need to be removed from the list and adds to fishCounter
@@ -68,6 +68,15 @@ void whale::updatePosition (double timeDiff)
     position.x += velocity.x * timeDiff;
     position.y += velocity.y * timeDiff;
     position.z += velocity.z * timeDiff;
+}
+
+void whale::sight (vector<fish>)
+{
+    //calculate the furthest locations (in a sphere) the whale can eat and store in vector 3
+
+    //go through the fish vector
+
+    //check the fish position against the whale position
 }
 
 #endif /*whale_hpp*/
