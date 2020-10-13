@@ -69,8 +69,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
     plane* _plane = nullptr;
     triangle* _triangle = nullptr;
     mesh* _mesh = nullptr;
-    for (int i = 0; i < objects.size(); i++) {
-        
+    for (int i = 0; i < objects.size(); i++) {  
         if ((_point = dynamic_cast<vector3*>(objects[i]))) {
             vector3 P = point_relative_to_camera(*_point);
             if (P.y > clippingPlane) {

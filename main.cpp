@@ -77,14 +77,15 @@ int main(int, char const**) {
     vector<vector3> points;
     vector<vector<int>> indicies;
     ifstream myfile;
-    myfile.open(resourcePath() + "Dragon.obj");
+    myfile.open(resourcePath() + "DragonEye.obj");
     string l;
     int c = 0;
     bool going = true;
     while(getline(myfile, l)) {
+        going = true;
         vector<string> split = {""};
         for (int i = 0; i < l.size(); i++) {
-            if (l[i] == '/' || l[i] == '\\') {
+            if (l[i] == '/' || l[i] == '\r') {
                 going = false;
             } else if (l[i] == ' ') {
                 going = true;
@@ -100,7 +101,11 @@ int main(int, char const**) {
 //                verticies.push_back(new vector3(stof(split[0]), -stof(split[1]), stof(split[2])));
 //                c=0;
 //            }
-            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
+//            for (int i = 0; i < split.size(); i++) {
+//                cout << split[i] << ", ";
+//            }
+//            cout << endl;
+            points.push_back(vector3(stof(split[0]), stof(split[1]), stof(split[2])));
         } else if (split[0] == "f") {
             split.erase(split.begin());
             indicies.push_back(vector<int>());
@@ -126,16 +131,16 @@ int main(int, char const**) {
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), M_PI / 3, 1);
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(60);
     
     
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false;
     while (window.isOpen()) {
-        cam.position.print();
-        cam.forward.print();
-        cam.up.print();
-        cam.right.print();
-        cout << endl;
+//        cam.position.print();
+//        cam.forward.print();
+//        cam.up.print();
+//        cam.right.print();
+//        cout << endl;
         active = window.hasFocus();
         Event event;
         while (window.pollEvent(event)) {
