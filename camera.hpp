@@ -61,7 +61,7 @@ private:
 
 std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
     std::vector<object2D*> shapes;
-    shapes.reserve(objects.size());
+//    shapes.reserve(objects.size());
     std::vector<object*> objs;
     
     vector3* _point = nullptr;
@@ -127,19 +127,25 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     R(point_relative_to_camera(_triangle->v3)),
                     S(0, 0, 0);
             
-            objs.push_back(new triangle(P, Q, R));
             
             if (P.y < clippingPlane) {
                 if (Q.y < clippingPlane) {
-                    P = move_to_clipping_plane(P, R);
-                    Q = move_to_clipping_plane(Q, R);
-                    if (fov != 0) {
-                        P /= (P.y*tan(fov/2));
-                        Q /= (Q.y*tan(fov/2));
-                        R /= (R.y*tan(fov/2));
+                    if (R.y < clippingPlane) {
+                        
+                    } else {
+                        objs.push_back(new triangle(P, Q, R));
+                        P = move_to_clipping_plane(P, R);
+                        Q = move_to_clipping_plane(Q, R);
+                        if (fov != 0) {
+                            P /= (P.y*tan(fov/2));
+                            Q /= (Q.y*tan(fov/2));
+                            R /= (R.y*tan(fov/2));
+                        }
+                        shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                     }
-                    shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
+                    
                 } else if (R.y < clippingPlane) {
+                    objs.push_back(new triangle(P, Q, R));
                     P = move_to_clipping_plane(P, Q);
                     R = move_to_clipping_plane(R, Q);
                     if (fov != 0) {
@@ -149,6 +155,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     }
                     shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                 } else {
+                    objs.push_back(new triangle(P, Q, R));
                     S = move_to_clipping_plane(P, Q);
                     P = move_to_clipping_plane(P, R);
                     if (fov != 0) {
@@ -161,6 +168,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                 }
             } else if (R.y < clippingPlane) {
                 if (Q.y < clippingPlane) {
+                    objs.push_back(new triangle(P, Q, R));
                     R = move_to_clipping_plane(R, P);
                     Q = move_to_clipping_plane(Q, P);
                     if (fov != 0) {
@@ -170,6 +178,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     }
                     shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                 } else {
+                    objs.push_back(new triangle(P, Q, R));
                     S = move_to_clipping_plane(R, P);
                     R = move_to_clipping_plane(R, Q);
                     if (fov != 0) {
@@ -181,6 +190,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     shapes.push_back(new convexshape({P, Q, R, S}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                 }
             } else if (Q.y < clippingPlane) {
+                objs.push_back(new triangle(P, Q, R));
                 S = move_to_clipping_plane(Q, R);
                 Q = move_to_clipping_plane(Q, P);
                 if (fov != 0) {
@@ -191,6 +201,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                 }
                 shapes.push_back(new convexshape({P, Q, S, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
             } else {
+                objs.push_back(new triangle(P, Q, R));
                 if (fov != 0) {
                     P /= (P.y*tan(fov/2));
                     Q /= (Q.y*tan(fov/2));
@@ -207,19 +218,23 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                         R(point_relative_to_camera(((*_mesh)[i]).v3)),
                         S(0, 0, 0);
                 
-                objs.push_back(new triangle(P, Q, R));
-                
                 if (P.y < clippingPlane) {
                     if (Q.y < clippingPlane) {
-                        P = move_to_clipping_plane(P, R);
-                        Q = move_to_clipping_plane(Q, R);
-                        if (fov != 0) {
-                            P /= (P.y*tan(fov/2));
-                            Q /= (Q.y*tan(fov/2));
-                            R /= (R.y*tan(fov/2));
+                        if (R.y < clippingPlane) {
+                            
+                        } else {
+                            objs.push_back(new triangle(P, Q, R));
+                            P = move_to_clipping_plane(P, R);
+                            Q = move_to_clipping_plane(Q, R);
+                            if (fov != 0) {
+                                P /= (P.y*tan(fov/2));
+                                Q /= (Q.y*tan(fov/2));
+                                R /= (R.y*tan(fov/2));
+                            }
+                            shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                         }
-                        shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                     } else if (R.y < clippingPlane) {
+                        objs.push_back(new triangle(P, Q, R));
                         P = move_to_clipping_plane(P, Q);
                         R = move_to_clipping_plane(R, Q);
                         if (fov != 0) {
@@ -229,6 +244,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                         }
                         shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                     } else {
+                        objs.push_back(new triangle(P, Q, R));
                         S = move_to_clipping_plane(P, Q);
                         P = move_to_clipping_plane(P, R);
                         if (fov != 0) {
@@ -241,6 +257,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     }
                 } else if (R.y < clippingPlane) {
                     if (Q.y < clippingPlane) {
+                        objs.push_back(new triangle(P, Q, R));
                         R = move_to_clipping_plane(R, P);
                         Q = move_to_clipping_plane(Q, P);
                         if (fov != 0) {
@@ -250,6 +267,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                         }
                         shapes.push_back(new convexshape({P, Q, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                     } else {
+                        objs.push_back(new triangle(P, Q, R));
                         S = move_to_clipping_plane(R, P);
                         R = move_to_clipping_plane(R, Q);
                         if (fov != 0) {
@@ -261,6 +279,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                         shapes.push_back(new convexshape({P, Q, R, S}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                     }
                 } else if (Q.y < clippingPlane) {
+                    objs.push_back(new triangle(P, Q, R));
                     S = move_to_clipping_plane(Q, R);
                     Q = move_to_clipping_plane(Q, P);
                     if (fov != 0) {
@@ -271,6 +290,7 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     }
                     shapes.push_back(new convexshape({P, Q, S, R}, sf::Color(_triangle->c.r, _triangle->c.g, _triangle->c.b)));
                 } else {
+                    objs.push_back(new triangle(P, Q, R));
                     if (fov != 0) {
                         P /= (P.y*tan(fov/2));
                         Q /= (Q.y*tan(fov/2));

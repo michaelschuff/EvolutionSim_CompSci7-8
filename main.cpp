@@ -77,55 +77,65 @@ int main(int, char const**) {
     vector<vector3> points;
     vector<vector<int>> indicies;
     ifstream myfile;
-    myfile.open(resourcePath() + "dragon1.obj");
+    myfile.open(resourcePath() + "Dragon.obj");
     string l;
     int c = 0;
+    bool going = true;
     while(getline(myfile, l)) {
         vector<string> split = {""};
         for (int i = 0; i < l.size(); i++) {
-            if (l[i] == ' ') {
+            if (l[i] == '/' || l[i] == '\\') {
+                going = false;
+            } else if (l[i] == ' ') {
+                going = true;
                 split.push_back("");
-            } else {
+            } else if (going) {
                 split[split.size() - 1] += l[i];
             }
         }
         if (split[0] == "v") {
-            c++;
-            if (c == 100) {
-                verticies.push_back(new vector3(stof(split[1]), -stof(split[2]), stof(split[3])));
-                c=0;
-            }
-//            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
-        } else if (split[0] == "f") {
-//            split.erase(split.begin());
-//            indicies.push_back(vector<int>());
-//            for (int i = 0; i < split.size(); i++) {
-//                if (is_number(split[i])) {
-//                    indicies[indicies.size() - 1].push_back(stoi(split[i]));
-//                }
+            split.erase(split.begin());
+//            c++;
+//            if (c == 1) {
+//                verticies.push_back(new vector3(stof(split[0]), -stof(split[1]), stof(split[2])));
+//                c=0;
 //            }
+            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
+        } else if (split[0] == "f") {
+            split.erase(split.begin());
+            indicies.push_back(vector<int>());
+            for (int i = 0; i < split.size(); i++) {
+                if (is_number(split[i])) {
+                    indicies[indicies.size() - 1].push_back(stoi(split[i]));
+                }
+            }
         }
     }
     
     myfile.close();
     
-//    for (int i = 0; i < indicies.size(); i+=10) {
-//        for (int j = 1; j + 1 < indicies[i].size(); j++) {
-//            r = ((float) 255*rand()/RAND_MAX);
-//            g = ((float) 255*rand()/RAND_MAX);
-//            b = ((float) 255*rand()/RAND_MAX);
-//            verticies.push_back(new triangle(vector3(points[indicies[i][0]]), vector3(points[indicies[i][j]]), vector3(points[indicies[i][j+1]]), color(r, g, b)));
-//        }
-//    }
+    for (int i = 0; i < indicies.size(); i++) {
+        for (int j = 1; j + 1 < indicies[i].size(); j++) {
+            r = ((float) 255*rand()/RAND_MAX);
+            g = ((float) 255*rand()/RAND_MAX);
+            b = ((float) 255*rand()/RAND_MAX);
+            verticies.push_back(new triangle(vector3(points[indicies[i][0] - 1]), vector3(points[indicies[i][j] - 1]), vector3(points[indicies[i][j+1] - 1]), color(r, g, b)));
+        }
+    }
     double sensitivity = 0.1, speed = 5;
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), M_PI / 3, 1);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
     
     
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false;
     while (window.isOpen()) {
+        cam.position.print();
+        cam.forward.print();
+        cam.up.print();
+        cam.right.print();
+        cout << endl;
         active = window.hasFocus();
         Event event;
         while (window.pollEvent(event)) {

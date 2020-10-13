@@ -217,8 +217,6 @@ void vector3::project_onto(vector3 v) { //project v1 onto v2
 
 std::string remove_terminating_zeros(std::string str) {
     str.erase(str.find_last_not_of('0') + 1, std::string::npos);
-    str.erase(str.find_last_not_of('7') + 1, std::string::npos);
-    str.erase(str.find_last_not_of('0') + 1, std::string::npos);
     str.erase(str.find_last_not_of('.') + 1, std::string::npos);
     return str;
 }
