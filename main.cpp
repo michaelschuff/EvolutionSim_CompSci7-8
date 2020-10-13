@@ -24,7 +24,8 @@ int main() {
     time_t endTime;
     double timeDifference;
     vector<whale> whaleList;
-    int numWhales = 10;
+    int numWhales = 10; //the total number of whales that have ever existed
+
 
     //make whales w/ random starting traits
     for (int ww = 0; ww < numWhales; ww ++)

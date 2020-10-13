@@ -16,7 +16,7 @@ class whale : public agent
 public:
     whale(int, int, vector3, vector3);
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    updatePosition(double); //update position every frame based on velocity and time
+    void updatePosition(double); //update position every frame based on velocity and time
     //sight (vector<fish>)); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
     decision (); //using its traits, decide what to do on a turn
@@ -63,7 +63,7 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
     position = pos;
 }
 
-updatePosition (double timeDiff)
+void whale::updatePosition (double timeDiff)
 {
     position.x += velocity.x * timeDiff;
     position.y += velocity.y * timeDiff;
