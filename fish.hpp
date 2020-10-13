@@ -41,15 +41,14 @@ fish :: fish(vector3 pos = vector3(), vector3 vel = vector3(), int id = 0): agen
 std :: vector <agent> fish :: otherFishList(std::vector<agent> allAgents)
 {
     std::vector<agent> test = allAgents;
-    //not working right now
-    /*for(int ii = test.size()-1; ii >= 0; ii --)
+
+    for(int ii = test.size()-1; ii >= 0; ii --)
     {
         //if (test.id == my id) { remove test}
-        if(test[ii].id == id) { test.erase(ii); }
+        if(test[ii].id == id) { test.erase(test.begin() + ii); }
         //if (test is a whale) { remove test}
 
-    }*/
-
+    }
     return test;
 }
 
