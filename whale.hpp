@@ -6,6 +6,7 @@
 #include<time.h>
 #include "vector3.hpp"
 #include "agent.hpp"
+#include "fish.hpp"
 
 /*
 This file sets up the whale class, which is a child of the agent class.
@@ -70,13 +71,24 @@ void whale::updatePosition (double timeDiff)
     position.z += velocity.z * timeDiff;
 }
 
-void whale::sight (vector<fish>)
+void whale::sight (vector<fish> possibleFood)
 {
-    //calculate the furthest locations (in a sphere) the whale can eat and store in vector 3
+    vector3 difference;
+    int eatRadius = 5;
+    int
 
-    //go through the fish vector
+    for (int ff = 0; ff < possibleFood.size(); ff ++)
+    {
+        //find the differences in x, y, and z values
+        difference.x = possibleFood[ff].position.x - position.x;
+        difference.y = possibleFood[ff].position.y - position.y;
+        difference.z = possibleFood[ff].position.z - position.z;
 
-    //check the fish position against the whale position
+        //use 3D Pythagorean theorem to find the radius value
+
+
+        //if it's less than r add that fish's id to the list
+    }
 }
 
 #endif /*whale_hpp*/
