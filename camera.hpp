@@ -32,7 +32,7 @@ public:
     float clippingPlane;
     int width, height;
     
-    camera(vector3 _position, vector3 _forward, vector3 _up, vector3 _right, float _fov = M_PI/3, float _clippingPlane = 0.5) : position(_position), forward(_forward), up(_up), right(_right), fov(_fov), clippingPlane(_clippingPlane) { }
+    camera(vector3 _position, vector3 _forward, vector3 _up, vector3 _right, float _fov = 3.14159/3, float _clippingPlane = 0.5) : position(_position), forward(_forward), up(_up), right(_right), fov(_fov), clippingPlane(_clippingPlane) { }
     camera(const camera &c) : position(c.position), forward(c.forward), right(c.right), up(c.up), target(c.target), fov(c.fov) { }
     
     std::vector<object2D*> get_view(std::vector<object*>);

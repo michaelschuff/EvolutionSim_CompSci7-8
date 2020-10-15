@@ -116,9 +116,9 @@ int main(int, char const**) {
 //            }
 //        }
 //    }
-//    
+//
 //    myfile.close();
-//    
+//
 //    for (int i = 0; i < indicies.size(); i++) {
 //        for (int j = 1; j + 1 < indicies[i].size(); j++) {
 //            r = ((float) 255*rand()/RAND_MAX);
@@ -130,7 +130,7 @@ int main(int, char const**) {
     double sensitivity = 0.1, speed = 5;
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
-    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), M_PI / 3, 1);
+    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(60);
     
     
@@ -240,10 +240,10 @@ int main(int, char const**) {
         if (active) {
             Vector2i mouse_position = Mouse::getPosition(window);
             if (mouse_position.x != width / 2) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * M_PI / 180.0);
+                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
-            if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * M_PI / 180.0).y > 0) {
-                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * M_PI / 180.0);
+            if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
+                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
             }
             Mouse::setPosition(Vector2i(width/2, height/2), window);
             
@@ -289,7 +289,7 @@ int main(int, char const**) {
                     RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
                     r.setOrigin(0.5, 0.5);
                     r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
-                    r.rotate(-_rect->theta * 180.0 / M_PI);
+                    r.rotate(-_rect->theta * 180.0 / 3.14159);
                     r.setFillColor(_rect->c);
 
                     window.draw(r);
