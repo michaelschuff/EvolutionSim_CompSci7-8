@@ -16,7 +16,7 @@
 #include "color.hpp"
 #include <fstream>
 #include <string>
-#include "ResourcePath.hpp"
+//#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
@@ -61,72 +61,72 @@ int main(int, char const**) {
 //        new line(p8, p5),
 //        new line(p8, p6),
 //        new line(p8, p7),
-//        new triangle(p4, p6, p8, v[0]),
-//        new triangle(p4, p8, p5, v[1]),
-//        new triangle(p6, p2, p7, v[2]),
-//        new triangle(p6, p7, p8, v[3]),
-//        new triangle(p2, p1, p3, v[4]),
-//        new triangle(p2, p3, p7, v[5]),
-//        new triangle(p1, p4, p5, v[6]),
-//        new triangle(p1, p5, p3, v[7]),
-//        new triangle(p5, p8, p7, v[8]),
-//        new triangle(p5, p7, p3, v[9]),
-//        new triangle(p6, p1, p2, v[10]),
-//        new triangle(p6, p4, p1, v[11]),
+        new triangle(p4, p6, p8, v[0]),
+        new triangle(p4, p8, p5, v[1]),
+        new triangle(p6, p2, p7, v[2]),
+        new triangle(p6, p7, p8, v[3]),
+        new triangle(p2, p1, p3, v[4]),
+        new triangle(p2, p3, p7, v[5]),
+        new triangle(p1, p4, p5, v[6]),
+        new triangle(p1, p5, p3, v[7]),
+        new triangle(p5, p8, p7, v[8]),
+        new triangle(p5, p7, p3, v[9]),
+        new triangle(p6, p1, p2, v[10]),
+        new triangle(p6, p4, p1, v[11]),
     };
-    vector<vector3> points;
-    vector<vector<int>> indicies;
-    ifstream myfile;
-    myfile.open(resourcePath() + "DragonEye.obj");
-    string l;
-    int c = 0;
-    bool going = true;
-    while(getline(myfile, l)) {
-        going = true;
-        vector<string> split = {""};
-        for (int i = 0; i < l.size(); i++) {
-            if (l[i] == '/' || l[i] == '\r') {
-                going = false;
-            } else if (l[i] == ' ') {
-                going = true;
-                split.push_back("");
-            } else if (going) {
-                split[split.size() - 1] += l[i];
-            }
-        }
-        if (split[0] == "v") {
-            split.erase(split.begin());
-//            c++;
-//            if (c == 1) {
-//                verticies.push_back(new vector3(stof(split[0]), -stof(split[1]), stof(split[2])));
-//                c=0;
+//    vector<vector3> points;
+//    vector<vector<int>> indicies;
+//    ifstream myfile;
+//    myfile.open(resourcePath() + "DragonEye.obj");
+//    string l;
+//    int c = 0;
+//    bool going = true;
+//    while(getline(myfile, l)) {
+//        going = true;
+//        vector<string> split = {""};
+//        for (int i = 0; i < l.size(); i++) {
+//            if (l[i] == '/' || l[i] == '\r') {
+//                going = false;
+//            } else if (l[i] == ' ') {
+//                going = true;
+//                split.push_back("");
+//            } else if (going) {
+//                split[split.size() - 1] += l[i];
 //            }
+//        }
+//        if (split[0] == "v") {
+//            split.erase(split.begin());
+////            c++;
+////            if (c == 1) {
+////                verticies.push_back(new vector3(stof(split[0]), -stof(split[1]), stof(split[2])));
+////                c=0;
+////            }
+////            for (int i = 0; i < split.size(); i++) {
+////                cout << split[i] << ", ";
+////            }
+////            cout << endl;
+//            points.push_back(vector3(stof(split[0]), stof(split[1]), stof(split[2])));
+//        } else if (split[0] == "f") {
+//            split.erase(split.begin());
+//            indicies.push_back(vector<int>());
 //            for (int i = 0; i < split.size(); i++) {
-//                cout << split[i] << ", ";
+//                if (is_number(split[i])) {
+//                    indicies[indicies.size() - 1].push_back(stoi(split[i]));
+//                }
 //            }
-//            cout << endl;
-            points.push_back(vector3(stof(split[0]), stof(split[1]), stof(split[2])));
-        } else if (split[0] == "f") {
-            split.erase(split.begin());
-            indicies.push_back(vector<int>());
-            for (int i = 0; i < split.size(); i++) {
-                if (is_number(split[i])) {
-                    indicies[indicies.size() - 1].push_back(stoi(split[i]));
-                }
-            }
-        }
-    }
-    
-    myfile.close();
-    
-    for (int i = 0; i < indicies.size(); i++) {
-        for (int j = 1; j + 1 < indicies[i].size(); j++) {
-            r = ((float) 255*rand()/RAND_MAX);
-            g = ((float) 255*rand()/RAND_MAX);
-            b = ((float) 255*rand()/RAND_MAX);
-            verticies.push_back(new triangle(vector3(points[indicies[i][0] - 1]), vector3(points[indicies[i][j] - 1]), vector3(points[indicies[i][j+1] - 1]), color(r, g, b)));
-        }
-    }
+//        }
+//    }
+//    
+//    myfile.close();
+//    
+//    for (int i = 0; i < indicies.size(); i++) {
+//        for (int j = 1; j + 1 < indicies[i].size(); j++) {
+//            r = ((float) 255*rand()/RAND_MAX);
+//            g = ((float) 255*rand()/RAND_MAX);
+//            b = ((float) 255*rand()/RAND_MAX);
+//            verticies.push_back(new triangle(vector3(points[indicies[i][0] - 1]), vector3(points[indicies[i][j] - 1]), vector3(points[indicies[i][j+1] - 1]), color(r, g, b)));
+//        }
+//    }
     double sensitivity = 0.1, speed = 5;
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
