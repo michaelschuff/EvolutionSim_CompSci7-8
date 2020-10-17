@@ -9,10 +9,15 @@ public:
     vector3 position;
     vector3 velocity;
 
-    int id;
+    static int nextID;
+    int id; //individual agent id
 
 protected:
-    agent(vector3 pos, vector3 vel, int ID) : position(pos), velocity(vel),  id(ID) {} //agent constructor takes in two vector3's to create instance of agent
+    agent(vector3 pos, vector3 vel) : position(pos), velocity(vel), id(nextID)
+    {
+        nextID ++;
+    } //agent constructor takes in two vector3s to create instance of agent
 };
+
 
 #endif /* agent_hpp */

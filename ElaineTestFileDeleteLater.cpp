@@ -13,17 +13,21 @@ using namespace sf;
 using namespace std;
 
 //global variable. Turn into other type variable once I figure out how
-vector<agent> allAgents = vector<agent>();
+vector<fish> allFish = vector<fish>();
+
+int agent::nextID = 0; ///Necessary line
 
 int main(int, char const**) {
-    fish MrDarp(vector3(), vector3(20, 0, 0));
 
-    allAgents.push_back(MrDarp);
+    //add new fish to the allAgents vector and update an id variable
+    for(int ii = 0; ii < 10; ii ++) {
+        fish MrDarp(vector3(0, 100*(ii%5+1), ii*50), vector3(0, ii, 0));
+        allFish.push_back(MrDarp);
+        cout<<MrDarp.id<<endl;
+        fish JohnNash;
+        cout<<JohnNash.id<<endl;
+    }
 
-    cout<<"Mr. Darp's x velocity is "<<MrDarp.velocity.x<<endl;
-
-    MrDarp.velocity += vector3(0, 50, 0);
-    cout<<"Mr. Darp's y velocity is now "<<MrDarp.velocity.y<<endl;
 
     return EXIT_SUCCESS;
 }
