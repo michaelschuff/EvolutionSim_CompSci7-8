@@ -36,7 +36,7 @@ public:
     vector3() : object(), x(0), y(0), z(0) {}
     vector3(float x1, float y1, float z1, color _c = color(), bool visable = true) : object(visable), x(x1), y(y1), z(z1), c(_c) {}
     vector3(const vector3 &v, color _c, bool visable = true) : object(visable), x(v.x), y(v.y), z(v.z), c(_c) {}//copy constructor
-    
+
     vector3 operator+(const vector3 &v);
     vector3 &operator+=(const vector3 &v);
     vector3 operator-(const vector3 &v);
@@ -49,15 +49,15 @@ public:
     vector3 &operator=(const vector3 &v);
     vector3 operator-();
     float &operator[](int i) const;
-    
+
     void cross(const vector3 &v);                       //vector becomes the cross product of the vector and the parameter
     void project_onto(vector3 v);
-    
+
     void rotate(vector3 axis, float theta);
     void rotate(const quaternion &q);
     vector3 rotated(vector3 axis, float theta);        //returns rotated vector
     vector3 rotated(const quaternion &q);
-    
+
     float phi();
     float theta();
     void normalize();                                   //sets magnitude to 1
@@ -117,7 +117,7 @@ vector3 vector3::operator/(float k){
 
 vector3 &vector3::operator/=(float k) {
     if (k == 0) {
-        return;
+        return *this;
     }
     assert(k!=0);
     x /= k;

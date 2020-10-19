@@ -132,9 +132,11 @@ int main(int, char const**) {
     window.setMouseCursorVisible(false);
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(60);
+
     
     
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
+
     while (window.isOpen()) {
 //        cam.position.print();
 //        cam.forward.print();
@@ -260,11 +262,13 @@ int main(int, char const**) {
                 }
             }
         }
-        
+
         if (active) {
+
             Vector2i mouse_position = Mouse::getPosition(window);
             cout << mouse_position.x << "   " << mouse_position.y << endl;
             if (mouse_position.x != width / 2) {
+
 //                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
             if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
@@ -288,35 +292,36 @@ int main(int, char const**) {
                 cam.rotate(vector3(0, 1, 0), -sensitivity * 10 * 3.14159 / 180.0);
             }
             
+
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
             }
             if (sDown) {
                 cam.position -= speed * cam.forward / 60.0;
             }
-            
+
             if (aDown) {
                 cam.position -= speed * cam.right / 60.0;
             }
             if (dDown) {
                 cam.position += speed * cam.right / 60.0;
             }
-            
+
             if (eDown) {
                 cam.position += speed * cam.up / 60.0;
             }
             if (qDown) {
                 cam.position -= speed * cam.up / 60.0;
             }
-            
+
             window.clear();
-            
+
             circle* _circ = nullptr;
             rectangle* _rect = nullptr;
             convexshape* _convexshape = nullptr;
-            
-            
-            
+
+
+
             vector<object2D*> shapes = cam.get_view(verticies);
             for (int i = 0; i < shapes.size(); i++) {
                 if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
@@ -345,7 +350,7 @@ int main(int, char const**) {
             }
             window.display();
         }
-        
+
     }
 
     return EXIT_SUCCESS;
