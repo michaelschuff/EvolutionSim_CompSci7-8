@@ -25,22 +25,46 @@ public:
 
     void reportFishNumbers();
 
-private:
     //function to calculate separation velocity. Returns vector3
+    vector3 vSeparation();
     //function to calculate alignment velocity. Returns vector3
+    vector3 vAlignment();
     //function to calculate cohesion velocity. Returns vector3
+    vector3 vCohesion();
+
+private:
+
 
     //void to update velocity
-    //void to update position
+    void updateVelocity();
+    //void to update position based on current velocity
+    void updatePosition();
 
     //function to make vector of only other fish
-    std::vector <fish> otherFishList(std::vector <fish>);
+    std::vector <fish> otherFishList();
+
 };
 
-//allAgents is the list of all agent types. Returns a vector with only fish and not the agent itself. Yes, this works.
-std :: vector <fish> fish :: otherFishList(std::vector<fish> allFish)
+vector3 fish :: vSeparation()
 {
-    std::vector<fish> test = allFish;
+    vector<fish> fish = otherFishList(); //list of other fish
+    vector3 finalV = vector3(0, 0, 0); //will become the returned vector3
+    float r = 5; ///How close fish can be to trigger this. Tweak this later!
+    for(int ii = 0; ii < fish.size(); ii ++) {
+        //if dist btwn me and this fish is less than r...
+        if(position.distance(fish[ii].position) < r) {
+            fish[ii].position.print();
+            finalV += position - fish[ii].position; //Possibly multiply by some value
+        }
+    }
+
+    ///may want to scale finalV by some amount
+    return finalV;
+}
+//allAgents is the list of all agent types. Returns a vector with only fish and not the agent itself. Yes, this works.
+std :: vector <fish> fish :: otherFishList()
+{
+    std::vector<fish> test = *allFishList;
 
     for(int ii = test.size()-1; ii >= 0; ii --)
     {
