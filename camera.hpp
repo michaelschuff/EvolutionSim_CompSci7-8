@@ -126,12 +126,8 @@ std::vector<object2D*> camera::get_view(std::vector<object*> objects) {
                     R(point_relative_to_camera(_triangle->v3)),
                     S(0, 0, 0);
             vector3 normal = cross_product(Q - P, R - P);
-            double theta_x = atan2(P.x, P.y * tan(fov/2));
-            normal.rotate(vector3(0, 0, 1), theta_x);
-            double theta_z = atan2(P.z, P.y * tan(fov/2));
-            normal.rotate(vector3(1, 0, 0), -theta_z);
             
-            if (normal.y < 0) {
+            if (dot_product(normal, (P + Q + R) / 3) < 0) {
                 if (P.y < clippingPlane) {
                     if (Q.y < clippingPlane) {
                         if (R.y < clippingPlane) {
