@@ -24,7 +24,7 @@ public:
     //void updateFish();
 
     void reportFishNumbers();
-
+    ///these should only be used if there is more than one fish around
     //function to calculate separation velocity. Returns vector3
     vector3 vSeparation();
     //function to calculate alignment velocity. Returns vector3
@@ -45,6 +45,7 @@ private:
 
 };
 
+//not tested
 vector3 fish :: vSeparation()
 {
     vector<fish> fish = otherFishList(); //list of other fish
@@ -59,7 +60,49 @@ vector3 fish :: vSeparation()
     }
 
     ///may want to scale finalV by some amount
-    return finalV;
+    finalV -= velocity;
+    return finalV.normalized();
+}
+//should work
+vector3 fish :: vAlignment()
+{
+    cout<<"Determining alignment velocity of the fish (should point in same direction)"<<endl;
+    vector<fish> fish = otherFishList();
+    cout<<"I'm going to consider the positions of "<<fish.size()<<" other fish"<<endl;
+
+    vector3 finalV = vector3(0, 0, 0);
+    for(int ii = 0; ii < fish.size(); ii ++) {
+        cout<<" * fish "<<fish[ii].id<<" has velocity ";
+        fish[ii].velocity.print();
+
+        finalV += fish[ii].velocity;
+    }
+    finalV /= fish.size();
+    finalV -= velocity;
+
+    if(finalV.x == 0 && finalV.y == 0 && finalV.z == 0) {return vector3(0, 0, 0);}
+    return finalV.normalized(); ///may want to scale differently
+}
+
+//should work
+vector3 fish :: vCohesion()
+{
+    cout<<"Determining cohesive velocity of fish "<<id<<endl;
+    vector<fish> fish = otherFishList();
+    cout<<"I'm going to consider the positions of "<<fish.size()<<" other fish"<<endl;
+
+    vector3 avgPos = vector3(0, 0, 0);
+
+    for(int ii = 0; ii < fish.size(); ii ++) {
+        cout<<" * fish "<<fish[ii].id<<" has position ";
+        fish[ii].position.print();
+        avgPos += fish[ii].position;
+    }
+    avgPos /= fish.size();
+    avgPos -= position;
+
+    if(avgPos.x == 0 && avgPos.y == 0 && avgPos.z == 0) {return vector3(0, 0, 0);}
+    return avgPos.normalized(); ///may want to scale differently
 }
 //allAgents is the list of all agent types. Returns a vector with only fish and not the agent itself. Yes, this works.
 std :: vector <fish> fish :: otherFishList()

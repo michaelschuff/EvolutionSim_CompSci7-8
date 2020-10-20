@@ -21,10 +21,11 @@ vector<fish> *fish::allFishList = &allFish;
 int main(int, char const**) {
 
     //two fish, 1 unit apart
-    allFish.push_back(fish(vector3(0, 0, 0), vector3(0, 0, 0)));
-    allFish.push_back(fish(vector3(0, 1, 0), vector3(0, 0, 0)));
-    allFish.push_back(fish(vector3(1, 0, 0), vector3(0, 0, 0)));
-    allFish[0].vSeparation().print();
+    allFish.push_back(fish(vector3(-1, 0, 0), vector3(1, 0, 0)));
+    allFish.push_back(fish(vector3(0, 1, 0), vector3(-1, 0, 0)));
+    allFish.push_back(fish(vector3(1, 0, 0), vector3(1, 0, 0)));
+    allFish.push_back(fish(vector3(0, -1, 0), vector3(0, 0, 0)));
 
+    allFish[3].vAlignment().print();
     return EXIT_SUCCESS;
 }
