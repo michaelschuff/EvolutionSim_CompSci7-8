@@ -29,11 +29,11 @@ bool is_number(const std::string& s) {
 int main(int, char const**) {
     srand(time(NULL));
     const int width = 800, height = 800;
-    vector3 p1(-0.5, -0.5, -0.5),
-            p2( 0.5, -0.5, -0.5),
-            p3(-0.5,  0.5, -0.5),
-            p4(-0.5, -0.5,  0.5),
-            p5(-0.5,  0.5,  0.5),
+    vector3 p1(-1, 1, 0),
+            p2( 0.5, 1, 0.5),
+            p3(0.5,  0, 0.5),
+            p4(0.5, 1,  -0.5),
+            p5(0.5,  0,  -0.5),
             p6( 0.5, -0.5,  0.5),
             p7( 0.5,  0.5, -0.5),
             p8( 0.5,  0.5,  0.5);
@@ -61,18 +61,19 @@ int main(int, char const**) {
 //        new line(p8, p5),
 //        new line(p8, p6),
 //        new line(p8, p7),
-        new triangle(p4, p6, p8, v[0]),
-        new triangle(p4, p8, p5, v[1]),
-        new triangle(p6, p2, p7, v[2]),
-        new triangle(p6, p7, p8, v[3]),
+//        new triangle(p4, p6, p8, v[0]),
+//        new triangle(p4, p8, p5, v[1]),
+//        new triangle(p6, p2, p7, v[2]),
+        //Main body
+        new triangle(p1, p5, p3, v[3]),
         new triangle(p2, p1, p3, v[4]),
-        new triangle(p2, p3, p7, v[5]),
+        new triangle(p1, p4, p2, v[5]),
         new triangle(p1, p4, p5, v[6]),
-        new triangle(p1, p5, p3, v[7]),
-        new triangle(p5, p8, p7, v[8]),
-        new triangle(p5, p7, p3, v[9]),
-        new triangle(p6, p1, p2, v[10]),
-        new triangle(p6, p4, p1, v[11]),
+//        new triangle(p2, p3, p6, v[7]),
+//        new triangle(p5, p8, p7, v[8]),
+//        new triangle(p5, p7, p3, v[9]),
+//        new triangle(p6, p1, p2, v[10]),
+//        new triangle(p6, p4, p1, v[11]),
     };
 //    vector<vector3> points;
 //    vector<vector<int>> indicies;
@@ -241,11 +242,11 @@ int main(int, char const**) {
 
             Vector2i mouse_position = Mouse::getPosition(window);
             if (mouse_position.x != width / 2) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
+                //cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
 
             }
             if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
+                //cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
 
             }
             Mouse::setPosition(Vector2i(width/2, height/2), window);
