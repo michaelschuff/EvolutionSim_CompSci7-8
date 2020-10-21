@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include<SFML/Graphics.hpp>
 
 #include "vector3.hpp"
 #include "agent.hpp"
@@ -14,14 +15,19 @@ public:
 
     static vector<fish> *allFishList; //pointer to vector in main. Every fish can see every other fish, so this is static
 
+    sf::CircleShape Shape2D; ///Delete later
+    double vision; ///could be private
+
     //constructor. Same as agent constructor for now.
     fish(vector3 pos = vector3(), vector3 vel = vector3()): agent(pos, vel)
     {
+        vision = 200;
+        Shape2D.setRadius(10); ///Delete later
     }
 
     /*Function that should be run repeatedly in update area (while loop in main).
     Does everything that needs to be done repeatedly (updating velocity, position, physical appearance, etc)*/
-    //void updateFish();
+    void updateFish();
 
     void reportFishNumbers();
     ///these should only be used if there is more than one fish around
@@ -32,8 +38,9 @@ public:
     //function to calculate cohesion velocity. Returns vector3
     vector3 vCohesion();
 
-private:
 
+
+private:
 
     //void to update velocity
     void updateVelocity();
@@ -45,64 +52,95 @@ private:
 
 };
 
-//not tested
+void fish :: updateFish()
+{
+    updateVelocity();
+    updatePosition();
+    Shape2D.setPosition(position.x, position.y);
+}
+
+void fish :: updateVelocity()
+{
+    velocity += (3*vSeparation() + 0.2*vAlignment() + vCohesion())*0.25;
+    velocity.normalize(); //might wanna change this
+}
+
+void fish :: updatePosition()
+{
+    position += velocity*0.5; //scale by something?
+}
+//should work
 vector3 fish :: vSeparation()
 {
     vector<fish> fish = otherFishList(); //list of other fish
     vector3 finalV = vector3(0, 0, 0); //will become the returned vector3
-    float r = 5; ///How close fish can be to trigger this. Tweak this later!
+
+    float r = vision/4; ///How close fish can be to trigger this. Tweak this later!
+
+    //Evaluate each fish in the array
     for(int ii = 0; ii < fish.size(); ii ++) {
+
+        double distAway = position.distance(fish[ii].position);
+
         //if dist btwn me and this fish is less than r...
-        if(position.distance(fish[ii].position) < r) {
-            fish[ii].position.print();
-            finalV += position - fish[ii].position; //Possibly multiply by some value
+        if(distAway < r && distAway > 0) {
+            //adjust finalV by: vector3 of movement away from fish, but move less for farther away fish
+            finalV += (position - fish[ii].position).normalized()/distAway; //Possibly multiply by some value
         }
     }
 
     ///may want to scale finalV by some amount
-    finalV -= velocity;
-    return finalV.normalized();
+    //finalV -= velocity;
+    if(finalV.x == 0 && finalV.y == 0 && finalV.z == 0) {return vector3(0, 0, 0);}
+    return finalV.normalized(); ///may want to scale differently
 }
 //should work
 vector3 fish :: vAlignment()
 {
-    cout<<"Determining alignment velocity of the fish (should point in same direction)"<<endl;
     vector<fish> fish = otherFishList();
-    cout<<"I'm going to consider the positions of "<<fish.size()<<" other fish"<<endl;
-
     vector3 finalV = vector3(0, 0, 0);
+    double fishConsidering;
+
+    //sum all other fish velocities (if fish can be seen)
     for(int ii = 0; ii < fish.size(); ii ++) {
-        cout<<" * fish "<<fish[ii].id<<" has velocity ";
-        fish[ii].velocity.print();
-
-        finalV += fish[ii].velocity;
+        if(position.distance(fish[ii].position) < vision) {
+            fishConsidering ++;
+            finalV += fish[ii].velocity;
+        }
     }
-    finalV /= fish.size();
-    finalV -= velocity;
 
-    if(finalV.x == 0 && finalV.y == 0 && finalV.z == 0) {return vector3(0, 0, 0);}
-    return finalV.normalized(); ///may want to scale differently
+    //divide to get average
+    if(fishConsidering > 0 && finalV.magnitude() > 0) {
+        finalV /= fishConsidering;
+        return finalV.normalized();
+    }
+    return finalV;
 }
 
 //should work
 vector3 fish :: vCohesion()
 {
-    cout<<"Determining cohesive velocity of fish "<<id<<endl;
     vector<fish> fish = otherFishList();
-    cout<<"I'm going to consider the positions of "<<fish.size()<<" other fish"<<endl;
 
     vector3 avgPos = vector3(0, 0, 0);
+    double fishConsidering = 0;
 
+    //add up all of the positions
     for(int ii = 0; ii < fish.size(); ii ++) {
-        cout<<" * fish "<<fish[ii].id<<" has position ";
-        fish[ii].position.print();
-        avgPos += fish[ii].position;
+        if(position.distance(fish[ii].position) < vision) {
+            fishConsidering ++;
+            avgPos += fish[ii].position;
+        }
     }
-    avgPos /= fish.size();
-    avgPos -= position;
 
-    if(avgPos.x == 0 && avgPos.y == 0 && avgPos.z == 0) {return vector3(0, 0, 0);}
-    return avgPos.normalized(); ///may want to scale differently
+    //make sure we don't divide by 0
+    if(fishConsidering > 0 && avgPos.magnitude() > 0) {
+        avgPos /= fishConsidering;
+        //find vector from current position to average position
+        avgPos -= position;
+        return avgPos.normalized();
+    }
+    return avgPos;
 }
 //allAgents is the list of all agent types. Returns a vector with only fish and not the agent itself. Yes, this works.
 std :: vector <fish> fish :: otherFishList()
