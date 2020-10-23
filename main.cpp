@@ -77,7 +77,7 @@ int main(int, char const**) {
 //    vector<vector3> points;
 //    vector<vector<int>> indicies;
 //    ifstream myfile;
-//    myfile.open(resourcePath() + "DragonEye.obj");
+//    myfile.open(resourcePath() + "aca.obj");
 //    string l;
 //    int c = 0;
 //    bool going = true;
@@ -105,7 +105,7 @@ int main(int, char const**) {
 ////                cout << split[i] << ", ";
 ////            }
 ////            cout << endl;
-//            points.push_back(vector3(stof(split[0]), stof(split[1]), stof(split[2])));
+//            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
 //        } else if (split[0] == "f") {
 //            split.erase(split.begin());
 //            indicies.push_back(vector<int>());
@@ -128,7 +128,7 @@ int main(int, char const**) {
 //        }
 //    }
     double sensitivity = 0.1, speed = 5;
-    RenderWindow window(VideoMode(width, height), "SFML window");
+    RenderWindow window(VideoMode(), "SFML window", Style::Fullscreen);
     window.setMouseCursorVisible(false);
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(60);
