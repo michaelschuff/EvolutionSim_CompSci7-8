@@ -128,7 +128,7 @@ int main(int, char const**) {
 //        }
 //    }
     double sensitivity = 0.1, speed = 5;
-    RenderWindow window(VideoMode(), "SFML window", Style::Fullscreen);
+    RenderWindow window(VideoMode(width, height), "SFML window");
     window.setMouseCursorVisible(false);
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(60);
