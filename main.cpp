@@ -134,7 +134,7 @@ int main(int, char const**) {
     window.setFramerateLimit(60);
     
     
-    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false;
+    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
     while (window.isOpen()) {
 //        cam.position.print();
 //        cam.forward.print();
@@ -161,6 +161,18 @@ int main(int, char const**) {
                         break;
                     case Keyboard::W:
                         wDown = true;
+                        break;
+                    case Keyboard::I:
+                        iDown = true;
+                        break;
+                    case Keyboard::J:
+                        jDown = true;
+                        break;
+                    case Keyboard::K:
+                        kDown = true;
+                        break;
+                    case Keyboard::L:
+                        lDown = true;
                         break;
                     case Keyboard::LShift:
                         qDown = true;
@@ -199,6 +211,18 @@ int main(int, char const**) {
                         break;
                     case Keyboard::W:
                         wDown = false;
+                        break;
+                    case Keyboard::I:
+                        iDown = false;
+                        break;
+                    case Keyboard::J:
+                        jDown = false;
+                        break;
+                    case Keyboard::K:
+                        kDown = false;
+                        break;
+                    case Keyboard::L:
+                        lDown = false;
                         break;
                     case Keyboard::Escape:
                         window.close();
@@ -241,12 +265,28 @@ int main(int, char const**) {
             Vector2i mouse_position = Mouse::getPosition(window);
             cout << mouse_position.x << "   " << mouse_position.y << endl;
             if (mouse_position.x != width / 2) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
+//                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
             if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
+//                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
             }
-            Mouse::setPosition(Vector2i(width/2, height/2), window);
+//            Mouse::setPosition(Vector2i(width/2, height/2), window);
+            
+            if (iDown) {
+                cam.rotate(cam.right, sensitivity * 10 * 3.14159 / 180.0);
+            }
+            
+            if (kDown) {
+                cam.rotate(cam.right, -sensitivity * 10 * 3.14159 / 180.0);
+            }
+            
+            if (jDown) {
+                cam.rotate(vector3(0, 1, 0), sensitivity * 10 * 3.14159 / 180.0);
+            }
+            
+            if (lDown) {
+                cam.rotate(vector3(0, 1, 0), -sensitivity * 10 * 3.14159 / 180.0);
+            }
             
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
