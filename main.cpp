@@ -239,6 +239,7 @@ int main(int, char const**) {
         
         if (active) {
             Vector2i mouse_position = Mouse::getPosition(window);
+            cout << mouse_position.x << "   " << mouse_position.y << endl;
             if (mouse_position.x != width / 2) {
                 cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
