@@ -357,6 +357,8 @@ bool first_is_in_front(vector3 &v, line &l) {return true;};
 bool first_is_in_front(line &l, vector3 &v) {return true;};
 
 bool first_is_in_front(triangle &t1, triangle &t2) {
+    
+    return (t1.v1.y + t1.v2.y + t1.v3.y > t2.v1.y + t2.v2.y + t2.v3.y);
     vector<vector<vector3>> points = {
         {   (t1.v1 + t2.v1)/2,
             (t1.v2 + t2.v2)/2,
@@ -503,7 +505,7 @@ bool check(object* temp1, std::vector<object*> &objects, int i, int j) {
     return false;
 }
 void camera::sort(std::vector<object*> &objects, std::vector<object2D*> &shapes) {
-    int i, j;
+    int j;
     object *temp1;
     object2D *temp2;
     for (int i = 1; i < objects.size(); i++) {
