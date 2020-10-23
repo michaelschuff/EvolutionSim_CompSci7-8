@@ -21,6 +21,7 @@ vector<fish> *fish::allFishList = &allFish;
 int main(int, char const**) {
 
     RenderWindow window(VideoMode(1000, 1000), "2DBoids");
+
     //two fish, 1 unit apart
     allFish.push_back(fish(vector3(100, 200, 0), vector3(-1, 0, 0)));
     allFish.push_back(fish(vector3(200, 200, 0), vector3(0, 0, 0)));
@@ -28,7 +29,6 @@ int main(int, char const**) {
     allFish.push_back(fish(vector3(700, 700, 0), vector3(0, 0, 0)));
     allFish.push_back(fish(vector3(300, 500, 0), vector3(-1, 0, 0)));
     allFish.push_back(fish(vector3(500, 500, 0), vector3(0, 0, 0)));
-    allFish.push_back(fish(vector3(900, 100, 0), vector3(0, 3, 0)));
     allFish.push_back(fish(vector3(400, 700, 0), vector3(0, 0, 0)));
     allFish.push_back(fish(vector3(140, 200, 0), vector3(-1, 0, 0)));
     allFish.push_back(fish(vector3(240, 200, 0), vector3(0, 0, 0)));
@@ -36,10 +36,8 @@ int main(int, char const**) {
     allFish.push_back(fish(vector3(700, 740, 0), vector3(0, 0, 0)));
     allFish.push_back(fish(vector3(340, 500, 0), vector3(-1, 0, 0)));
     allFish.push_back(fish(vector3(500, 540, 0), vector3(0, 0, 0)));
-    allFish.push_back(fish(vector3(940, 100, 0), vector3(0, 3, 0)));
     allFish.push_back(fish(vector3(400, 740, 0), vector3(0, 0, 0)));
 
-    allFish[1].vSeparation().print();
 
     while(window.isOpen())
     {
