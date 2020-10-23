@@ -66,9 +66,16 @@ int main(int, char const**) {
 //        new triangle(p6, p2, p7, v[2]),
         //Main body
         new triangle(p1, p5, p3, v[3]),
+        new triangle(p5, p1, p3, v[3]),
+
         new triangle(p2, p1, p3, v[4]),
+        new triangle(p1, p2, p3, v[4]),
+
         new triangle(p1, p4, p2, v[5]),
+        new triangle(p4, p1, p2, v[5]),
+
         new triangle(p1, p4, p5, v[6]),
+        new triangle(p4,p1 , p5, v[6]),
 //        new triangle(p2, p3, p6, v[7]),
 //        new triangle(p5, p8, p7, v[8]),
 //        new triangle(p5, p7, p3, v[9]),
@@ -134,8 +141,8 @@ int main(int, char const**) {
     camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(60);
 
-    
-    
+
+
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
 
     while (window.isOpen()) {
@@ -278,24 +285,24 @@ int main(int, char const**) {
 //                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
             }
 //            Mouse::setPosition(Vector2i(width/2, height/2), window);
-            
+
             if (iDown) {
                 cam.rotate(cam.right, sensitivity * 10 * 3.14159 / 180.0);
             }
-            
+
             if (kDown) {
                 cam.rotate(cam.right, -sensitivity * 10 * 3.14159 / 180.0);
             }
-            
+
             if (jDown) {
                 cam.rotate(vector3(0, 1, 0), sensitivity * 10 * 3.14159 / 180.0);
             }
-            
+
             if (lDown) {
                 cam.rotate(vector3(0, 1, 0), -sensitivity * 10 * 3.14159 / 180.0);
 
             }
-            
+
 
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
