@@ -23,7 +23,7 @@ public:
     fish(vector3 pos = vector3(), vector3 vel = vector3()): agent(pos, vel)
     {
         srand(time(NULL));
-        vision = 5;
+        vision = 50;
         Shape2D.setRadius(10); ///Delete later
     }
 
@@ -34,7 +34,7 @@ public:
     void reportFishNumbers();
 
 private:
-    const double fishBoundary = 500;
+    const double fishBoundary = 400;
     void fixOffScreen();
     ///these should only be used if there is more than one fish around
     //function to calculate separation velocity. Returns vector3
@@ -66,16 +66,17 @@ void fish :: fixOffScreen()
 {
     vector3 screenCenter = vector3(500, 500, 0);
     //if fish is off screen, move it to the opposite side and let it continue
-    if(position.distance(screenCenter) >= fishBoundary) {
+    if(abs(position.x - screenCenter.x) >= fishBoundary || abs(position.y - screenCenter.y) >= fishBoundary) {
         velocity *= -1;
     }
 }
 
 void fish :: updateVelocity()
 {
-    velocity += (vSeparation() + vAlignment() + vCohesion())*0.25;
+    velocity += (3*vSeparation() + 0.2*vAlignment() + 2*vCohesion())*0.1;
     if(velocity.magnitude() > 0) {
         velocity.normalize(); //might wanna change this
+        velocity *= 1.5;
     }
 }
 
@@ -88,7 +89,7 @@ vector3 fish :: vSeparation()
 {
     vector3 finalV = vector3(0, 0, 0); //will become the returned vector3
 
-    float r = vision/4; ///How close fish can be to trigger this. Tweak this later!
+    float r = 20; ///How close fish can be to trigger this. Tweak this later!
 
     //Evaluate each fish in the array
     for(int ii = 0; ii < (*allFishList).size(); ii ++) {
@@ -147,12 +148,16 @@ vector3 fish :: vCohesion()
         }
     }
     //make sure we don't divide by 0
-    if(fishConsidering > 0 && avgPos.magnitude() > 0) {
+    if(fishConsidering > 0) {
         avgPos /= fishConsidering;
         //find vector from current position to average position
         avgPos -= position;
+    }
+    //make sure we don't divide by 0
+    if(avgPos.magnitude() > 0) {
         return avgPos.normalized();
     }
+
     return avgPos;
 }
 
