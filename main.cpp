@@ -34,9 +34,10 @@ int main(int, char const**) {
             p3(0.5,  0, 0.5),
             p4(0.5, 1,  -0.5),
             p5(0.5,  0,  -0.5),
-            p6( 0.5, -0.5,  0.5),
-            p7( 0.5,  0.5, -0.5),
-            p8( 0.5,  0.5,  0.5);
+            p6( 1, 1,  0.5),
+            p7( 1,  1, -0.5),
+            p8( 1,  0.1,  0.5),
+            p9(1,0.1,-0.5);
     int r, g, b;
     vector<color> v;
     for (int i = 0; i < 12; i++) {
@@ -76,11 +77,22 @@ int main(int, char const**) {
 
         new triangle(p1, p4, p5, v[6]),
         new triangle(p4,p1 , p5, v[6]),
-//        new triangle(p2, p3, p6, v[7]),
-//        new triangle(p5, p8, p7, v[8]),
-//        new triangle(p5, p7, p3, v[9]),
-//        new triangle(p6, p1, p2, v[10]),
-//        new triangle(p6, p4, p1, v[11]),
+
+        new triangle(p2, p3, p6, v[7]),
+        new triangle(p3, p2, p6, v[8]),
+
+        new triangle(p4, p7, p5, v[9]),
+        new triangle(p5, p7, p4, v[10]),
+
+        new triangle(p8, p6, p3, v[11]),
+        new triangle(p6, p8, p3, v[11]),
+
+        new triangle(p9, p7, p5, v[11]),
+        new triangle(p7, p9, p5, v[11]),
+
+        new triangle(p4, p2, p7, v[11]),
+        new triangle(p2, p4, p7, v[11]),
+
     };
 //    vector<vector3> points;
 //    vector<vector<int>> indicies;
