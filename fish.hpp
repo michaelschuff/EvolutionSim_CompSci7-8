@@ -66,7 +66,7 @@ void fish :: fixOffScreen()
 {
     vector3 screenCenter = vector3(500, 500, 0);
     //if fish is off screen, move it to the opposite side and let it continue
-    if(abs(position.x - screenCenter.x) >= fishBoundary || abs(position.y - screenCenter.y) >= fishBoundary) {
+    if(abs(position.x - screenCenter.x) >= fishBoundary || abs(position.y - screenCenter.y) >= fishBoundary || abs(position.z - screenCenter.z) >= fishBoundary) {
         velocity *= -1;
     }
 }
