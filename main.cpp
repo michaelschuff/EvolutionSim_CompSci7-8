@@ -61,6 +61,7 @@ int main(int, char const**) {
 //        new line(p8, p5),
 //        new line(p8, p6),
 //        new line(p8, p7),
+        
         new triangle(p4, p6, p8, v[0]),
         new triangle(p4, p8, p5, v[1]),
         new triangle(p6, p2, p7, v[2]),
