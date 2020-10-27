@@ -29,7 +29,7 @@ bool is_number(const std::string& s) {
 int main(int, char const**) {
     srand(time(NULL));
     const int width = 800, height = 800;
-    vector3 p1(-1, 1, 0),
+    vector3 p1(-1, 1.2, 0),
             p2( 0.5, 1, 0.5),
             p3(0.5,  0, 0.5),
             p4(0.5, 1,  -0.5),
@@ -37,7 +37,16 @@ int main(int, char const**) {
             p6( 1, 1,  0.5),
             p7( 1,  1, -0.5),
             p8( 1,  0.1,  0.5),
-            p9(1,0.1,-0.5);
+            p9(1,0.1,-0.5),
+            p10(2.2,1,0),
+            p11(-1.3,1.6,0.5),
+            p12(-1.3,1.6,-0.5),
+            p13(1.7,0.8,0.2),
+            p14(1.8,0.8,0.18),
+            p15(1.75,0.85,0.19),
+            p16(1.7,0.8,-0.2),
+            p17(1.8,0.8,-0.18),
+            p18(1.75,0.85,-0.19);
     int r, g, b;
     vector<color> v;
     for (int i = 0; i < 12; i++) {
@@ -46,7 +55,7 @@ int main(int, char const**) {
         b = ((float) 255*rand()/RAND_MAX);
         v.push_back(color(r, g, b));
     }
-    vector<object*> verticies = {
+    vector<object*> whaleModel = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
         new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
@@ -66,23 +75,23 @@ int main(int, char const**) {
 //        new triangle(p4, p8, p5, v[1]),
 //        new triangle(p6, p2, p7, v[2]),
         //Main body
-        new triangle(p1, p5, p3, v[3]),
-        new triangle(p5, p1, p3, v[3]),
+        new triangle(p1, p5, p3, v[11]),
+        new triangle(p5, p1, p3, v[11]),
 
-        new triangle(p2, p1, p3, v[4]),
-        new triangle(p1, p2, p3, v[4]),
+        new triangle(p2, p1, p3, v[11]),
+        new triangle(p1, p2, p3, v[11]),
 
-        new triangle(p1, p4, p2, v[5]),
-        new triangle(p4, p1, p2, v[5]),
+        new triangle(p1, p4, p2, v[11]),
+        new triangle(p4, p1, p2, v[11]),
 
-        new triangle(p1, p4, p5, v[6]),
-        new triangle(p4,p1 , p5, v[6]),
+        new triangle(p1, p4, p5, v[11]),
+        new triangle(p4,p1 , p5, v[11]),
 
-        new triangle(p2, p3, p6, v[7]),
-        new triangle(p3, p2, p6, v[8]),
+        new triangle(p2, p3, p6, v[11]),
+        new triangle(p3, p2, p6, v[11]),
 
-        new triangle(p4, p7, p5, v[9]),
-        new triangle(p5, p7, p4, v[10]),
+        new triangle(p4, p7, p5, v[11]),
+        new triangle(p5, p7, p4, v[11]),
 
         new triangle(p8, p6, p3, v[11]),
         new triangle(p6, p8, p3, v[11]),
@@ -92,6 +101,39 @@ int main(int, char const**) {
 
         new triangle(p4, p2, p7, v[11]),
         new triangle(p2, p4, p7, v[11]),
+
+        new triangle(p7, p2, p6, v[11]),
+        new triangle(p2, p7, p6, v[11]),
+
+        new triangle(p3, p5, p8, v[11]),
+        new triangle(p5, p3, p8, v[11]),
+
+        new triangle(p5, p9, p8, v[11]),
+        new triangle(p9, p5, p8, v[11]),
+        //Head
+        new triangle(p10, p9, p8, v[11]),
+        new triangle(p9, p10, p8, v[11]),
+
+        new triangle(p7, p9, p10, v[11]),
+        new triangle(p9, p7, p10, v[11]),
+
+        new triangle(p7, p6, p10, v[11]),
+        new triangle(p6, p7, p10, v[11]),
+
+        new triangle(p6, p8, p10, v[11]),
+        new triangle(p8, p6, p10, v[11]),
+
+        //Tail
+
+        new triangle(p12, p11, p1, v[11]),
+        new triangle(p11, p12, p1, v[11]),
+
+        //Eyes
+        new triangle(p13, p15, p14, v[6]),
+        new triangle(p15, p13, p14, v[6]),
+
+        new triangle(p16, p17, p18, v[6]),
+        new triangle(p17, p16, p18, v[6]),
 
     };
 //    vector<vector3> points;
@@ -345,7 +387,7 @@ int main(int, char const**) {
 
 
 
-            vector<object2D*> shapes = cam.get_view(verticies);
+            vector<object2D*> shapes = cam.get_view(whaleModel);
             for (int i = 0; i < shapes.size(); i++) {
                 if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
                     CircleShape c(_circ->r);
