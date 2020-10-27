@@ -13,6 +13,7 @@ using namespace std;
 
 class fish : public agent{
 public:
+    //added a comment here
 
     static vector<fish>* allFishList; //pointer to vector in main. Every fish can see every other fish, so this is static
 
