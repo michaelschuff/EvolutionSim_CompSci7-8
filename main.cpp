@@ -34,10 +34,9 @@ int main(int, char const**) {
             p3(0.5,  0, 0.5),
             p4(0.5, 1,  -0.5),
             p5(0.5,  0,  -0.5),
-            p6( 1, 1,  0.5),
-            p7( 1,  1, -0.5),
-            p8( 1,  0.1,  0.5),
-            p9(1,0.1,-0.5);
+            p6( 0.5, -0.5,  0.5),
+            p7( 0.5,  0.5, -0.5),
+            p8( 0.5,  0.5,  0.5);
     int r, g, b;
     vector<color> v;
     for (int i = 0; i < 12; i++) {
@@ -67,37 +66,19 @@ int main(int, char const**) {
 //        new triangle(p6, p2, p7, v[2]),
         //Main body
         new triangle(p1, p5, p3, v[3]),
-        new triangle(p5, p1, p3, v[3]),
-
         new triangle(p2, p1, p3, v[4]),
-        new triangle(p1, p2, p3, v[4]),
-
         new triangle(p1, p4, p2, v[5]),
-        new triangle(p4, p1, p2, v[5]),
-
         new triangle(p1, p4, p5, v[6]),
-        new triangle(p4,p1 , p5, v[6]),
-
-        new triangle(p2, p3, p6, v[7]),
-        new triangle(p3, p2, p6, v[8]),
-
-        new triangle(p4, p7, p5, v[9]),
-        new triangle(p5, p7, p4, v[10]),
-
-        new triangle(p8, p6, p3, v[11]),
-        new triangle(p6, p8, p3, v[11]),
-
-        new triangle(p9, p7, p5, v[11]),
-        new triangle(p7, p9, p5, v[11]),
-
-        new triangle(p4, p2, p7, v[11]),
-        new triangle(p2, p4, p7, v[11]),
-
+//        new triangle(p2, p3, p6, v[7]),
+//        new triangle(p5, p8, p7, v[8]),
+//        new triangle(p5, p7, p3, v[9]),
+//        new triangle(p6, p1, p2, v[10]),
+//        new triangle(p6, p4, p1, v[11]),
     };
 //    vector<vector3> points;
 //    vector<vector<int>> indicies;
 //    ifstream myfile;
-//    myfile.open(resourcePath() + "aca.obj");
+//    myfile.open(resourcePath() + "DragonEye.obj");
 //    string l;
 //    int c = 0;
 //    bool going = true;
@@ -125,7 +106,7 @@ int main(int, char const**) {
 ////                cout << split[i] << ", ";
 ////            }
 ////            cout << endl;
-//            points.push_back(vector3(stof(split[1]), stof(split[2]), stof(split[3])));
+//            points.push_back(vector3(stof(split[0]), stof(split[1]), stof(split[2])));
 //        } else if (split[0] == "f") {
 //            split.erase(split.begin());
 //            indicies.push_back(vector<int>());
@@ -154,9 +135,7 @@ int main(int, char const**) {
     window.setFramerateLimit(60);
 
 
-
-    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
-
+    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false;
     while (window.isOpen()) {
 //        cam.position.print();
 //        cam.forward.print();
@@ -183,18 +162,6 @@ int main(int, char const**) {
                         break;
                     case Keyboard::W:
                         wDown = true;
-                        break;
-                    case Keyboard::I:
-                        iDown = true;
-                        break;
-                    case Keyboard::J:
-                        jDown = true;
-                        break;
-                    case Keyboard::K:
-                        kDown = true;
-                        break;
-                    case Keyboard::L:
-                        lDown = true;
                         break;
                     case Keyboard::LShift:
                         qDown = true;
@@ -233,18 +200,6 @@ int main(int, char const**) {
                         break;
                     case Keyboard::W:
                         wDown = false;
-                        break;
-                    case Keyboard::I:
-                        iDown = false;
-                        break;
-                    case Keyboard::J:
-                        jDown = false;
-                        break;
-                    case Keyboard::K:
-                        kDown = false;
-                        break;
-                    case Keyboard::L:
-                        lDown = false;
                         break;
                     case Keyboard::Escape:
                         window.close();
@@ -286,35 +241,15 @@ int main(int, char const**) {
         if (active) {
 
             Vector2i mouse_position = Mouse::getPosition(window);
-            cout << mouse_position.x << "   " << mouse_position.y << endl;
             if (mouse_position.x != width / 2) {
+                //cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
 
-
-//                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
             if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-
-//                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
-            }
-//            Mouse::setPosition(Vector2i(width/2, height/2), window);
-
-            if (iDown) {
-                cam.rotate(cam.right, sensitivity * 10 * 3.14159 / 180.0);
-            }
-
-            if (kDown) {
-                cam.rotate(cam.right, -sensitivity * 10 * 3.14159 / 180.0);
-            }
-
-            if (jDown) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * 10 * 3.14159 / 180.0);
-            }
-
-            if (lDown) {
-                cam.rotate(vector3(0, 1, 0), -sensitivity * 10 * 3.14159 / 180.0);
+                //cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
 
             }
-
+            Mouse::setPosition(Vector2i(width/2, height/2), window);
 
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
