@@ -9,17 +9,21 @@
 #ifndef color_hpp
 #define color_hpp
 
+#include <iostream>
+
 class color {
 public:
     int r, g, b, a;
-    
-    color() : r(0), g(0), b(0), a(0) {}
+
+    color() : r(255), g(255), b(255), a(255) {}
     color(int _r, int _g, int _b, int _a = 255) : r(_r), g(_g), b(_b), a(_a) {}
     color(float _r, float _g, float _b, float _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}
     color(double _r, double _g, double _b, double _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}
     color(const color &c) : r(c.r), g(c.g), b(c.b), a(c.a) {}
-    
+
     int &operator[](int i);
+    std::string to_string();
+    void print();
 };
 
 int &color::operator[](int i) {
@@ -34,6 +38,14 @@ int &color::operator[](int i) {
         case 3:
             return a;
     }
+}
+
+std::string color::to_string() {
+    return "<" + std::to_string(r) + ", " + std::to_string(g) + ", " + std::to_string(b) + ">, " + std::to_string(a);
+}
+
+void color::print() {
+    std::cout << (*this).to_string() << std::endl;
 }
 
 #endif /* color_hpp */
