@@ -31,6 +31,8 @@ int main() {
     vector<whale> whaleList;
     vector<fish> fishList;
     int numWhales = 10; //the total number of whales that have ever existed
+    int radiusOfOcean = 1000;
+    float volumeOcean = (4/3) * M_PI * pow(1000.0f, 2.0f);
 
 
     //make whales w/ random starting traits

@@ -1,5 +1,5 @@
 #ifndef whale_hpp
-#define whale_hpp
+#define _USE_MATH_DEFINES
 using namespace sf;
 using namespace std;
 
@@ -15,6 +15,7 @@ using namespace std;
 #include <cstdlib>
 #include <unistd.h>
 #include<ctime>
+#include<cmath>
 
 
 /*
@@ -29,14 +30,19 @@ public:
     void updatePosition(double); //update position every frame based on velocity and time
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
-    decision (); //using its traits, decide what to do on a turn
+    vector<fish> decision (int); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
+
 
 private:
     //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
     int radius; //how far around the whale it can eat
+    long int volume; //the volume of water the fish can eat from
+    bool eat; //whether or not to eat the fish
+    decisionEat (int);
+    decisionMove();
 };
 
 whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel) : agent(pos, vel)
@@ -44,7 +50,8 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
-    radius = 5;
+    radius = 200; //200 cm
+    volume = (4.0f/3.0f) * M_PI * (float)pow(radius, 3);
 
 //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
@@ -105,6 +112,60 @@ void whale::sight (vector<fish> &fishList)
             foodList.push_back(fishList[ff].id);
         }
     }
+}
+
+vector<fish> whale::decision (int numFish)
+{
+    decisionEat(numFish);
+
+    //eat fish
+    if (eat == true)
+    {
+        return foodList();
+    }
+
+    //find destination to move
+    else
+    {
+        decisionMove();
+    }
+}
+
+void decisionEat(int numFish)
+{
+    //numFish is the size of the fishList in main
+    float density;
+    float percentTotal;
+    eat = false;
+
+    //see if foodList is dense enough
+    density = foodList.size() / volume * 100.0f;
+
+    if (density >= eatDenseFish)
+    {
+        eat = true;
+    }
+
+    //otherwise, see if the whale is fine with eating far fish
+    else
+    {
+        percentTotal = foodList.size() / numFish * 100.0f;
+        if (percentTotal >= eatCloseFish)
+        {
+            eat = true;
+        }
+    }
+}
+
+void decisionMove()
+{
+    //divide ocean into cubes
+
+    //check if in densest cube
+
+    //if yes, divide again
+
+    //if no, move to center of densest cube
 }
 
 #endif /*whale_hpp*/
