@@ -30,7 +30,7 @@ public:
     void updatePosition(double); //update position every frame based on velocity and time
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
-    vector<fish> decision (int); //using its traits, decide what to do on a turn
+    vector<int> decision (int); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
 
 
@@ -41,8 +41,8 @@ private:
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
     bool eat; //whether or not to eat the fish
-    decisionEat (int);
-    decisionMove();
+    void decisionEat (int);
+    void decisionMove();
 };
 
 whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel) : agent(pos, vel)
@@ -114,14 +114,14 @@ void whale::sight (vector<fish> &fishList)
     }
 }
 
-vector<fish> whale::decision (int numFish)
+vector<int> whale::decision (int numFish)
 {
     decisionEat(numFish);
 
     //eat fish
     if (eat == true)
     {
-        return foodList();
+        //don't move, in main go through foodList and remove those IDs
     }
 
     //find destination to move
@@ -131,14 +131,14 @@ vector<fish> whale::decision (int numFish)
     }
 }
 
-void decisionEat(int numFish)
+void whale::decisionEat(int numFish)
 {
     //numFish is the size of the fishList in main
     float density;
     float percentTotal;
     eat = false;
 
-    //see if foodList is dense enough
+    //see if foodList is dense enoughs
     density = foodList.size() / volume * 100.0f;
 
     if (density >= eatDenseFish)
@@ -157,15 +157,24 @@ void decisionEat(int numFish)
     }
 }
 
-void decisionMove()
+void whale::decisionMove()
 {
-    //divide ocean into cubes
+    float randX, randY, randZ;
 
-    //check if in densest cube
+    //random movement if not eating
+    //generate random values for velocity
+    randX = (rand() % 5) -2;
+    randY = (rand() % 5) -2;
+    randZ = (rand() % 5) -2;
 
-    //if yes, divide again
+    velocity.x = randX;
+    velocity.y = randY;
+    velocity.z = randZ;
 
-    //if no, move to center of densest cube
+    //normalize velocity
+    velocity.normalize();
+
+    //scale it to 2
 }
 
 #endif /*whale_hpp*/

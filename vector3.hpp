@@ -115,6 +115,7 @@ vector3 vector3::operator/(float k){
     return vector3(x/k, y/k, z/k);
 }
 
+
 vector3 &vector3::operator/=(float k) {
     if (k == 0) {
         return;
