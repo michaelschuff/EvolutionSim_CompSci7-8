@@ -6,7 +6,7 @@
 #include "vector3.hpp"
 #include "triangle.hpp"
 #include "mesh.hpp"
-#include "camera.hpp"
+//#include "camera.hpp"
 #include "fish.hpp"
 #include<stdio.h>
 #include<stdlib.h>
@@ -31,53 +31,104 @@ int main() {
     vector<whale> whaleList;
     vector<fish> fishList;
     int numWhales = 10; //the total number of whales that have ever existed
-    int radiusOfOcean = 1000;
-    float volumeOcean = (4/3) * M_PI * pow(1000.0f, 2.0f);
+    vector3 limits (1000,1000,1000);
+    int numReproduce = numWhales * 0.10;
+    int numDie = numWhales * 0.10;
+    int totalWhales = numWhales;
 
 
     //make whales w/ random starting traits
     for (int ww = 0; ww < numWhales; ww ++)
     {
-        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3(), vector3(0,0,0));
+        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3(), vector3(0,0,0), limits);
         newWhale.id = ww;
         whaleList.push_back(newWhale);
     }
 
+
     //make fish
-    for (int ww = 0; ww < 10; ww ++)
+    for (int ff = 0; ff < 10000; ff ++)
     {
-        fish newFish (vector3 ((rand() % 10), (rand() % 10), (rand() % 10)), vector3 ());
-        newFish.id = ww;
+        fish newFish (vector3 ((rand() % 1000), (rand() % 1000), (rand() % 1000)), vector3 ());
+        newFish.id = ff;
         fishList.push_back(newFish);
-        cout << "x: " << fishList[ww].position.x << "y: " << fishList[ww].position.y << "z: " << fishList[ww].position.z << endl;
     }
 
-    //see if fish can be eaten
-    whaleList[0].sight(fishList);
-
-    //see the ids of fish that can be eaten
-    for (int cc = 0; cc < whaleList[0].foodList.size(); cc++)
-    {
-        cout << "id: " << whaleList[0].foodList[cc] << endl;
-    }
-
-    /*
-    //loop of program
+//*****************loop of program
     while(true)
     {
-        startTime = time(NULL);
+        //startTime = time(NULL);
+        //endTime = time(NULL);
+        //timeDifference = difftime(endTime, startTime);
 
+        //*********************whales make decisions about what to do
+        for (int ww = 0; ww < whaleList.size(); ww++)
+        {
+            whaleList[ww].decision(fishList);
 
-        endTime = time(NULL);
+            //*************when whales are able to eat
+            if (whaleList[ww].eat == true)
+            {
+                //go through the list of food
+                for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
+                {
+                    //see if the IDs match those of fish
+                    for (int ff = fishList.size() -1; ff >= 0; ff --)
+                    {
 
-        timeDifference = difftime(endTime, startTime);
+                        if (fishList[ff].id == whaleList[ww].foodList[ee])
+                        {
+                            //eat the fish
+                            fishList.erase(fishList.begin() + ff);
+                            whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
+                        }
+                    }
+                }
+            }
+
+            //**************move whale
+            else
+            {
+                whaleList[ww].updatePosition(5.4);  //the number passed is the "length" of a frame
+            }
+        }
+
+        //*****************************go through whales and see which ones die
+        //sort the whales based on number of fish they've eaten
+        for (int i = 0; i < whaleList.size(); i++)
+        {
+            int j = i;
+
+            while (j > 0 and whaleList[j].fishCounter < whaleList[j-1].fishCounter)
+            {
+                swap(whaleList[j], whaleList[j - 1]);
+                j = j -1;
+            }
+        }
+
+        //bottom 10% die
+        for (int dd = 0; dd < numDie; dd++)
+        {
+            whaleList.erase(whaleList.begin() + dd);
+        }
+
+        //top 10% reproduce
+        for (int rr = whaleList.size() -1; rr > whaleList.size() - numReproduce -1; rr --)
+        {
+            whale newWhale(whaleList[rr].eatCloseFish,whaleList[rr].eatDenseFish, whaleList[rr].position, vector3(), limits);
+            totalWhales ++;
+            newWhale.id = totalWhales;
+            whaleList.push_back(newWhale);
+        }
 
         for (int ww = 0; ww < whaleList.size(); ww++)
         {
-            whaleList[ww].updatePosition (timeDifference);
+            cout << whaleList[ww].id << ": " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
         }
+
+        cout << endl;
     }
-    */
+
 
     return EXIT_SUCCESS;
 }

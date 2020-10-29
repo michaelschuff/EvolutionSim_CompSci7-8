@@ -25,33 +25,35 @@ This file sets up the whale class, which is a child of the agent class.
 class whale : public agent
 {
 public:
-    whale(int, int, vector3, vector3);
+    whale(int, int, vector3, vector3, vector3);
     int fishCounter; //how many fish the whale has eaten, used for ranking
     void updatePosition(double); //update position every frame based on velocity and time
-    void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
     whaleMove (); //given a location, move towards it frame by frame
-    vector<int> decision (int); //using its traits, decide what to do on a turn
+    void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
-
-
-private:
+    bool eat; //whether or not to eat the fish
     //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
+
+private:
+
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
-    bool eat; //whether or not to eat the fish
     void decisionEat (int);
     void decisionMove();
+    vector3 edges; //the bottom corner of the board
+    void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
 };
 
-whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel) : agent(pos, vel)
+whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary) : agent(pos, vel)
 {
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
-    radius = 200; //200 cm
+    radius = 50; //200 cm
     volume = (4.0f/3.0f) * M_PI * (float)pow(radius, 3);
+    edges = boundary;
 
 //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
@@ -87,6 +89,22 @@ void whale::updatePosition (double timeDiff)
     position.x += velocity.x * timeDiff;
     position.y += velocity.y * timeDiff;
     position.z += velocity.z * timeDiff;
+
+    //check if beyond boundaries
+    if (position.x > edges.x or position.x < 0)
+    {
+        position.x = abs(position.x - edges.x);
+    }
+
+    if (position.y > edges.y or position.y < 0)
+    {
+        position.y = abs(position.y - edges.y);
+    }
+
+    if (position.z > edges.z or position.z < 0)
+    {
+        position.z = abs(position.z - edges.z);
+    }
 }
 
 void whale::sight (vector<fish> &fishList)
@@ -114,14 +132,16 @@ void whale::sight (vector<fish> &fishList)
     }
 }
 
-vector<int> whale::decision (int numFish)
+void whale::decision (vector<fish> &fishList)
 {
-    decisionEat(numFish);
+    sight(fishList);
+    decisionEat(fishList.size());
 
     //eat fish
     if (eat == true)
     {
         //don't move, in main go through foodList and remove those IDs
+        fishCounter += foodList.size();
     }
 
     //find destination to move
@@ -139,7 +159,7 @@ void whale::decisionEat(int numFish)
     eat = false;
 
     //see if foodList is dense enoughs
-    density = foodList.size() / volume * 100.0f;
+    density = ((float)foodList.size() / (float)volume) * 1000000.0f;
 
     if (density >= eatDenseFish)
     {
@@ -149,7 +169,8 @@ void whale::decisionEat(int numFish)
     //otherwise, see if the whale is fine with eating far fish
     else
     {
-        percentTotal = foodList.size() / numFish * 100.0f;
+        percentTotal = ((float)foodList.size() / (float)numFish) * 100.0f;
+
         if (percentTotal >= eatCloseFish)
         {
             eat = true;
@@ -159,22 +180,34 @@ void whale::decisionEat(int numFish)
 
 void whale::decisionMove()
 {
+    vector3 tempVel;
     float randX, randY, randZ;
 
     //random movement if not eating
-    //generate random values for velocity
-    randX = (rand() % 5) -2;
-    randY = (rand() % 5) -2;
-    randZ = (rand() % 5) -2;
+    while (true)
+    {
+        //generate random values for velocity
+        randX = (rand() % 5) -2;
+        randY = (rand() % 5) -2;
+        randZ = (rand() % 5) -2;
 
-    velocity.x = randX;
-    velocity.y = randY;
-    velocity.z = randZ;
+        if (randX != 0 & randY != 0 & randZ != 0)
+        {
+            break;
+        }
+    }
+
+    tempVel.x = randX;
+    tempVel.y = randY;
+    tempVel.z = randZ;
 
     //normalize velocity
-    velocity.normalize();
+    tempVel.normalize();
 
     //scale it to 2
+    velocity.x = tempVel.x * 2;
+    velocity.y = tempVel.y * 2;
+    velocity.z = tempVel.z * 2;
 }
 
 #endif /*whale_hpp*/
