@@ -231,12 +231,9 @@ int main(int, char const**) {
             // MARK: Update Agents
             for (int w = 0; w < whaleList.size(); w++) {
                 whaleList[w].decision(fishList);
-                //         when whales are able to eat
-                if (whaleList[w].eat == true) {
-                    //go through the list of food
-                    for (int e = whaleList[w].foodList.size() -1; e >= 0; e--) {
-                        //see if the IDs match those of fish
-                        for (int f = fishList.size() - 1; f >= 0; f--) {
+                if (whaleList[w].eat == true) {// when whales are able to eat
+                    for (int e = whaleList[w].foodList.size() -1; e >= 0; e--) {//go through the list of food
+                        for (int f = fishList.size() - 1; f >= 0; f--) {//see if the IDs match those of fish
                             if (fishList[f].id == whaleList[w].foodList[e]) {
                                 //eat the fish
                                 fishList.erase(fishList.begin() + f);
@@ -244,15 +241,12 @@ int main(int, char const**) {
                             }
                         }
                     }
-                }
-
-                //         move whale
-                else {
+                } else { //move whale
                     whaleList[w].updatePosition(1.0 / framerate);  //the number passed is the "length" of a frame
                 }
             }
 
-            //            go through whales and see which ones die
+            //go through whales and see which ones die
             //sort the whales based on number of fish they've eaten
             for (int i = 0; i < whaleList.size(); i++) {
                 int j = i;
