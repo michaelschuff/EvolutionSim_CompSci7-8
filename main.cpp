@@ -16,39 +16,53 @@
 #include "color.hpp"
 #include <fstream>
 #include <string>
+#include "whale.hpp"
+#include "fish.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
 
-
-bool is_number(const std::string& s) {
-    return !s.empty() && std::find_if(s.begin(),
-        s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
-}
 int main(int, char const**) {
-    // MARK: Declare Vars
+    // MARK: Program vars
     srand(time(NULL));
-    const int width = 800, height = 800;
+    const int width = 800, height = 800, framerate = 60;
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
-//    int r, g, b;
-//    vector<color> v;
-//    for (int i = 0; i < 12; i++) {
-//        r = ((float) 255*rand()/RAND_MAX);
-//        g = ((float) 255*rand()/RAND_MAX);
-//        b = ((float) 255*rand()/RAND_MAX);
-//        v.push_back(color(r, g, b));
-//    }
-    vector<object*> verticies = {
+    RenderWindow window(VideoMode(width, height), "SFML window");
+    window.setMouseCursorVisible(false);
+    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
+    window.setFramerateLimit(framerate);
+    
+    
+    
+    vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
         new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
     };
+    // MARK: Evolution vars
+    vector<whale> whaleList;
+    vector<fish> fishList;
     double sensitivity = 0.1, speed = 5;
-    RenderWindow window(VideoMode(width, height), "SFML window");
-    window.setMouseCursorVisible(false);
-    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
-    window.setFramerateLimit(60);
+    
+    int numWhales = 10;
+    vector3 limits (1000,1000,1000);
+    int numReproduce = numWhales * 0.10;
+    int numDie = numWhales * 0.10;
+    int totalWhales = numWhales;
+    //make whales w/ random starting traits
+    for (int w = 0; w < numWhales; w++) {
+        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3(), vector3(0,0,0), limits);
+        newWhale.id = w;
+        whaleList.push_back(newWhale);
+    }
+    //make fish
+    for (int f = 0; f < 10000; f++) {
+        fish newFish (vector3 ((rand() % 1000), (rand() % 1000), (rand() % 1000)), vector3 ());
+        newFish.id = f;
+        fishList.push_back(newFish);
+    }
+    
     
     while (window.isOpen()) {
         active = window.hasFocus();
@@ -214,13 +228,59 @@ int main(int, char const**) {
                 cam.position -= speed * cam.up / 60.0;
             }
             
+            // MARK: Update Agents
+            for (int w = 0; w < whaleList.size(); w++) {
+                whaleList[w].decision(fishList);
+                //         when whales are able to eat
+                if (whaleList[w].eat == true) {
+                    //go through the list of food
+                    for (int e = whaleList[w].foodList.size() -1; e >= 0; e--) {
+                        //see if the IDs match those of fish
+                        for (int f = fishList.size() - 1; f >= 0; f--) {
+                            if (fishList[f].id == whaleList[w].foodList[e]) {
+                                //eat the fish
+                                fishList.erase(fishList.begin() + f);
+                                whaleList[w].foodList.erase(whaleList[w].foodList.begin() + e);
+                            }
+                        }
+                    }
+                }
+
+                //         move whale
+                else {
+                    whaleList[w].updatePosition(1.0 / framerate);  //the number passed is the "length" of a frame
+                }
+            }
+
+            //            go through whales and see which ones die
+            //sort the whales based on number of fish they've eaten
+            for (int i = 0; i < whaleList.size(); i++) {
+                int j = i;
+                while (j > 0 and whaleList[j].fishCounter < whaleList[j-1].fishCounter) {
+                    swap(whaleList[j], whaleList[j - 1]);
+                    j = j - 1;
+                }
+            }
+
+            //bottom 10% die
+            for (int d = 0; d < numDie; d++) {
+                whaleList.erase(whaleList.begin() + d);
+            }
+
+            //top 10% reproduce
+            for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
+                whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, vector3(), limits);
+                totalWhales++;
+                newWhale.id = totalWhales;
+                whaleList.push_back(newWhale);
+            }
             window.clear();
             
             // MARK: Draw Shapes to Window
             circle* _circ = nullptr;
             rectangle* _rect = nullptr;
             convexshape* _convexshape = nullptr;
-            vector<object2D*> shapes = cam.get_view(verticies);
+            vector<object2D*> shapes = cam.get_view(objects);
             for (int i = 0; i < shapes.size(); i++) {
                 if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
                     CircleShape c(_circ->r);
