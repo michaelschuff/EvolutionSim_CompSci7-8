@@ -29,9 +29,10 @@ This file sets up the whale class, which is a child of the agent class.
 
 class whale : public agent {
 public:
-    whale(int, int, vector3, vector3, vector3);
+    whale(int, int, vector3, vector3, vector3, int);
+    int framerate;
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    void updatePosition(double); //update position every frame based on velocity and time
+    void updatePosition(); //update position every frame based on velocity and time
     void whaleMove(); //given a location, move towards it frame by frame
     void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
@@ -50,7 +51,7 @@ private:
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
 };
 
-whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary) : agent(pos, vel) {
+whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
@@ -83,21 +84,21 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     position = pos;
 }
 
-void whale::updatePosition (double timeDiff) {
-    position += velocity * timeDiff;
+void whale::updatePosition () {
+    position += velocity / framerate;
 
     //check if beyond boundaries
-    if (position.x > edges.x or position.x < 0) {
-        position.x = abs(position.x - edges.x);
-    }
-
-    if (position.y > edges.y or position.y < 0) {
-        position.y = abs(position.y - edges.y);
-    }
-
-    if (position.z > edges.z or position.z < 0) {
-        position.z = abs(position.z - edges.z);
-    }
+//    if (position.x > edges.x or position.x < 0) {
+//        position.x = abs(position.x - edges.x);
+//    }
+//
+//    if (position.y > edges.y or position.y < 0) {
+//        position.y = abs(position.y - edges.y);
+//    }
+//
+//    if (position.z > edges.z or position.z < 0) {
+//        position.z = abs(position.z - edges.z);
+//    }
 }
 
 void whale::sight(vector<fish> &fishList) {

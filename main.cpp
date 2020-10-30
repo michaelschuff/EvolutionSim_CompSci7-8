@@ -23,9 +23,7 @@
 using namespace sf;
 using namespace std;
 
-vector<fish> allFish = vector<fish>();
-int agent::nextID = 0; ///Necessary line
-vector<fish> *fish::allFishList = &allFish;
+int agent::nextID = 0;
 
 int main(int, char const**) {
     // MARK: Program vars
@@ -67,21 +65,24 @@ int main(int, char const**) {
     vector<whale> whaleList;
     vector<fish> fishList;
     double sensitivity = 0.1, speed = 5;
-    
+    vector<color> whale_colors;
+    for (int i = 0; i < 19; i++) {
+        whale_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
+    }
     int numWhales = 10;
-    vector3 limits(1000, 1000, 1000);
+    vector3 limits(100, 100, 100);
     int numReproduce = numWhales * 0.10;
     int numDie = numWhales * 0.10;
     int totalWhales = numWhales;
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
-        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3(), vector3(0,0,0), limits);
+        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), limits, framerate);
         newWhale.id = w;
         whaleList.push_back(newWhale);
     }
     //make fish
-    for (int f = 0; f < 100; f++) {
-        fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3());
+    for (int f = 0; f < 300; f++) {
+        fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         newFish.id = f;
         fishList.push_back(newFish);
     }
@@ -252,6 +253,9 @@ int main(int, char const**) {
             }
             
             // MARK: Update Agents
+            for (int i = 0; i < fishList.size(); i++) {
+                fishList[i].updateFish(fishList);
+            }
             vector<int> deadFishId;
             for (int w = 0; w < whaleList.size(); w++) {
                 whaleList[w].decision(fishList);
@@ -266,7 +270,7 @@ int main(int, char const**) {
                         }
                     }
                 } else { //move whale
-                    whaleList[w].updatePosition(1.0 / framerate);  //the number passed is the "length" of a frame
+                    whaleList[w].updatePosition();  //the number passed is the "length" of a frame
                 }
             }
             
@@ -302,72 +306,84 @@ int main(int, char const**) {
             objects = {
                 new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
                 new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
-                new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255))
+                new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
+                new line(vector3(0, 0, 0), vector3(100, 0, 0), color()),
+                new line(vector3(100, 0, 0), vector3(100, 0, 100), color()),
+                new line(vector3(100, 0, 100), vector3(0, 0, 100), color()),
+                new line(vector3(0, 0, 100), vector3(0, 0, 0), color()),
+                new line(vector3(0, 0, 0), vector3(0, 100, 0), color()),
+                new line(vector3(100, 0, 0), vector3(100, 100, 0), color()),
+                new line(vector3(0, 0, 100), vector3(0, 100, 100), color()),
+                new line(vector3(100, 0, 100), vector3(100, 100, 100), color()),
+                new line(vector3(0, 100, 0), vector3(100, 100, 0), color()),
+                new line(vector3(100, 100, 0), vector3(100, 100, 100), color()),
+                new line(vector3(100, 100, 100), vector3(0, 100, 100), color()),
+                new line(vector3(0, 100, 100), vector3(0, 100, 0), color()),
             };
             
             for (int i = 0; i < fishList.size(); i++) {
-                objects.push_back(
+                objects.push_back(new vector3(fishList[i].position));
             }
             
             for (int i = 0; i < whaleList.size(); i++) {
-                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp5, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp1, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp5, whaleList[i].position + wp3, whale_colors[0]));
+                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp1, whaleList[i].position + wp3, whale_colors[0]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp1, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp2, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp1, whaleList[i].position + wp3, whale_colors[1]));
+                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp2, whaleList[i].position + wp3, whale_colors[1]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp4, whaleList[i].position + wp2, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp1, whaleList[i].position + wp2, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp4, whaleList[i].position + wp2, whale_colors[2]));
+                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp1, whaleList[i].position + wp2, whale_colors[2]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp4, whaleList[i].position + wp5, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp4,whaleList[i].position + wp1 , whaleList[i].position + wp5, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp1, whaleList[i].position + wp4, whaleList[i].position + wp5, whale_colors[3]));
+                objects.push_back(new triangle(whaleList[i].position + wp4,whaleList[i].position + wp1 , whaleList[i].position + wp5, whale_colors[3]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp3, whaleList[i].position + wp6, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp3, whaleList[i].position + wp2, whaleList[i].position + wp6, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp3, whaleList[i].position + wp6, whale_colors[4]));
+                objects.push_back(new triangle(whaleList[i].position + wp3, whaleList[i].position + wp2, whaleList[i].position + wp6, whale_colors[4]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp7, whaleList[i].position + wp5, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp7, whaleList[i].position + wp4, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp7, whaleList[i].position + wp5, whale_colors[5]));
+                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp7, whaleList[i].position + wp4, whale_colors[5]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp8, whaleList[i].position + wp6, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp8, whaleList[i].position + wp3, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp8, whaleList[i].position + wp6, whaleList[i].position + wp3, whale_colors[6]));
+                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp8, whaleList[i].position + wp3, whale_colors[6]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp7, whaleList[i].position + wp5, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp9, whaleList[i].position + wp5, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp7, whaleList[i].position + wp5, whale_colors[7]));
+                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp9, whaleList[i].position + wp5, whale_colors[7]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp2, whaleList[i].position + wp7, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp4, whaleList[i].position + wp7, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp4, whaleList[i].position + wp2, whaleList[i].position + wp7, whale_colors[8]));
+                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp4, whaleList[i].position + wp7, whale_colors[8]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp2, whaleList[i].position + wp6, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp7, whaleList[i].position + wp6, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp2, whaleList[i].position + wp6, whale_colors[9]));
+                objects.push_back(new triangle(whaleList[i].position + wp2, whaleList[i].position + wp7, whaleList[i].position + wp6, whale_colors[9]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp3, whaleList[i].position + wp5, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp3, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp3, whaleList[i].position + wp5, whaleList[i].position + wp8, whale_colors[10]));
+                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp3, whaleList[i].position + wp8, whale_colors[10]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp9, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp5, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp5, whaleList[i].position + wp9, whaleList[i].position + wp8, whale_colors[11]));
+                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp5, whaleList[i].position + wp8, whale_colors[11]));
                         //Head
-                objects.push_back(new triangle(whaleList[i].position + wp10, whaleList[i].position + wp9, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp10, whaleList[i].position + wp8, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp10, whaleList[i].position + wp9, whaleList[i].position + wp8, whale_colors[12]));
+                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp10, whaleList[i].position + wp8, whale_colors[12]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp9, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp7, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp9, whaleList[i].position + wp10, whale_colors[13]));
+                objects.push_back(new triangle(whaleList[i].position + wp9, whaleList[i].position + wp7, whaleList[i].position + wp10, whale_colors[13]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp6, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp7, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp7, whaleList[i].position + wp6, whaleList[i].position + wp10, whale_colors[14]));
+                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp7, whaleList[i].position + wp10, whale_colors[14]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp8, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp8, whaleList[i].position + wp6, whaleList[i].position + wp10, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp6, whaleList[i].position + wp8, whaleList[i].position + wp10, whale_colors[15]));
+                objects.push_back(new triangle(whaleList[i].position + wp8, whaleList[i].position + wp6, whaleList[i].position + wp10, whale_colors[15]));
 
                 //Tail
-                objects.push_back(new triangle(whaleList[i].position + wp12, whaleList[i].position + wp11, whaleList[i].position + wp1, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp11, whaleList[i].position + wp12, whaleList[i].position + wp1, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp12, whaleList[i].position + wp11, whaleList[i].position + wp1, whale_colors[16]));
+                objects.push_back(new triangle(whaleList[i].position + wp11, whaleList[i].position + wp12, whaleList[i].position + wp1, whale_colors[16]));
 
                 //Eyes
-                objects.push_back(new triangle(whaleList[i].position + wp13, whaleList[i].position + wp15, whaleList[i].position + wp14, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp15, whaleList[i].position + wp13, whaleList[i].position + wp14, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp13, whaleList[i].position + wp15, whaleList[i].position + wp14, whale_colors[17]));
+                objects.push_back(new triangle(whaleList[i].position + wp15, whaleList[i].position + wp13, whaleList[i].position + wp14, whale_colors[17]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp16, whaleList[i].position + wp17, whaleList[i].position + wp18, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
-                objects.push_back(new triangle(whaleList[i].position + wp17, whaleList[i].position + wp16, whaleList[i].position + wp18, color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX)));
+                objects.push_back(new triangle(whaleList[i].position + wp16, whaleList[i].position + wp17, whaleList[i].position + wp18, whale_colors[18]));
+                objects.push_back(new triangle(whaleList[i].position + wp17, whaleList[i].position + wp16, whaleList[i].position + wp18, whale_colors[18]));
             }
             
             // MARK: Draw Shapes to Window
