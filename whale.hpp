@@ -35,6 +35,7 @@ public:
     //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
+    int age; //how many frames it's been alive
 
 private:
 
@@ -54,6 +55,7 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
     radius = 50; //200 cm
     volume = (4.0f/3.0f) * M_PI * (float)pow(radius, 3);
     edges = boundary;
+    age = 0;
 
 //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
@@ -136,6 +138,9 @@ void whale::decision (vector<fish> &fishList)
 {
     sight(fishList);
     decisionEat(fishList.size());
+
+    //increase age
+    age ++;
 
     //eat fish
     if (eat == true)

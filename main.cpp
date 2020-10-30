@@ -20,21 +20,16 @@
 using namespace sf;
 using namespace std;
 
-float frameTime (int); //finds the amount of time the frame has lasted
-
 int main() {
     srand(time(NULL));
 
-    time_t startTime;
-    time_t endTime;
-    double timeDifference;
     vector<whale> whaleList;
     vector<fish> fishList;
-    int numWhales = 10; //the total number of whales that have ever existed
-    vector3 limits (1000,1000,1000);
+    int numWhales = 10;
+    vector3 limits (1000,1000,1000); //the size of the ocean
     int numReproduce = numWhales * 0.10;
     int numDie = numWhales * 0.10;
-    int totalWhales = numWhales;
+    int totalWhales = numWhales; //the total number of whales that have ever existed
 
 
     //make whales w/ random starting traits
@@ -57,10 +52,6 @@ int main() {
 //*****************loop of program
     while(true)
     {
-        //startTime = time(NULL);
-        //endTime = time(NULL);
-        //timeDifference = difftime(endTime, startTime);
-
         //*********************whales make decisions about what to do
         for (int ww = 0; ww < whaleList.size(); ww++)
         {
@@ -93,13 +84,14 @@ int main() {
             }
         }
 
-        //*****************************go through whales and see which ones die
+        cout << endl;
+
         //sort the whales based on number of fish they've eaten
         for (int i = 0; i < whaleList.size(); i++)
         {
             int j = i;
 
-            while (j > 0 and whaleList[j].fishCounter < whaleList[j-1].fishCounter)
+            while (j > 0 and (float)((float)whaleList[j].fishCounter / (float)whaleList[j].age) < (float)((float)whaleList[j-1].fishCounter / (float)whaleList[j-1].age))
             {
                 swap(whaleList[j], whaleList[j - 1]);
                 j = j -1;
@@ -123,7 +115,7 @@ int main() {
 
         for (int ww = 0; ww < whaleList.size(); ww++)
         {
-            cout << whaleList[ww].id << ": " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
+            cout << whaleList[ww].id << ": (" << whaleList[ww].age << ") " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
         }
 
         cout << endl;
