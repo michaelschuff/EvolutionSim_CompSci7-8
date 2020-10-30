@@ -250,7 +250,7 @@ int main(int, char const**) {
             //sort the whales based on number of fish they've eaten
             for (int i = 0; i < whaleList.size(); i++) {
                 int j = i;
-                while (j > 0 and whaleList[j].fishCounter < whaleList[j-1].fishCounter) {
+                while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
                     swap(whaleList[j], whaleList[j - 1]);
                     j = j - 1;
                 }
