@@ -56,9 +56,9 @@ int main(int, char const**) {
         v.push_back(color(r, g, b));
     }
     vector<object*> whaleModel = {
-        new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
+        //new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
+        //new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
+        //new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
 //        new line(p1, p2),
 //        new line(p1, p3),
 //        new line(p1, p4),
@@ -74,6 +74,7 @@ int main(int, char const**) {
 //        new triangle(p4, p6, p8, v[0]),
 //        new triangle(p4, p8, p5, v[1]),
 //        new triangle(p6, p2, p7, v[2]),
+
         //Main body
         new triangle(p1, p5, p3, v[11]),
         new triangle(p5, p1, p3, v[11]),
@@ -134,6 +135,8 @@ int main(int, char const**) {
 
         new triangle(p16, p17, p18, v[6]),
         new triangle(p17, p16, p18, v[6]),
+
+
 
     };
 //    vector<vector3> points;
@@ -376,7 +379,7 @@ int main(int, char const**) {
                 cam.position += speed * cam.up / 60.0;
             }
             if (qDown) {
-                cam.position -= speed * cam.up / 60.0;
+                //cam.position -= speed * cam.up / 60.0;
             }
 
             window.clear();
