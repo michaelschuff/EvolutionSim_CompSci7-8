@@ -86,7 +86,7 @@ int main() {
 
         cout << endl;
 
-        //sort the whales based on number of fish they've eaten
+        //sort the whales based on number of fish they've eaten and age
         for (int i = 0; i < whaleList.size(); i++)
         {
             int j = i;
