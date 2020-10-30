@@ -88,6 +88,7 @@ void whale::updatePosition () {
     position += velocity / framerate;
 
     //check if beyond boundaries
+    position %= edges.x;
 //    if (position.x > edges.x or position.x < 0) {
 //        position.x = abs(position.x - edges.x);
 //    }

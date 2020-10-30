@@ -304,9 +304,6 @@ int main(int, char const**) {
             
             
             objects = {
-                new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
-                new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
-                new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
                 new line(vector3(0, 0, 0), vector3(100, 0, 0), color()),
                 new line(vector3(100, 0, 0), vector3(100, 0, 100), color()),
                 new line(vector3(100, 0, 100), vector3(0, 0, 100), color()),

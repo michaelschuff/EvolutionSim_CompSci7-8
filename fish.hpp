@@ -78,10 +78,10 @@ void fish::fixOffScreen() {
 
 void fish::updateVelocity(vector<fish> &allFish) {
     velocity = speed * (3*vSeparation(allFish) + 0.2*vAlignment(allFish) + 2*vCohesion(allFish)).normalized();
-    float x = ((float) rand() / RAND_MAX);
-    float y = ((float) rand() / RAND_MAX);
-    float z = ((float) rand() / RAND_MAX);
-    velocity += 0.1*vector3(x, y, z);
+//    float x = ((float) rand() / RAND_MAX);
+//    float y = ((float) rand() / RAND_MAX);
+//    float z = ((float) rand() / RAND_MAX);
+//    velocity += 0.1*vector3(x, y, z);
 }
 
 void fish::updatePosition() {
