@@ -50,7 +50,7 @@ private:
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
 };
 
-whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary) : agent(pos, vel) {
+whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary) : agent(pos, vel) {
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
@@ -83,8 +83,7 @@ whale::whale (int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel
     position = pos;
 }
 
-void whale::updatePosition (double timeDiff)
-{
+void whale::updatePosition (double timeDiff) {
     position += velocity * timeDiff;
 
     //check if beyond boundaries
@@ -114,7 +113,7 @@ void whale::sight(vector<fish> &fishList) {
     }
 }
 
-void whale::decision (vector<fish> &fishList) {
+void whale::decision(vector<fish> &fishList) {
     sight(fishList);
     decisionEat(fishList.size());
 

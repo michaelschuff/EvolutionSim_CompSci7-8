@@ -13,32 +13,25 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vector>
-#include<SFML/Graphics.hpp>
-
 #include "vector3.hpp"
 #include "agent.hpp"
+
 using namespace std;
 
-class fish : public agent{
+class fish : public agent {
 public:
-    //added a comment here
-    //and again
 
     static vector<fish>* allFishList; //pointer to vector in main. Every fish can see every other fish, so this is static
 
-    sf::CircleShape Shape2D; ///Delete later
     double vision; ///could be private
 
     //constructor. Same as agent constructor for now.
-    fish(vector3 pos = vector3(), vector3 vel = vector3()): agent(pos, vel)
-    {
-        srand(time(NULL));
+    fish(vector3 pos, vector3 vel) : agent(pos, vel) {
+//        srand(time(NULL));
         vision = 50;
-        Shape2D.setRadius(10); ///Delete later
     }
 
-    /*Function that should be run repeatedly in update area (while loop in main).
-    Does everything that needs to be done repeatedly (updating velocity, position, physical appearance, etc)*/
+    
     void updateFish();
 
     void reportFishNumbers();
@@ -64,15 +57,13 @@ private:
 
 };
 
-void fish :: updateFish()
-{
+void fish::updateFish() {
     updateVelocity();
     updatePosition();
     fixOffScreen();
-    Shape2D.setPosition(position.x, position.y);
 }
 
-void fish :: fixOffScreen()
+void fish::fixOffScreen()
 {
     vector3 screenCenter = vector3(500, 500, 0);
     //if fish is off screen, move it to the opposite side and let it continue
@@ -81,22 +72,19 @@ void fish :: fixOffScreen()
     }
 }
 
-void fish :: updateVelocity()
-{
+void fish::updateVelocity() {
     velocity += (3*vSeparation() + 0.2*vAlignment() + 2*vCohesion())*0.1;
-    if(velocity.magnitude() > 0) {
+    if (velocity.magnitude() > 0) {
         velocity.normalize(); //might wanna change this
         velocity *= 1.5;
     }
 }
 
-void fish :: updatePosition()
-{
+void fish :: updatePosition() {
     position += velocity*0.5; //scale by something?
 }
 //should work
-vector3 fish :: vSeparation()
-{
+vector3 fish::vSeparation() {
     vector3 finalV = vector3(0, 0, 0); //will become the returned vector3
 
     float r = 20; ///How close fish can be to trigger this. Tweak this later!
@@ -117,12 +105,11 @@ vector3 fish :: vSeparation()
 
     ///may want to scale finalV by some amount
     //finalV -= velocity;
-    if(finalV.magnitude() == 0) {return vector3(0, 0, 0);}
+    if (finalV.magnitude() == 0) {return vector3(0, 0, 0);}
     return finalV.normalized(); ///may want to scale differently
 }
 //should work
-vector3 fish :: vAlignment()
-{
+vector3 fish::vAlignment() {
     vector3 finalV = vector3(0, 0, 0);
     double fishConsidering;
 
@@ -144,8 +131,7 @@ vector3 fish :: vAlignment()
 }
 
 //should work
-vector3 fish :: vCohesion()
-{
+vector3 fish :: vCohesion() {
     vector3 avgPos = vector3(0, 0, 0);
     double fishConsidering = 0;
 
@@ -170,29 +156,5 @@ vector3 fish :: vCohesion()
 
     return avgPos;
 }
-
-//allAgents is the list of all agent types. Returns a vector with only fish and not the agent itself. Yes, this works.
-/*std :: vector <fish> fish :: otherFishList()
-{
-    std::vector<fish> test = *allFishList;
-
-    for(int ii = test.size()-1; ii >= 0; ii --)
-    {
-        if(test[ii].id == id) { test.erase(test.begin() + ii); }
-    }
-    return test;
-}*/
-
-//For debugging purposes
-//void fish::reportFishNumbers()
-//{
-//    std::cout<<"This fish, (id #"<<id<<") knows there are "<<allFishList -> size()<<" fish in the sea"<<endl;
-//    std::cout<<"    These fish are: ";
-//    for(int ii = 0; ii < allFishList -> size(); ii ++) {
-//        vector<fish> subFish = *allFishList;
-//        cout<<subFish[ii].id<<", ";
-//    }
-//    std::cout<<endl;
-//}
 
 #endif /* fish_hpp */
