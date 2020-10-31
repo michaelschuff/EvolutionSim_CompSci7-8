@@ -85,7 +85,7 @@ quaternion &quaternion::operator*=(const float &c) {
 }
 
 quaternion quaternion::operator/(const float &c) const {
-    assert(c!=0);
+//    assert(c!=0);
     return quaternion(r/c, i/c, j/c, k/c);
 }
 

@@ -53,29 +53,37 @@ int main(int, char const**) {
     // MARK: Evolution vars
     //whale model points
     vector3  wp1(  -1,  1.2,     0),
-                 wp2( 0.5,    1,   0.5),
-                 wp3( 0.5,  0.1,  0.35),
-                 wp4( 0.5,    1,  -0.5),
-                 wp5( 0.5,  0.1, -0.35),
-                 wp6(   1,    1,   0.5),
-                 wp7(   1,    1,  -0.5),
-                 wp8(   1,  0.3,   0.4),
-                 wp9(   1,  0.3,  -0.4),
-                wp10( 2.2,    1,     0),
-                wp11(-1.3,  1.6,   0.5),
-                wp12(-1.3,  1.6,  -0.5),
-                wp13( 1.7,  0.8,   0.2),
-                wp14( 1.8,  0.8,  0.18),
-                wp15(1.75, 0.85,  0.19),
-                wp16( 1.7,  0.8,  -0.2),
-                wp17( 1.8,  0.8, -0.18),
-                wp18(1.75, 0.85, -0.19);
+             wp2( 0.5,    1,   0.5),
+             wp3( 0.5,  0.1,  0.35),
+             wp4( 0.5,    1,  -0.5),
+             wp5( 0.5,  0.1, -0.35),
+             wp6(   1,    1,   0.5),
+             wp7(   1,    1,  -0.5),
+             wp8(   1,  0.3,   0.4),
+             wp9(   1,  0.3,  -0.4),
+            wp10( 2.2,    1,     0),
+            wp11(-1.3,  1.6,   0.5),
+            wp12(-1.3,  1.6,  -0.5),
+            wp13( 1.7,  0.8,   0.2),
+            wp14( 1.8,  0.8,  0.18),
+            wp15(1.75, 0.85,  0.19),
+            wp16( 1.7,  0.8,  -0.2),
+            wp17( 1.8,  0.8, -0.18),
+            wp18(1.75, 0.85, -0.19);
+    //fish model points
+    vector3  fp1(   1,     0,     0),
+             fp2(   0,   0.5,     0),
+             fp3(   0,-0.1,-0.172),
+             fp4(   0,-0.1, 0.172);
     vector<whale> whaleList;
     vector<fish> fishList;
     double sensitivity = 0.1, speed = 5;
-    vector<color> whale_colors;
+    vector<color> whale_colors, fish_colors;
     for (int i = 0; i < 19; i++) {
         whale_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
+    }
+    for (int i = 0; i < 4; i++) {
+        fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
     int numWhales = 10;
     vector3 limits(100, 100, 100);
@@ -332,10 +340,21 @@ int main(int, char const**) {
                 new line(vector3(0, 100, 100), vector3(0, 100, 0), color()),
             };
             
-            for (int i = 0; i < fishList.size(); i++) {
-                objects.push_back(new vector3(fishList[i].position));
-            }
+//            for (int i = 0; i < fishList.size(); i++) {
+//                objects.push_back(new vector3(fishList[i].position));
+//            }
             
+            for (int i = 0; i < fishList.size(); i++) {
+                quaternion q = get_quaternion(vector3(1, 0, 0), fishList[i].velocity);
+                objects.push_back(new triangle(fishList[i].position + fp2.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[0]));
+                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp2.rotated(q), fish_colors[1]));
+                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp2.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[2]));
+                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[3]));
+            }
+//            objects.push_back(new triangle(fp2, fp3, fp4, fish_colors[0]));
+//            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
+//            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
+//            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
             for (int i = 0; i < whaleList.size(); i++) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), whaleList[i].velocity);
                 objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
