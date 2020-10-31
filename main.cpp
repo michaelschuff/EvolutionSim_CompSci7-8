@@ -43,8 +43,8 @@ int main(int, char const**) {
     sep.create(0, 1);
     ali.create(0, 1);
     coh.setSliderValue(0.1);
-    sep.setSliderValue(0.1);
-    ali.setSliderValue(0.2);
+    sep.setSliderValue(1);
+    ali.setSliderValue(0.25);
 //    SliderSFML(10, 0, resourcePath());
 //    SliderSFML(20, 0, resourcePath());
     vector<object*> objects = {
