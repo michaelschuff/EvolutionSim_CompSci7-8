@@ -25,7 +25,7 @@ public:
     int framerate;
     float speed = 20;
     //constructor. Same as agent constructor for now.
-    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 50) : agent(pos, vel), framerate(_framerate), vision(_vision) {
+    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel), framerate(_framerate), vision(_vision) {
 //        srand(time(NULL));
     }
 

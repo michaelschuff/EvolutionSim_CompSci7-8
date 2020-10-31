@@ -19,7 +19,7 @@
 #include "whale.hpp"
 #include "fish.hpp"
 #include "SliderSFML.hpp"
-#include "ResourcePath.hpp"
+//#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
