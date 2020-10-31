@@ -18,7 +18,8 @@
 #include <string>
 #include "whale.hpp"
 #include "fish.hpp"
-//#include "ResourcePath.hpp"
+#include "SliderSFML.hpp"
+#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
@@ -31,12 +32,21 @@ int main(int, char const**) {
     const int width = 800, height = 800, framerate = 60;
     bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
     RenderWindow window(VideoMode(width, height), "SFML window");
-    window.setMouseCursorVisible(false);
-    camera cam(vector3(5, 0, 0), vector3(-1, 0, 0).normalized(), vector3(0, 1, 0).normalized(), vector3(0, 0, -1).normalized(), 3.14159 / 3, 1);
+//    window.setMouseCursorVisible(false);
+    camera cam(vector3(0, 150, -80), vector3(0.253319, -0.590397, 0.76476).normalized(), vector3(0.185644, 0.805622, 0.560449).normalized(), vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(framerate);
     
-    
-    
+    SliderSFML coh(5, 30);
+    SliderSFML sep(5, 90);
+    SliderSFML ali(5, 150);
+    coh.create(0, 1);
+    sep.create(0, 1);
+    ali.create(0, 1);
+    coh.setSliderValue(0.1);
+    sep.setSliderValue(0.1);
+    ali.setSliderValue(0.2);
+//    SliderSFML(10, 0, resourcePath());
+//    SliderSFML(20, 0, resourcePath());
     vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
@@ -89,6 +99,14 @@ int main(int, char const**) {
     
     
     while (window.isOpen()) {
+//        cam.position.print();
+//        cam.up.print();
+//        cam.right.print();
+//        cam.forward.print();
+//        cout << endl << endl << endl;
+        cout << "coh: " << coh.getSliderValue() << endl;
+        cout << "sep: " << sep.getSliderValue() << endl;
+        cout << "ali: " << ali.getSliderValue() << endl << endl;
         active = window.hasFocus();
         // MARK: Handle Events
         Event event;
@@ -96,7 +114,7 @@ int main(int, char const**) {
             if (event.type == Event::Closed) {
                 window.close();
             } else if (event.type == Event::GainedFocus) {
-                window.setMouseCursorVisible(false);
+//                window.setMouseCursorVisible(false);
             } else if (event.type == Event::KeyPressed) {
                 switch (event.key.code) {
                     case Keyboard::A:
@@ -214,12 +232,12 @@ int main(int, char const**) {
             // MARK: Handle Inputs
             Vector2i mouse_position = Mouse::getPosition(window);
             if (mouse_position.x != width / 2) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
+//                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
             }
             if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
+//                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
             }
-            Mouse::setPosition(Vector2i(width/2, height/2), window);
+//            Mouse::setPosition(Vector2i(width/2, height/2), window);
             
             if (iDown) {
                 cam.rotate(cam.right, sensitivity * 10 * 3.14159 / 180.0);
@@ -254,6 +272,9 @@ int main(int, char const**) {
             
             // MARK: Update Agents
             for (int i = 0; i < fishList.size(); i++) {
+                fishList[i].cohesion = coh.getSliderValue();
+                fishList[i].separation = sep.getSliderValue();
+                fishList[i].alignment = ali.getSliderValue();
                 fishList[i].updateFish(fishList);
             }
             vector<int> deadFishId;
@@ -413,6 +434,9 @@ int main(int, char const**) {
                     window.draw(c);
                 }
             }
+            coh.draw(window);
+            sep.draw(window);
+            ali.draw(window);
             window.display();
         }
         

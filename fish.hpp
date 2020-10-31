@@ -20,16 +20,13 @@ using namespace std;
 
 class fish : public agent {
 public:
-    vector<vector3> velocities;
+    float cohesion=0.1, separation=0.1, alignment=0.2;
     float vision; ///could be private
     int framerate;
     float speed = 20;
     //constructor. Same as agent constructor for now.
     fish(vector3 pos, vector3 vel, int _framerate, int _vision = 50) : agent(pos, vel), framerate(_framerate), vision(_vision) {
 //        srand(time(NULL));
-        for (int i = 0; i < 30; i++){
-            velocities.push_back(vector3());
-        }
     }
 
     
@@ -60,24 +57,21 @@ private:
 
 void fish::updateFish(vector<fish> &allFish) {
     updateVelocity(allFish);
-    for (int i = 1; i < velocities.size(); i++) {
-        velocities[i - 1] = velocities[i];
-    }
     fixOffScreen();
-    velocities[velocities.size() - 1] = velocity;
     updatePosition();
 }
 
 void fish::fixOffScreen() {
 //    vector3 screenCenter = vector3(500, 500, 0);
 //    //if fish is off screen, move it to the opposite side and let it continue
-    if(position.x > fishboundary || position.x < 0 || position.y > fishboundary || position.y < 0 || position.z > fishboundary || position.z < 0) {
-        velocity = -speed * (position - 0.5 * vector3(fishboundary, fishboundary, fishboundary)).normalized();
-    }
+    position %= fishboundary;
+//    if(position.x > fishboundary || position.x < 0 || position.y > fishboundary || position.y < 0 || position.z > fishboundary || position.z < 0) {
+//        velocity = -speed * (position - 0.5 * vector3(fishboundary, fishboundary, fishboundary)).normalized();
+//    }
 }
 
 void fish::updateVelocity(vector<fish> &allFish) {
-    velocity = speed * (3*vSeparation(allFish) + 0.2*vAlignment(allFish) + 2*vCohesion(allFish)).normalized();
+    velocity = speed * (separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
 //    float x = ((float) rand() / RAND_MAX);
 //    float y = ((float) rand() / RAND_MAX);
 //    float z = ((float) rand() / RAND_MAX);
@@ -91,9 +85,8 @@ void fish::updatePosition() {
 vector3 fish::vSeparation(vector<fish> &allFish) {
     vector3 finalV; //will become the returned vector3
     //Evaluate each fish in the array
-    float r = 50;
+    float r = vision;
     for (int ii = 0; ii < allFish.size(); ii ++) {
-
         if(allFish[ii].id != id) {
             float dist = position.distance(allFish[ii].position);
             
@@ -103,8 +96,6 @@ vector3 fish::vSeparation(vector<fish> &allFish) {
                 finalV += (position - allFish[ii].position) / (dist*dist);
             }
         }
-
-        
     }
     return finalV;
 }
@@ -117,7 +108,7 @@ vector3 fish::vAlignment(vector<fish> &allFish) {
         if(allFish[ii].id != id) {
             double dist = position.distance(allFish[ii].position);
             if (dist < vision) {
-                finalV += allFish[ii].velocities[0] / (dist*dist);
+                finalV += allFish[ii].velocity / (dist*dist);
             }
         }
     }
