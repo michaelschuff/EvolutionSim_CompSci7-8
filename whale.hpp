@@ -145,7 +145,7 @@ void whale::decisionEat(int numFish) {
 
 void whale::decisionMove() {
     
-    float drandom = 10;
+    float drandom = 5;
     float randPhi = (rand() % ((int) drandom*2)) - drandom;
     float randTheta = (rand() % ((int) drandom*2)) - drandom;
     velocity.rotate(vector3(0, 1, 0), randTheta * 3.14159 / 180.0);
