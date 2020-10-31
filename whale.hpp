@@ -41,6 +41,7 @@ public:
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
     int age;
+    int speed = 20;
 
 private:
     int radius; //how far around the whale it can eat
@@ -55,7 +56,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
-    radius = 50; //200 cm
+    radius = 3;
     volume = (float) (4.0/3.0) * M_PI * pow(radius, 3);
     edges = boundary;
     age = 0;
@@ -85,7 +86,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
 }
 
 void whale::updatePosition () {
-    position += velocity / framerate;
+    position += speed * velocity / framerate;
 
     //check if beyond boundaries
     position %= edges.x;
@@ -143,22 +144,13 @@ void whale::decisionEat(int numFish) {
 }
 
 void whale::decisionMove() {
-    float randX, randY, randZ;
-
-    //random movement if not eating
-    while (true) {
-        //generate random values for velocity
-        randX = (rand() % 5) -2;
-        randY = (rand() % 5) -2;
-        randZ = (rand() % 5) -2;
-
-        if (randX != 0 && randY != 0 && randZ != 0) {
-            break;
-        }
-    }
-
     
-    velocity = 2 * vector3(randX, randY, randZ).normalized();
+    float drandom = 10;
+    float randPhi = (rand() % ((int) drandom*2)) - drandom;
+    float randTheta = (rand() % ((int) drandom*2)) - drandom;
+    velocity.rotate(vector3(0, 1, 0), randTheta * 3.14159 / 180.0);
+    vector3 temp(-velocity.z, 0, velocity.x);
+    velocity.rotate(temp, randPhi * 3.14159 / 180.0);
 }
 
 #endif /* whale_hpp */

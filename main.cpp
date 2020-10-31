@@ -45,8 +45,6 @@ int main(int, char const**) {
     coh.setSliderValue(0.1);
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
-//    SliderSFML(10, 0, resourcePath());
-//    SliderSFML(20, 0, resourcePath());
     vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
@@ -86,7 +84,7 @@ int main(int, char const**) {
     int totalWhales = numWhales;
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
-        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), limits, framerate);
+        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
         newWhale.id = w;
         whaleList.push_back(newWhale);
     }
@@ -99,14 +97,9 @@ int main(int, char const**) {
     
     
     while (window.isOpen()) {
-//        cam.position.print();
-//        cam.up.print();
-//        cam.right.print();
-//        cam.forward.print();
-//        cout << endl << endl << endl;
-        cout << "coh: " << coh.getSliderValue() << endl;
-        cout << "sep: " << sep.getSliderValue() << endl;
-        cout << "ali: " << ali.getSliderValue() << endl << endl;
+//        cout << "coh: " << coh.getSliderValue() << endl;
+//        cout << "sep: " << sep.getSliderValue() << endl;
+//        cout << "ali: " << ali.getSliderValue() << endl << endl;
         active = window.hasFocus();
         // MARK: Handle Events
         Event event;
@@ -240,16 +233,16 @@ int main(int, char const**) {
 //            Mouse::setPosition(Vector2i(width/2, height/2), window);
             
             if (iDown) {
-                cam.rotate(cam.right, sensitivity * 10 * 3.14159 / 180.0);
+                cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
             }
             if (kDown) {
-                cam.rotate(cam.right, -sensitivity * 10 * 3.14159 / 180.0);
+                cam.rotate(cam.right, -sensitivity * 20 * 3.14159 / 180.0);
             }
             if (jDown) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * 10 * 3.14159 / 180.0);
+                cam.rotate(vector3(0, 1, 0), sensitivity * 20 * 3.14159 / 180.0);
             }
             if (lDown) {
-                cam.rotate(vector3(0, 1, 0), -sensitivity * 10 * 3.14159 / 180.0);
+                cam.rotate(vector3(0, 1, 0), -sensitivity * 20 * 3.14159 / 180.0);
             }
             if (wDown) {
                 cam.position += speed * cam.forward / 60.0;
@@ -291,7 +284,7 @@ int main(int, char const**) {
                         }
                     }
                 } else { //move whale
-                    whaleList[w].updatePosition();  //the number passed is the "length" of a frame
+                    whaleList[w].updatePosition();
                 }
             }
             
