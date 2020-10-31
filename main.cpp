@@ -71,10 +71,10 @@ int main(int, char const**) {
             wp17( 1.8,  0.8, -0.18),
             wp18(1.75, 0.85, -0.19);
     //fish model points
-    vector3  fp1(   1,     0,     0),
-             fp2(   0,   0.2,     0),
-             fp3(   0,-0.1,-0.172),
-             fp4(   0,-0.1, 0.172);
+    vector3  fp1(1,   0,     0),
+             fp2(0, 0.2,     0),
+             fp3(0,-0.1,-0.172),
+             fp4(0,-0.1, 0.172);
     vector<whale> whaleList;
     vector<fish> fishList;
     double sensitivity = 0.1, speed = 5;
