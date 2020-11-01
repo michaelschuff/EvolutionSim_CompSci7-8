@@ -35,7 +35,8 @@ int main(int, char const**) {
 //    window.setMouseCursorVisible(false);
     camera cam(vector3(0, 150, -80), vector3(0.253319, -0.590397, 0.76476).normalized(), vector3(0.185644, 0.805622, 0.560449).normalized(), vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(framerate);
-    
+    int frameCounter = 0;
+
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -102,8 +103,8 @@ int main(int, char const**) {
         newFish.id = f;
         fishList.push_back(newFish);
     }
-    
-    
+
+
     while (window.isOpen()) {
         active = window.hasFocus();
         // MARK: Handle Events
@@ -225,7 +226,7 @@ int main(int, char const**) {
                 }
             }
         }
-        
+
         if (active) {
             // MARK: Handle Inputs
             Vector2i mouse_position = Mouse::getPosition(window);
@@ -236,7 +237,7 @@ int main(int, char const**) {
 //                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
             }
 //            Mouse::setPosition(Vector2i(width/2, height/2), window);
-            
+
             if (iDown) {
                 cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
             }
@@ -267,7 +268,7 @@ int main(int, char const**) {
             if (qDown) {
                 cam.position -= speed * cam.up / 60.0;
             }
-            
+
             // MARK: Update Agents
             for (int i = 0; i < fishList.size(); i++) {
                 fishList[i].cohesion = coh.getSliderValue();
@@ -292,36 +293,49 @@ int main(int, char const**) {
                     whaleList[w].updatePosition();
                 }
             }
-            
+
             for (int i = 0; i < deadFishId.size(); i++) {
 //                fishList.erase(fishList.begin() + deadFishId[i]);
             }
-            
+
             //go through whales and see which ones die
             //sort the whales based on number of fish they've eaten
             for (int i = 0; i < whaleList.size(); i++) {
-//                int j = i;
-//                while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
-//                    swap(whaleList[j], whaleList[j - 1]);
-//                    j = j - 1;
-//                }
+                int j = i;
+                while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
+                    swap(whaleList[j], whaleList[j - 1]);
+                    j = j - 1;
+                }
             }
 
-            //bottom 10% die
-            for (int d = 0; d < numDie; d++) {
-//                whaleList.erase(whaleList.begin() + d);
+
+            if ((frameCounter % 500) == 0)
+            {
+                //bottom 10% die
+                for (int d = 0; d < numDie; d++) {
+                    whaleList.erase(whaleList.begin() + d);
+                }
+
+                //top 10% reproduce
+                for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
+                    whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, whaleList[r].velocity, limits, framerate);
+                    totalWhales++;
+                    newWhale.id = totalWhales;
+                    whaleList.push_back(newWhale);
+                }
+
+                for (int ww = 0; ww < whaleList.size(); ww++)
+                {
+                    cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
+                }
+                cout << endl;
             }
 
-            //top 10% reproduce
-            for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
-//                whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, vector3(), limits);
-//                totalWhales++;
-//                newWhale.id = totalWhales;
-//                whaleList.push_back(newWhale);
-            }
+            frameCounter ++;
+
             window.clear();
-            
-            
+
+
             objects = {
                 new line(vector3(0, 0, 0), vector3(100, 0, 0), color(0.5, 0.5, 0.5)),
                 new line(vector3(100, 0, 0), vector3(100, 0, 100), color(0.5, 0.5, 0.5)),
@@ -336,11 +350,11 @@ int main(int, char const**) {
                 new line(vector3(100, 100, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
                 new line(vector3(0, 100, 100), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
             };
-            
+
 //            for (int i = 0; i < fishList.size(); i++) {
 //                objects.push_back(new vector3(fishList[i].position));
 //            }
-            
+
             for (int i = 0; i < fishList.size(); i++) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), fishList[i].velocity);
                 objects.push_back(new triangle(fishList[i].position + fp2.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[0]));
@@ -413,7 +427,7 @@ int main(int, char const**) {
 //                objects.push_back(new triangle(whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
 //                objects.push_back(new triangle(whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
 //            }
-            
+
             // MARK: Draw Shapes to Window
             circle* _circ = nullptr;
             rectangle* _rect = nullptr;
@@ -449,7 +463,7 @@ int main(int, char const**) {
             ali.draw(window);
             window.display();
         }
-        
+
     }
 
     return EXIT_SUCCESS;

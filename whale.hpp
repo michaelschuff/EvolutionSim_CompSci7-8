@@ -2,8 +2,8 @@
 //  whale.hpp
 //  CompSci78
 //
-//  Created by Michael Schuff on 10/30/20.
-//  Copyright © 2020 Michael Schuff. All rights reserved.
+//  Created by Bronte McKinnis
+//  Copyright © 2020 Bronte McKinnis. All rights reserved.
 //
 
 #ifndef whale_hpp
@@ -73,7 +73,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     } else if (eatCloseFish < 1) {
         eatCloseFish = 1;
     }
-    
+
     if (eatDenseFish > 10) {
         eatDenseFish = 10;
     } else if (eatDenseFish < 1) {
@@ -121,7 +121,7 @@ void whale::decision(vector<fish> &fishList) {
     decisionEat(fishList.size());
 
     age++;
-    
+
     if (eat == true) {//eat fish
         //don't move, in main go through foodList and remove those IDs
         fishCounter += foodList.size();
@@ -144,7 +144,7 @@ void whale::decisionEat(int numFish) {
 }
 
 void whale::decisionMove() {
-    
+
     float drandom = 5;
     float randPhi = (rand() % ((int) drandom*2)) - drandom;
     float randTheta = (rand() % ((int) drandom*2)) - drandom;
