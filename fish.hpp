@@ -33,6 +33,7 @@ public:
     void updateFish(vector<fish> &allFish);
 
     void reportFishNumbers();
+    fish &operator=(const fish &f);
 
 private:
     const float fishboundary = 100;
@@ -54,6 +55,16 @@ private:
     //std::vector <fish> otherFishList();
 
 };
+
+fish &fish::operator=(const fish &f) {
+    cohesion=f.cohesion;
+    separation=f.separation;
+    alignment=f.alignment;
+    vision = f.vision;
+    framerate = f.framerate;
+    speed = f.speed;
+    return *this;
+}
 
 void fish::updateFish(vector<fish> &allFish) {
     updateVelocity(allFish);

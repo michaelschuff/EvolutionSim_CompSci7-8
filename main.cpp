@@ -276,28 +276,30 @@ int main(int, char const**) {
                 fishList[i].alignment = ali.getSliderValue();
                 fishList[i].updateFish(fishList);
             }
-            vector<int> deadFishId;
-            for (int w = 0; w < whaleList.size(); w++) {
-                whaleList[w].decision(fishList);
-                if (whaleList[w].eat == true) {// when whales are able to eat
-                    for (int e = whaleList[w].foodList.size() - 1; e >= 0; e--) {//go through the list of food
-                        for (int f = fishList.size() - 1; f >= 0; f--) {//see if the IDs match those of fish
-                            if (fishList[f].id == whaleList[w].foodList[e]) {
+            
+            for (int ww = 0; ww < whaleList.size(); ww++) {
+                whaleList[ww].decision(fishList);
+                if (whaleList[ww].eat == true) {// when whales are able to eat
+                    //go through the list of food
+                    for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
+                    {
+                        //see if the IDs match those of fish
+                        for (int ff = fishList.size() - 1; ff >= 0; ff--)
+                        {
+
+                            if (fishList[ff].id == whaleList[ww].foodList[ee])
+                            {
                                 //eat the fish
-                                for (int i = 0; i < deadFishId.size(); i++) {
-                                    fishList.erase(fishList.begin() + deadFishId[i]);
-                                }
-                                deadFishId.push_back(f);
-                                whaleList[w].foodList.erase(whaleList[w].foodList.begin() + e);
+
+                                fishList.erase(fishList.begin() + ff);
+                                whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
                             }
                         }
                     }
                 } else { //move whale
-                    whaleList[w].updatePosition();
+                    whaleList[ww].updatePosition();
                 }
             }
-
-            
 
             //go through whales and see which ones die
             //sort the whales based on number of fish they've eaten
