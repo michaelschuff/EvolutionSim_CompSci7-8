@@ -366,67 +366,67 @@ int main(int, char const**) {
 //            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
 //            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
 //            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
-//            for (int i = 0; i < whaleList.size(); i++) {
-//                quaternion q = get_quaternion(vector3(1, 0, 0), whaleList[i].velocity);
-//                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
-//                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
-//                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
-//                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[3]));
-//                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q),whaleList[i].position + wp1.rotated(q) , whaleList[i].position + wp5.rotated(q), whale_colors[3]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
-//                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[5]));
-//                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp4.rotated(q), whale_colors[5]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
-//                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
-//                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
-//                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
-//                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
-//                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
-//                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
-//                        //Head
-//                objects.push_back(new triangle(whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
-//                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
-//                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
-//                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
-//                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
-//
-//                //Tail
-//                objects.push_back(new triangle(whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
-//                objects.push_back(new triangle(whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
-//
-//                //Eyes
-//                objects.push_back(new triangle(whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
-//                objects.push_back(new triangle(whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
-//
-//                objects.push_back(new triangle(whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
-//                objects.push_back(new triangle(whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
-//            }
+            for (int i = 0; i < whaleList.size(); i++) {
+                quaternion q = get_quaternion(vector3(1, 0, 0), whaleList[i].velocity);
+                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
+                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
+                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
+                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[3]));
+                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q),whaleList[i].position + wp1.rotated(q) , whaleList[i].position + wp5.rotated(q), whale_colors[3]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
+                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[5]));
+                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp4.rotated(q), whale_colors[5]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
+                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
+                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
+                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
+                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
+                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
+                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
+                        //Head
+                objects.push_back(new triangle(whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
+                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
+                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
+                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
+                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
+
+                //Tail
+                objects.push_back(new triangle(whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
+                objects.push_back(new triangle(whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
+
+                //Eyes
+                objects.push_back(new triangle(whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
+                objects.push_back(new triangle(whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
+
+                objects.push_back(new triangle(whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
+                objects.push_back(new triangle(whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
+            }
 
             // MARK: Draw Shapes to Window
             circle* _circ = nullptr;

@@ -12,15 +12,15 @@
 using namespace sf;
 using namespace std;
 
-#include<iostream>
-#include<math.h>
-#include<time.h>
-#include<vector>
+#include <iostream>
+#include <math.h>
+#include <time.h>
+#include <vector>
 #include "vector3.hpp"
 #include "agent.hpp"
 #include "fish.hpp"
 #include <cstdlib>
-#include<cmath>
+#include <cmath>
 
 
 /*
