@@ -284,8 +284,11 @@ int main(int, char const**) {
                         for (int f = fishList.size() - 1; f >= 0; f--) {//see if the IDs match those of fish
                             if (fishList[f].id == whaleList[w].foodList[e]) {
                                 //eat the fish
-//                                deadFishId.push_back(f);
-//                                whaleList[w].foodList.erase(whaleList[w].foodList.begin() + e);
+                                for (int i = 0; i < deadFishId.size(); i++) {
+                                    fishList.erase(fishList.begin() + deadFishId[i]);
+                                }
+                                deadFishId.push_back(f);
+                                whaleList[w].foodList.erase(whaleList[w].foodList.begin() + e);
                             }
                         }
                     }
@@ -294,9 +297,7 @@ int main(int, char const**) {
                 }
             }
 
-            for (int i = 0; i < deadFishId.size(); i++) {
-//                fishList.erase(fishList.begin() + deadFishId[i]);
-            }
+            
 
             //go through whales and see which ones die
             //sort the whales based on number of fish they've eaten
