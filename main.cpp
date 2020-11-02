@@ -276,10 +276,11 @@ int main(int, char const**) {
                 fishList[i].alignment = ali.getSliderValue();
                 fishList[i].updateFish(fishList);
             }
-            
+
             for (int ww = 0; ww < whaleList.size(); ww++) {
                 whaleList[ww].decision(fishList);
                 if (whaleList[ww].eat == true) {// when whales are able to eat
+                    /*
                     //go through the list of food
                     for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
                     {
@@ -296,6 +297,7 @@ int main(int, char const**) {
                             }
                         }
                     }
+                    */
                 } else { //move whale
                     whaleList[ww].updatePosition();
                 }
