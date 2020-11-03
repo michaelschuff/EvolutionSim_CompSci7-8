@@ -14,7 +14,7 @@
 class color {
 public:
     int r, g, b, a;
-
+    
     color() : r(255), g(255), b(255), a(255) {}
     color(int _r, int _g, int _b, int _a = 255) : r(_r), g(_g), b(_b), a(_a) {}
     color(float _r, float _g, float _b, float _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}

@@ -15,14 +15,6 @@
 #include "color.hpp"
 #include "object.hpp"
 
-
-/**
- * Rounds floating point number to a number of decimal places.
- *
- * @param n number
- * @param decimals number of decimal places. 0 to cast to int, 1 to round to tenths, -1 to round to nearest 10
- * @return rounded floating point number.
- */
 float round(float n, int decimals) {
     return round(pow(10, decimals) * n) / pow(10, decimals);
 }
@@ -48,6 +40,8 @@ public:
     vector3 &operator/=(float k);
     vector3 &operator=(const vector3 &v);
     vector3 operator-();
+    vector3 operator%(float k);
+    vector3 &operator%=(float k);
     float &operator[](int i) const;
 
     void cross(const vector3 &v);                       //vector becomes the cross product of the vector and the parameter
@@ -115,9 +109,10 @@ vector3 vector3::operator/(float k){
     return vector3(x/k, y/k, z/k);
 }
 
-
 vector3 &vector3::operator/=(float k) {
-
+    /*if (k == 0) {
+        return;
+    }*/
     assert(k!=0);
     x /= k;
     y /= k;
@@ -134,6 +129,30 @@ vector3 &vector3::operator=(const vector3 &v) {
 
 vector3 vector3::operator-() const {
     return vector3(-x, -y, -z);
+}
+
+vector3 vector3::operator%(float k) {
+    vector3 v;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    while (v.x > k) { v.x -= k; }
+    while (v.x < 0) { v.x += k; }
+    while (v.y > k) { v.y -= k; }
+    while (v.y < 0) { v.y += k; }
+    while (v.z > k) { v.z -= k; }
+    while (v.z < 0) { v.z += k; }
+    return v;
+}
+
+vector3 &vector3::operator%=(float k) {
+    while (x > k) { x -= k; }
+    while (x < 0) { x += k; }
+    while (y > k) { y -= k; }
+    while (y < 0) { y += k; }
+    while (z > k) { z -= k; }
+    while (z < 0) { z += k; }
+    return *this;
 }
 
 float &vector3::operator[](int i) const {
@@ -170,8 +189,10 @@ float vector3::square() const {
 }
 
 void vector3::normalize() {
-    assert(magnitude()!=0);
-    *this /= magnitude();
+    float mag = magnitude();
+    if (mag != 0) {
+        *this /= mag;
+    }
 }
 
 vector3 vector3::normalized() {
