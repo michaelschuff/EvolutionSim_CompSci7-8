@@ -86,19 +86,19 @@ int main(int, char const**) {
     for (int i = 0; i < 4; i++) {
         fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
-    int numWhales = 10;
-    vector3 limits(100, 100, 100);
-    int numReproduce = numWhales * 0.10;
+    int numWhales = 10; //*
+    vector3 limits(100, 100, 100); //*
+    int numReproduce = numWhales * 0.10; //...
     int numDie = numWhales * 0.10;
     int totalWhales = numWhales;
     //make whales w/ random starting traits
-    for (int w = 0; w < numWhales; w++) {
+    for (int w = 0; w < numWhales; w++) { //*
         whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
         newWhale.id = w;
         whaleList.push_back(newWhale);
     }
     //make fish
-    for (int f = 0; f < 300; f++) {
+    for (int f = 0; f < 300; f++) { //*
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         newFish.id = f;
         fishList.push_back(newFish);
@@ -270,14 +270,14 @@ int main(int, char const**) {
             }
 
             // MARK: Update Agents
-            for (int i = 0; i < fishList.size(); i++) {
+            for (int i = 0; i < fishList.size(); i++) { //*
                 fishList[i].cohesion = coh.getSliderValue();
                 fishList[i].separation = sep.getSliderValue();
                 fishList[i].alignment = ali.getSliderValue();
                 fishList[i].updateFish(fishList);
             }
 
-            for (int ww = 0; ww < whaleList.size(); ww++) {
+            for (int ww = 0; ww < whaleList.size(); ww++) { //*
                 whaleList[ww].decision(fishList);
                 if (whaleList[ww].eat == true) {// when whales are able to eat
                     /*
@@ -313,7 +313,7 @@ int main(int, char const**) {
                 }
             }
 
-
+            ///just copied this, must mess with
             if ((frameCounter % 500) == 0)
             {
                 //bottom 10% die
