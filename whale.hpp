@@ -56,7 +56,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
-    radius = 3;
+    radius = 5;
     volume = (float) (4.0/3.0) * M_PI * pow(radius, 3);
     edges = boundary;
     age = 0;
@@ -114,6 +114,13 @@ void whale::sight(vector<fish> &fishList) {
             foodList.push_back(fishList[f].id);
         }
     }
+/*
+    if (foodList.size() != 0)
+    {
+        cout << id << ": " << foodList.size() << endl;
+        cout << "     dense: " << eatDenseFish << ",  close: " << eatCloseFish << endl;
+    }
+    */
 }
 
 void whale::decision(vector<fish> &fishList) {
@@ -134,12 +141,18 @@ void whale::decisionEat(int numFish) {
     //numFish is the size of the fishList in main
     eat = false;
 
-    //see if foodList is dense enoughs
-    float density = ((float)foodList.size() / (float)volume) * 1000000.0f;
-    float percentTotal = ((float)foodList.size() / (float)numFish) * 100.0f;
-
+    //see if foodList is dense enough
+    float density = ((float)foodList.size() / (float)volume) * 1000.0f;
+    float percentTotal = ((float)foodList.size() / (float)numFish) * 1000.0f;
+/*
+    if (density != 0.0f && percentTotal != 0.0f)
+    {
+        cout << "     density: " << density << ", percentToal: " << percentTotal << endl;
+    }
+*/
     if (density >= eatDenseFish || percentTotal >= eatCloseFish) {
         eat = true;
+        //cout << "     eat" << endl;
     }
 }
 
