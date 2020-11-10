@@ -13,28 +13,31 @@ class evolutionSim {
 public:
     evolutionSim(int, vector3, int);
 
-    void fishReproduction();
-    void whaleReproduction();
-
     vector<whale> whaleList;
     vector<fish> fishList;
 
+    void updateSim(float, float, float);
+
+private:
     int numReproduce;
     int numDie;
-    int numWhales;
+    int frameCounter;
+    int framerate;
 
     vector3 limits;
 
-    void updateSim(float, float, float);
     void killFish();
+    void whaleReproduction();
+    //void fishReproduction();
 
 };
 
-evolutionSim::evolutionSim(int num, vector3 lim, int framerate) {
-    numWhales = num;
+evolutionSim::evolutionSim(int numWhales, vector3 lim, int rate) {
     limits = lim;
     numReproduce = numWhales * 0.10;
     numDie = numWhales * 0.10;
+    frameCounter = 0;
+    framerate = rate;
 
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
@@ -62,41 +65,50 @@ void evolutionSim::updateSim(float coh, float sep, float ali)
     }
 
     for (int ww = 0; ww < whaleList.size(); ww++) {
+
         whaleList[ww].decision(fishList);
-        if (whaleList[ww].eat == true) {// when whales are able to eat
+
+        // when whales are able to eat
+        if (whaleList[ww].eat == true) {
             //killFish();
-        } else { //move whale
+        }
+
+        //move whale
+        else
+        {
             whaleList[ww].updatePosition();
         }
     }
+
+    whaleReproduction ();
+    frameCounter ++;
 }
 
 void evolutionSim::killFish()
 {
-    /*
-    //go through the list of food
-    for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
+    for (int ww = whaleList.size() -1; ww >= 0; ww--)
     {
-        //see if the IDs match those of fish
-        for (int ff = fishList.size() - 1; ff >= 0; ff--)
+        //go through the list of food
+        for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
         {
-
-            if (fishList[ff].id == whaleList[ww].foodList[ee])
+            //see if the IDs match those of fish
+            for (int ff = fishList.size() - 1; ff >= 0; ff--)
             {
-                //eat the fish
 
-                fishList.erase(fishList.begin() + ff);
-                whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
+                if (fishList[ff].id == whaleList[ww].foodList[ee])
+                {
+                    //eat the fish
+
+                    fishList.erase(fishList.begin() + ff);
+                    whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
+                }
             }
         }
     }
-    */
 }
 
-///deal with this
-void evolutionSim::whaleReproduction(int frameCounter)
+void evolutionSim::whaleReproduction()
 {
-    //go through whales and see which ones die
     //sort the whales based on number of fish they've eaten
     for (int i = 0; i < whaleList.size(); i++) {
         int j = i;
@@ -106,6 +118,7 @@ void evolutionSim::whaleReproduction(int frameCounter)
         }
     }
 
+    //every 500 frames whales reproduce/die
     if ((frameCounter % 500) == 0)
     {
         //bottom 10% die
@@ -116,8 +129,6 @@ void evolutionSim::whaleReproduction(int frameCounter)
         //top 10% reproduce
         for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
             whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, whaleList[r].velocity, limits, framerate);
-            totalWhales++;
-            newWhale.id = totalWhales;
             whaleList.push_back(newWhale);
         }
 
@@ -127,7 +138,5 @@ void evolutionSim::whaleReproduction(int frameCounter)
         }
         cout << endl;
     }
-
-    frameCounter ++;
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED

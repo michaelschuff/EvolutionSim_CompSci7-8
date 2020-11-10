@@ -9,6 +9,7 @@
 #include "camera.hpp"
 #include "object.hpp"
 #include "objects2d.hpp"
+#include "evolutionSim.hpp"
 #include <math.h>
 #include "quaternion.hpp"
 #include <cstdlib>
@@ -76,8 +77,7 @@ int main(int, char const**) {
              fp2(0, 0.2,     0),
              fp3(0,-0.1,-0.172),
              fp4(0,-0.1, 0.172);
-    vector<whale> whaleList;
-    vector<fish> fishList;
+
     double sensitivity = 0.1, speed = 5;
     vector<color> whale_colors, fish_colors;
     for (int i = 0; i < 19; i++) {
@@ -86,24 +86,12 @@ int main(int, char const**) {
     for (int i = 0; i < 4; i++) {
         fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
-    int numWhales = 10; //*
-    vector3 limits(100, 100, 100); //*
-    int numReproduce = numWhales * 0.10; //...
-    int numDie = numWhales * 0.10;
-    int totalWhales = numWhales;
-    //make whales w/ random starting traits
-    for (int w = 0; w < numWhales; w++) { //*
-        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
-        newWhale.id = w;
-        whaleList.push_back(newWhale);
-    }
-    //make fish
-    for (int f = 0; f < 300; f++) { //*
-        fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
-        newFish.id = f;
-        fishList.push_back(newFish);
-    }
 
+    //create a simulation object
+    int numWhales = 10;
+    vector3 limits(100, 100, 100);
+
+    evolutionSim simulation(numWhales, limits, framerate);
 
     while (window.isOpen()) {
         active = window.hasFocus();
@@ -269,74 +257,8 @@ int main(int, char const**) {
                 cam.position -= speed * cam.up / 60.0;
             }
 
-            // MARK: Update Agents
-            for (int i = 0; i < fishList.size(); i++) { //*
-                fishList[i].cohesion = coh.getSliderValue();
-                fishList[i].separation = sep.getSliderValue();
-                fishList[i].alignment = ali.getSliderValue();
-                fishList[i].updateFish(fishList);
-            }
-
-            for (int ww = 0; ww < whaleList.size(); ww++) { //*
-                whaleList[ww].decision(fishList);
-                if (whaleList[ww].eat == true) {// when whales are able to eat
-                    /*
-                    //go through the list of food
-                    for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
-                    {
-                        //see if the IDs match those of fish
-                        for (int ff = fishList.size() - 1; ff >= 0; ff--)
-                        {
-
-                            if (fishList[ff].id == whaleList[ww].foodList[ee])
-                            {
-                                //eat the fish
-
-                                fishList.erase(fishList.begin() + ff);
-                                whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
-                            }
-                        }
-                    }
-                    */
-                } else { //move whale
-                    whaleList[ww].updatePosition();
-                }
-            }
-
-            //go through whales and see which ones die
-            //sort the whales based on number of fish they've eaten
-            for (int i = 0; i < whaleList.size(); i++) {
-                int j = i;
-                while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
-                    swap(whaleList[j], whaleList[j - 1]);
-                    j = j - 1;
-                }
-            }
-
-            ///just copied this, must mess with
-            if ((frameCounter % 500) == 0)
-            {
-                //bottom 10% die
-                for (int d = 0; d < numDie; d++) {
-                    whaleList.erase(whaleList.begin() + d);
-                }
-
-                //top 10% reproduce
-                for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
-                    whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, whaleList[r].velocity, limits, framerate);
-                    totalWhales++;
-                    newWhale.id = totalWhales;
-                    whaleList.push_back(newWhale);
-                }
-
-                for (int ww = 0; ww < whaleList.size(); ww++)
-                {
-                    cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
-                }
-                cout << endl;
-            }
-
-            frameCounter ++;
+            //update simulation
+            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue());
 
             window.clear();
 
@@ -360,77 +282,77 @@ int main(int, char const**) {
 //                objects.push_back(new vector3(fishList[i].position));
 //            }
 
-            for (int i = 0; i < fishList.size(); i++) {
-                quaternion q = get_quaternion(vector3(1, 0, 0), fishList[i].velocity);
-                objects.push_back(new triangle(fishList[i].position + fp2.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[0]));
-                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp2.rotated(q), fish_colors[1]));
-                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp2.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[2]));
-                objects.push_back(new triangle(fishList[i].position + fp1.rotated(q), fishList[i].position + fp3.rotated(q), fishList[i].position + fp4.rotated(q), fish_colors[3]));
+            for (int i = 0; i < simulation.fishList.size(); i++) {
+                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+                objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[0]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp2.rotated(q), fish_colors[1]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp2.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[2]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[3]));
             }
 //            objects.push_back(new triangle(fp2, fp3, fp4, fish_colors[0]));
 //            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
 //            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
 //            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
-            for (int i = 0; i < whaleList.size(); i++) {
-                quaternion q = get_quaternion(vector3(1, 0, 0), whaleList[i].velocity);
-                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
-                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[0]));
+            for (int i = 0; i < simulation.whaleList.size(); i++) {
+                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i].velocity);
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[0]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[0]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
-                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[1]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[1]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[1]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
-                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp2.rotated(q), whale_colors[2]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), whale_colors[2]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), whale_colors[2]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp1.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[3]));
-                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q),whaleList[i].position + wp1.rotated(q) , whaleList[i].position + wp5.rotated(q), whale_colors[3]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), whale_colors[3]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp1.rotated(q) , simulation.whaleList[i].position + wp5.rotated(q), whale_colors[3]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
-                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[4]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), whale_colors[4]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp3.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), whale_colors[4]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[5]));
-                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp4.rotated(q), whale_colors[5]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), whale_colors[5]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp4.rotated(q), whale_colors[5]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
-                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp3.rotated(q), whale_colors[6]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp8.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[6]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[6]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
-                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whale_colors[7]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), whale_colors[7]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), whale_colors[7]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
-                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp4.rotated(q), whaleList[i].position + wp7.rotated(q), whale_colors[8]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), whale_colors[8]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp4.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), whale_colors[8]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
-                objects.push_back(new triangle(whaleList[i].position + wp2.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whale_colors[9]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), whale_colors[9]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp2.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), whale_colors[9]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
-                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp3.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[10]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp3.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[10]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[10]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
-                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp5.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[11]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[11]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[11]));
                         //Head
-                objects.push_back(new triangle(whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
-                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whaleList[i].position + wp8.rotated(q), whale_colors[12]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp10.rotated(q), simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[12]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), whale_colors[12]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
-                objects.push_back(new triangle(whaleList[i].position + wp9.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[13]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[13]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp9.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[13]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
-                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp7.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[14]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[14]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp7.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[14]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
-                objects.push_back(new triangle(whaleList[i].position + wp8.rotated(q), whaleList[i].position + wp6.rotated(q), whaleList[i].position + wp10.rotated(q), whale_colors[15]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp8.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[15]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp8.rotated(q), simulation.whaleList[i].position + wp6.rotated(q), simulation.whaleList[i].position + wp10.rotated(q), whale_colors[15]));
 
                 //Tail
-                objects.push_back(new triangle(whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
-                objects.push_back(new triangle(whaleList[i].position + wp11.rotated(q), whaleList[i].position + wp12.rotated(q), whaleList[i].position + wp1.rotated(q), whale_colors[16]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp12.rotated(q), simulation.whaleList[i].position + wp11.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), whale_colors[16]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp11.rotated(q), simulation.whaleList[i].position + wp12.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), whale_colors[16]));
 
                 //Eyes
-                objects.push_back(new triangle(whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
-                objects.push_back(new triangle(whaleList[i].position + wp15.rotated(q), whaleList[i].position + wp13.rotated(q), whaleList[i].position + wp14.rotated(q), whale_colors[17]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp13.rotated(q), simulation.whaleList[i].position + wp15.rotated(q), simulation.whaleList[i].position + wp14.rotated(q), whale_colors[17]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp15.rotated(q), simulation.whaleList[i].position + wp13.rotated(q), simulation.whaleList[i].position + wp14.rotated(q), whale_colors[17]));
 
-                objects.push_back(new triangle(whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
-                objects.push_back(new triangle(whaleList[i].position + wp17.rotated(q), whaleList[i].position + wp16.rotated(q), whaleList[i].position + wp18.rotated(q), whale_colors[18]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp16.rotated(q), simulation.whaleList[i].position + wp17.rotated(q), simulation.whaleList[i].position + wp18.rotated(q), whale_colors[18]));
+                objects.push_back(new triangle(simulation.whaleList[i].position + wp17.rotated(q), simulation.whaleList[i].position + wp16.rotated(q), simulation.whaleList[i].position + wp18.rotated(q), whale_colors[18]));
             }
 
             // MARK: Draw Shapes to Window
