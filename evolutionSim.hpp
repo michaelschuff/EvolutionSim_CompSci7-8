@@ -1,3 +1,11 @@
+//
+//  agent.hpp
+//  CompSci78
+//
+//  Created by Bronte McKinnis and Elaine Demetrion on 11/12/20.
+//  Copyright © 2020 Bronte McKinnis and Elaine Demetrion. All rights reserved.
+//
+
 #ifndef EVOLUTIONSIM_HPP_INCLUDED
 #define EVOLUTIONSIM_HPP_INCLUDED
 #include <iostream>
