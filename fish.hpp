@@ -2,8 +2,8 @@
 //  fish.hpp
 //  CompSci78
 //
-//  Created by Michael Schuff on 10/30/20.
-//  Copyright © 2020 Michael Schuff. All rights reserved.
+//  Created by Elaine Demetrion on 10/30/20.
+//  Copyright © 2020 Elaine Demetrion. All rights reserved.
 //
 
 #ifndef fish_hpp
@@ -29,7 +29,7 @@ public:
 //        srand(time(NULL));
     }
 
-    
+
     void updateFish(vector<fish> &allFish);
 
     void reportFishNumbers();
@@ -100,7 +100,7 @@ vector3 fish::vSeparation(vector<fish> &allFish) {
     for (int ii = 0; ii < allFish.size(); ii ++) {
         if(allFish[ii].id != id) {
             float dist = position.distance(allFish[ii].position);
-            
+
             //if dist btwn me and this fish is less than r...
             if (dist < r) {
                 //adjust finalV by: vector3 of movement away from fish, but move less for farther away fish
@@ -123,7 +123,7 @@ vector3 fish::vAlignment(vector<fish> &allFish) {
             }
         }
     }
-    
+
     return finalV;
 }
 
@@ -141,13 +141,13 @@ vector3 fish::vCohesion(vector<fish> &allFish) {
             }
         }
     }
-    
+
     if(fishConsidering > 0) {
         avgPos /= fishConsidering;
         //find vector from current position to average position
         avgPos -= position;
     }
-    
+
     return avgPos;
 }
 
