@@ -22,6 +22,7 @@ public:
 protected:
     agent(vector3 pos, vector3 vel) : position(pos), velocity(vel), id(nextID) {
         nextID++;
+        cout << nextID << endl;
     } //agent constructor takes in two vector3s to create instance of agent
 };
 
