@@ -30,7 +30,6 @@ This file sets up the whale class, which is a child of the agent class.
 class whale : public agent {
 public:
     whale(int, int, vector3, vector3, vector3, int);
-    int framerate;
     int fishCounter; //how many fish the whale has eaten, used for ranking
     void updatePosition(); //update position every frame based on velocity and time
     void whaleMove(); //given a location, move towards it frame by frame
