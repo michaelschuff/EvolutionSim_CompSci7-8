@@ -21,7 +21,7 @@ using namespace std;
 class fish : public agent {
 public:
     //variables for boid movement
-    float cohesion=0.1, separation=0.1, alignment=0.2;
+    float cohesion=0.1, separation=0.1, alignment=0.2, avoidance=0.1;
     int framerate;
 
     //how fast the fish actually move
@@ -33,7 +33,7 @@ public:
     }
 
 
-    void updateFish(vector<fish> &allFish);
+    void updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos);
 
     fish &operator=(const fish &f); ///what does this even do
 
@@ -49,8 +49,10 @@ private:
     vector3 vAlignment(vector<fish> &allFish);
     vector3 vCohesion(vector<fish> &allFish);
 
+    vector3 vAvoidWhales(vector<vector3> &allWhalePos);
+
     //function to update velocity
-    void updateVelocity(vector<fish> &allFish);
+    void updateVelocity(vector<fish> &allFish, vector<vector3> &allWhalePos);
     //function to update position based on current velocity
     void updatePosition();
 
@@ -68,8 +70,8 @@ fish &fish::operator=(const fish &f) {
 }
 
 //Calls all functions necessary to this one fish
-void fish::updateFish(vector<fish> &allFish) {
-    updateVelocity(allFish);
+void fish::updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos) {
+    updateVelocity(allFish, allWhalePos);
     fixOffScreen();
     updatePosition();
 }
@@ -87,8 +89,8 @@ void fish::fixOffScreen() {
 }
 
 //updates the velocity variable
-void fish::updateVelocity(vector<fish> &allFish) {
-    velocity = speed * (separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
+void fish::updateVelocity(vector<fish> &allFish, vector<vector3> &allWhalePos) {
+    velocity = speed * (avoidance * vAvoidWhales(allWhalePos) + separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
 }
 
 //updates the position variable. Call after updateVelocity
@@ -98,6 +100,22 @@ void fish::updatePosition() {
 
 
 /* ************BOID MOVEMENT FUNCTIONS***********************/
+vector3 fish::vAvoidWhales(vector<vector3> &allWhalePos) {
+    vector3 finalV;
+    float r = vision * 2;
+
+    for(int ii = 0; ii < allWhalePos.size(); ii ++) {
+
+        float dist = position.distance(allWhalePos[ii]);
+
+        if(dist < r) {
+            finalV += (position - allWhalePos[ii]) / (dist*dist);
+        }
+    }
+
+    return finalV;
+}
+
 //Velocity for RULE: fish should move away from close fish
 vector3 fish::vSeparation(vector<fish> &allFish) {
 

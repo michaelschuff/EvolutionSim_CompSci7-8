@@ -24,7 +24,7 @@ public:
     vector<whale> whaleList;
     vector<fish> fishList;
 
-    void updateSim(float, float, float);
+    void updateSim(float, float, float, float);
 
 private:
     int numReproduce;
@@ -62,14 +62,21 @@ evolutionSim::evolutionSim(int numWhales, vector3 lim, int rate) {
 
 }
 
-void evolutionSim::updateSim(float coh, float sep, float ali)
+void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 {
+    //puts all whale positions in a vector to get passed to fish (couldn't use reference b/c can't include whale hpp file in fish hpp)
+    vector<vector3> whalePositions;
+    for(int ii = 0; ii < whaleList.size(); ii ++) {
+        whalePositions.push_back(whaleList[ii].position);
+    }
+
     // MARK: Update Agents
     for (int i = 0; i < fishList.size(); i++) {
         fishList[i].cohesion = coh;
         fishList[i].separation = sep;
         fishList[i].alignment = ali;
-        fishList[i].updateFish(fishList);
+        fishList[i].avoidance = avo;
+        fishList[i].updateFish(fishList, whalePositions);
     }
 
     for (int ww = 0; ww < whaleList.size(); ww++) {

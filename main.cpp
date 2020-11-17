@@ -41,12 +41,15 @@ int main(int, char const**) {
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
+    SliderSFML avo(500, 30);
     coh.create(0, 1);
     sep.create(0, 1);
     ali.create(0, 1);
+    avo.create(0, 1);
     coh.setSliderValue(0.1);
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
+    avo.setSliderValue(0);
     vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
@@ -258,7 +261,7 @@ int main(int, char const**) {
             }
 
             //update simulation
-            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue());
+            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
 
             window.clear();
 
@@ -388,6 +391,7 @@ int main(int, char const**) {
             coh.draw(window);
             sep.draw(window);
             ali.draw(window);
+            avo.draw(window);
             window.display();
         }
 
