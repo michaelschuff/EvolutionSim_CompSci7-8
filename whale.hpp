@@ -37,29 +37,48 @@ public:
     void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
     bool eat; //whether or not to eat the fish
+    int age;
+    int speed;
+
     //both of these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
-    int age;
-    int speed = 20;
 
 private:
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
     void decisionEat (int);
-    void decisionMove();
+    void decisionMove(vector<fish>&);
     vector3 edges; //the bottom corner of the board
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
+    int division; //the number of times the cube has been divided for movement
+    vector<int> fishDiv1; //the number of fish per cube
+    vector<int> fishDiv2;
+    vector<int> fishDiv3;
+    vector<int> fishDiv4;
+    int chosenQuadrant;
+    vector3 tempLimits; //for movement
+    int direction; //the direction of division for movement
+    int maxDiv; //the maximum amount of times the "ocean" can be divided
+    vector3 destination; //where the whale wants to go
 };
 
 whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
-    int randChangeClose, randChangeDense, addOrSubtract;
+    int randChangeClose, randChangeDense;
 
     fishCounter = 0;
     radius = 5;
     volume = (float) (4.0/3.0) * M_PI * pow(radius, 3);
     edges = boundary;
     age = 0;
+    speed = 20;
+    direction = 1;
+    tempLimits = boundary;
+    division = 0;
+    maxDiv = 0;
+    destination = (50.0f, 50.0f, 50.0f);
+    int currentRadius;
+
 
     //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
@@ -83,6 +102,13 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     //set velocity and position
     velocity = vel;
     position = pos;
+
+    //find maxDiv using radius
+    while (currentRadius > radius)
+    {
+        currentRadius = boundary.x / pow(2, maxDiv +1);
+        maxDiv ++;
+    }
 }
 
 void whale::updatePosition () {
@@ -90,21 +116,11 @@ void whale::updatePosition () {
 
     //check if beyond boundaries
     position %= edges.x;
-//    if (position.x > edges.x or position.x < 0) {
-//        position.x = abs(position.x - edges.x);
-//    }
-//
-//    if (position.y > edges.y or position.y < 0) {
-//        position.y = abs(position.y - edges.y);
-//    }
-//
-//    if (position.z > edges.z or position.z < 0) {
-//        position.z = abs(position.z - edges.z);
-//    }
 }
 
 void whale::sight(vector<fish> &fishList) {
     foodList.clear();
+
     for (int f = 0; f < fishList.size(); f++) {
         //use 3D Pythagorean theorem to find the radius value
         float actualRadius = (fishList[f].position - position).magnitude();
@@ -114,26 +130,23 @@ void whale::sight(vector<fish> &fishList) {
             foodList.push_back(fishList[f].id);
         }
     }
-/*
-    if (foodList.size() != 0)
-    {
-        cout << id << ": " << foodList.size() << endl;
-        cout << "     dense: " << eatDenseFish << ",  close: " << eatCloseFish << endl;
-    }
-    */
 }
 
 void whale::decision(vector<fish> &fishList) {
+
     sight(fishList);
     decisionEat(fishList.size());
 
     age++;
 
-    if (eat == true) {//eat fish
+    //eat fish
+    if (eat == true) {
         //don't move, in main go through foodList and remove those IDs
         fishCounter += foodList.size();
-    } else { //find destination to move
-        decisionMove();
+    }
+    //find destination to move
+    else {
+        decisionMove(fishList);
     }
 }
 
@@ -143,27 +156,54 @@ void whale::decisionEat(int numFish) {
 
     //see if foodList is dense enough
     float density = ((float)foodList.size() / (float)volume) * 1000.0f;
+
+    //see if fish are close enough considering all fish
     float percentTotal = ((float)foodList.size() / (float)numFish) * 1000.0f;
-/*
-    if (density != 0.0f && percentTotal != 0.0f)
-    {
-        cout << "     density: " << density << ", percentToal: " << percentTotal << endl;
-    }
-*/
+
     if (density >= eatDenseFish || percentTotal >= eatCloseFish) {
         eat = true;
-        //cout << "     eat" << endl;
     }
 }
 
-void whale::decisionMove() {
-
+void whale::decisionMove(vector<fish> &fishList) {
+    /*
+    //move randomly, rotating a little each time
     float drandom = 5;
     float randPhi = (rand() % ((int) drandom*2)) - drandom;
     float randTheta = (rand() % ((int) drandom*2)) - drandom;
     velocity.rotate(vector3(0, 1, 0), randTheta * 3.14159 / 180.0);
     vector3 temp(-velocity.z, 0, velocity.x);
     velocity.rotate(temp, randPhi * 3.14159 / 180.0);
+    */
+
+    //!assumption: the limit is the same in x, y, and z directions (ocean is a cube)
+    //see if we are dividing to make cubes smaller or larger
+    if (division == maxDiv)
+    {
+        direction = -1;
+    }
+    else if (division == 0)
+    {
+        direction = 1;
+    }
+
+    if (direction == 1)
+    {
+        tempLimits = tempLimits / 2.0f;
+        division ++;
+    }
+    else
+    {
+        tempLimits = tempLimits * 2.0f;
+        division --;
+    }
+
+    //go through all fish and see if they're in divisions
+    for (int ff = 0; ff < fishList.size(); ff++)
+    {
+        //if(fishList[ff].position.x)
+    }
+
 }
 
 #endif /* whale_hpp */
