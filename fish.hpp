@@ -22,13 +22,12 @@ class fish : public agent {
 public:
     //variables for boid movement
     float cohesion=0.1, separation=0.1, alignment=0.2, avoidance=0.1;
-    int framerate;
 
     //how fast the fish actually move
     float speed = 20;
 
     //constructor. Assigns vision, framerate, etc.
-    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel), framerate(_framerate), vision(_vision) {
+    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel, _framerate), vision(_vision) {
 //        srand(time(NULL));
     }
 

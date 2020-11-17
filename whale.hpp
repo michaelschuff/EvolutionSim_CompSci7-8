@@ -52,7 +52,7 @@ private:
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
 };
 
-whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
+whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
