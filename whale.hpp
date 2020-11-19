@@ -50,17 +50,10 @@ private:
     void decisionEat (int);
     void decisionMove(vector<fish>&);
     vector3 edges; //the bottom corner of the board
-    void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
-    int division; //the number of times the cube has been divided for movement
-    vector<int> fishDiv1; //the number of fish per cube
-    vector<int> fishDiv2;
-    vector<int> fishDiv3;
-    vector<int> fishDiv4;
-    int chosenQuadrant;
-    vector3 tempLimits; //for movement
-    int direction; //the direction of division for movement
-    int maxDiv; //the maximum amount of times the "ocean" can be divided
     vector3 destination; //where the whale wants to go
+    bool closeEnough(vector3, int);
+    vector<int> sight(vector<fish>&, int);
+
 };
 
 whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
@@ -72,11 +65,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     edges = boundary;
     age = 0;
     speed = 20;
-    direction = 1;
-    tempLimits = boundary;
-    division = 0;
-    maxDiv = 0;
-    destination = (50.0f, 50.0f, 50.0f);
+    vector3 destination (50, 50, 50);
     int currentRadius;
 
 
@@ -102,13 +91,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     //set velocity and position
     velocity = vel;
     position = pos;
-
-    //find maxDiv using radius
-    while (currentRadius > radius)
-    {
-        currentRadius = boundary.x / pow(2, maxDiv +1);
-        maxDiv ++;
-    }
 }
 
 void whale::updatePosition () {
@@ -118,23 +100,9 @@ void whale::updatePosition () {
     position %= edges.x;
 }
 
-void whale::sight(vector<fish> &fishList) {
-    foodList.clear();
-
-    for (int f = 0; f < fishList.size(); f++) {
-        //use 3D Pythagorean theorem to find the radius value
-        float actualRadius = (fishList[f].position - position).magnitude();
-
-        //if it's less than r add that fish's id to the list
-        if (actualRadius <= radius) {
-            foodList.push_back(fishList[f].id);
-        }
-    }
-}
-
 void whale::decision(vector<fish> &fishList) {
-
-    sight(fishList);
+    foodList.clear();
+    foodList = sight(fishList, radius);
     decisionEat(fishList.size());
 
     age++;
@@ -166,7 +134,7 @@ void whale::decisionEat(int numFish) {
 }
 
 void whale::decisionMove(vector<fish> &fishList) {
-    /*
+
     //move randomly, rotating a little each time
     float drandom = 5;
     float randPhi = (rand() % ((int) drandom*2)) - drandom;
@@ -174,36 +142,51 @@ void whale::decisionMove(vector<fish> &fishList) {
     velocity.rotate(vector3(0, 1, 0), randTheta * 3.14159 / 180.0);
     vector3 temp(-velocity.z, 0, velocity.x);
     velocity.rotate(temp, randPhi * 3.14159 / 180.0);
-    */
 
-    //!assumption: the limit is the same in x, y, and z directions (ocean is a cube)
-    //see if we are dividing to make cubes smaller or larger
-    if (division == maxDiv)
-    {
-        direction = -1;
-    }
-    else if (division == 0)
-    {
-        direction = 1;
-    }
-
-    if (direction == 1)
-    {
-        tempLimits = tempLimits / 2.0f;
-        division ++;
-    }
-    else
-    {
-        tempLimits = tempLimits * 2.0f;
-        division --;
-    }
-
-    //go through all fish and see if they're in divisions
+    /*
+    //go through all fish
     for (int ff = 0; ff < fishList.size(); ff++)
     {
-        //if(fishList[ff].position.x)
+        //see if the fish is close enough
+        if (closeEnough(fishList[ff].position, eatCloseFish * 5.0f))
+        {
+            //fish sees density of nearby fish
+
+
+            //if the fish works, set destination to that fish and break
+        }
+    }
+    */
+
+}
+
+vector<int> whale::sight(vector<fish> &fishList, int maxDist) {
+
+    vector<int> fishWork;
+
+    for (int f = 0; f < fishList.size(); f++) {
+
+        if (closeEnough(fishList[f].position, maxDist)) {
+            fishWork.push_back(fishList[f].id);
+        }
     }
 
+    return fishWork;
+}
+
+bool whale::closeEnough(vector3 otherPos, int maxDist)
+{
+    bool withinDist = false;
+
+    //use 3D Pythagorean theorem to find the radius value
+    float actualRadius = (otherPos - position).magnitude();
+
+    //if it's less than r add that fish's id to the list
+    if (actualRadius <= maxDist) {
+        withinDist = true;
+    }
+
+    return withinDist;
 }
 
 #endif /* whale_hpp */
