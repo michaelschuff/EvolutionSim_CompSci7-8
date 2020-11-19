@@ -64,7 +64,7 @@ evolutionSim::evolutionSim(int numWhales, vector3 lim, int rate) {
 
 void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 {
-    //puts all whale positions in a vector to get passed to fish (couldn't use reference b/c can't include whale hpp file in fish hpp)
+    //puts all whale positions in a new vector to get passed to fish (couldn't use reference b/c can't include whale hpp file in fish hpp)
     vector<vector3> whalePositions;
     for(int ii = 0; ii < whaleList.size(); ii ++) {
         whalePositions.push_back(whaleList[ii].position);
