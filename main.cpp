@@ -29,22 +29,34 @@ bool is_number(const std::string& s) {
 int main(int, char const**) {
     srand(time(NULL));
     const int width = 800, height = 800;
+
     ifstream objfile;
     objfile.open("whalemodel.obj",ios::in);
     streampos size;
     char* memblock;
+    string type;
+    objfile>> type;
+    float x;
+    float y;
+    float z;
 
-    if(objfile.is_open()){
-        size = objfile.tellg();
-        memblock = new char[size];
-        objfile.seekg(0,ios::end);
-        objfile.read(memblock,size);
-        objfile.close();
+    objfile>> x;
+    objfile>> y;
+    objfile>> z;
 
-    }
-    else{
-        cout<< "File not open! \n";
-    }
+    cout<< x<<y<<z<< endl;
+    //cout<< type<< endl;
+//    if(objfile.is_open()){
+//        size = objfile.tellg();
+//        memblock = new char[size];
+//        objfile.seekg(0,ios::end);
+//        objfile.read(memblock,size);
+//        objfile.close();
+//
+//    }
+//    else{
+//        cout<< "File not open! \n";
+//    }
 
 //    vector3 p1(-1, 1.2, 0),
 //            p2( 0.5, 1, 0.5),
