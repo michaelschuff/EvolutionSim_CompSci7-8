@@ -51,7 +51,7 @@ private:
     void decisionMove(vector<fish>&);
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
-    bool closeEnough(vector3, int);
+    bool closeEnough(vector3, vector3, int);
     vector<int> sight(vector<fish>&, int);
 
 };
@@ -135,6 +135,7 @@ void whale::decisionEat(int numFish) {
 
 void whale::decisionMove(vector<fish> &fishList) {
 
+/*
     //move randomly, rotating a little each time
     float drandom = 5;
     float randPhi = (rand() % ((int) drandom*2)) - drandom;
@@ -142,21 +143,37 @@ void whale::decisionMove(vector<fish> &fishList) {
     velocity.rotate(vector3(0, 1, 0), randTheta * 3.14159 / 180.0);
     vector3 temp(-velocity.z, 0, velocity.x);
     velocity.rotate(temp, randPhi * 3.14159 / 180.0);
+    */
 
-    /*
+    int fishInReach = 0;
+
     //go through all fish
     for (int ff = 0; ff < fishList.size(); ff++)
     {
-        //see if the fish is close enough
-        if (closeEnough(fishList[ff].position, eatCloseFish * 5.0f))
-        {
-            //fish sees density of nearby fish
+        fishInReach = 0;
 
+        //see if the fish is close enough
+        if (closeEnough(fishList[ff].position, position, eatCloseFish * radius))
+        {
+            //fish sees density of nearby fish (within a mouthful)
+            for (int of = 0; of < fishList.size(); of ++)
+            {
+                if (closeEnough(fishList[ff].position, fishList[of].position, radius))
+                {
+                    fishInReach ++;
+                }
+            }
 
             //if the fish works, set destination to that fish and break
+            if (((float)fishInReach / (float)volume) >= (eatDenseFish * 1000.0f))
+            {
+                destination = fishList[ff].position;
+
+                break;
+            }
+
         }
     }
-    */
 
 }
 
@@ -166,7 +183,7 @@ vector<int> whale::sight(vector<fish> &fishList, int maxDist) {
 
     for (int f = 0; f < fishList.size(); f++) {
 
-        if (closeEnough(fishList[f].position, maxDist)) {
+        if (closeEnough(fishList[f].position, position, maxDist)) {
             fishWork.push_back(fishList[f].id);
         }
     }
@@ -174,12 +191,12 @@ vector<int> whale::sight(vector<fish> &fishList, int maxDist) {
     return fishWork;
 }
 
-bool whale::closeEnough(vector3 otherPos, int maxDist)
+bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
 {
     bool withinDist = false;
 
     //use 3D Pythagorean theorem to find the radius value
-    float actualRadius = (otherPos - position).magnitude();
+    float actualRadius = (otherPos - myPos).magnitude();
 
     //if it's less than r add that fish's id to the list
     if (actualRadius <= maxDist) {
