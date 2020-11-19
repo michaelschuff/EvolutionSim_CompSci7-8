@@ -30,7 +30,6 @@ This file sets up the whale class, which is a child of the agent class.
 class whale : public agent {
 public:
     whale(int, int, vector3, vector3, vector3, int);
-    int framerate;
     int fishCounter; //how many fish the whale has eaten, used for ranking
     void updatePosition(); //update position every frame based on velocity and time
     void whaleMove(); //given a location, move towards it frame by frame
@@ -52,12 +51,12 @@ private:
     void sight (vector<fish>&); //see the fish around them and determine which ones are in a distance of them
 };
 
-whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
+whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
     int randChangeClose, randChangeDense, addOrSubtract;
 
     fishCounter = 0;
     radius = 3;
-    volume = (float) (4.0/3.0) * M_PI * pow(radius, 3);
+    volume = (float) (4.0/3.0) * 3.14159 * pow(radius, 3);
     edges = boundary;
     age = 0;
 
