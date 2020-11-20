@@ -38,6 +38,7 @@ int main(int, char const**) {
     window.setFramerateLimit(framerate);
     int frameCounter = 0;
 
+
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -57,6 +58,24 @@ int main(int, char const**) {
     };
     // MARK: Evolution vars
     //whale model points
+    vector<vector3> pointlist;
+    string check;
+    float x;
+    float y;
+    float z;
+    ifstream objfile;
+    objfile.open("whalemodel.obj", ios::in);
+    bool vert = true;
+    while(vert = true){
+        objfile>>check;
+        if(check != 'v'){
+            vert = false;
+        }
+        objfile>>x;
+        objfile>>y;
+        objfile>>z;
+        pointlist.push_back(new vector3(x,y,z));
+    }
     vector3  wp1(  -1,  1.2,     0),
              wp2( 0.5,    1,   0.5),
              wp3( 0.5,  0.1,  0.35),
