@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
-#include<time.h>
+#include <time.h>
 #include <vector>
 #include <iomanip>
 #include "vector3.hpp"
@@ -89,7 +89,7 @@ int main(int, char const**) {
     }
 
     //create a simulation object
-    int numWhales = 10;
+    int numWhales = 1;
     vector3 limits(100, 100, 100);
 
     evolutionSim simulation(numWhales, limits, framerate);

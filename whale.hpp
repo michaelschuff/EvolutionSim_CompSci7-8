@@ -1,11 +1,3 @@
-//
-//  whale.hpp
-//  CompSci78
-//
-//  Created by Bronte McKinnis
-//  Copyright © 2020 Bronte McKinnis. All rights reserved.
-//
-
 #ifndef whale_hpp
 #define whale_hpp
 
@@ -32,7 +24,7 @@ public:
     whale(int, int, vector3, vector3, vector3, int);
     int framerate;
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    void updatePosition(); //update position every frame based on velocity and time
+    void updatePosition(vector<fish>&); //update position every frame based on velocity and time
     void whaleMove(); //given a location, move towards it frame by frame
     void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
@@ -51,8 +43,12 @@ private:
     void decisionMove(vector<fish>&);
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
+    int fishTarget; //the fish whose location is the destination
     bool closeEnough(vector3, vector3, int);
     vector<int> sight(vector<fish>&, int);
+    bool atDest; //whether the whale should find a new destination in decisionMove
+    void updateDestination (vector<fish>&);
+    int frameCounter;
 
 };
 
@@ -67,6 +63,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     speed = 20;
     vector3 destination (50, 50, 50);
     int currentRadius;
+    frameCounter = 0;
 
 
     //set up traits with some randomness, based on a given initial value
@@ -93,7 +90,15 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     position = pos;
 }
 
-void whale::updatePosition () {
+void whale::updatePosition (vector<fish> &fishList) {
+    frameCounter ++;
+
+    //every 10 frames, update destination and velocity
+    if (frameCounter % 10 == 0)
+    {
+        updateDestination(fishList);
+    }
+
     position += speed * velocity / framerate;
 
     //check if beyond boundaries
@@ -108,13 +113,19 @@ void whale::decision(vector<fish> &fishList) {
     age++;
 
     //eat fish
-    if (eat == true) {
+    if (eat) {
         //don't move, in main go through foodList and remove those IDs
         fishCounter += foodList.size();
     }
     //find destination to move
     else {
-        decisionMove(fishList);
+
+        //only change destination if it reached the old one
+        if (atDest)
+        {
+            decisionMove(fishList);
+        }
+        updatePosition(fishList);
     }
 }
 
@@ -152,10 +163,13 @@ void whale::decisionMove(vector<fish> &fishList) {
     {
         fishInReach = 0;
 
+        //cout << "origin position: " << fishList[ff].position.x << endl << fishList[ff].position.y << endl << fishList[ff].position.z << endl << "whale: " << position.x << endl << position.y << endl << position.z << endl;
         //see if the fish is close enough
         if (closeEnough(fishList[ff].position, position, eatCloseFish * radius))
         {
+            //cout << "close enough" << endl;
             //fish sees density of nearby fish (within a mouthful)
+
             for (int of = 0; of < fishList.size(); of ++)
             {
                 if (closeEnough(fishList[ff].position, fishList[of].position, radius))
@@ -164,21 +178,22 @@ void whale::decisionMove(vector<fish> &fishList) {
                 }
             }
 
+            //cout << "num: " << fishInReach << endl;
+
             //if the fish works, set destination to that fish and break
             if (((float)fishInReach / (float)volume) >= (eatDenseFish * 1000.0f))
             {
-                destination = fishList[ff].position;
+                fishTarget = fishList[ff].id;
 
                 break;
             }
-
         }
     }
-
 }
 
-vector<int> whale::sight(vector<fish> &fishList, int maxDist) {
-
+vector<int> whale::sight(vector<fish> &fishList, int maxDist)
+{
+    //see which fish are within a certain distance of a given position
     vector<int> fishWork;
 
     for (int f = 0; f < fishList.size(); f++) {
@@ -188,6 +203,7 @@ vector<int> whale::sight(vector<fish> &fishList, int maxDist) {
         }
     }
 
+    //return a vector of fish IDs
     return fishWork;
 }
 
@@ -203,7 +219,26 @@ bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
         withinDist = true;
     }
 
+    //return a bool
     return withinDist;
+}
+
+void whale:: updateDestination (vector<fish> &fishList)
+{
+    //update destination using the fish's position
+    for (int ff = 0; ff < fishList.size(); ff ++)
+    {
+        if (fishList[ff].id == fishTarget)
+        {
+            destination = fishList[ff].position;
+        }
+    }
+
+    //find velocity to reach fish
+
+    //turn to face fish
+
+    //normalize velocity
 }
 
 #endif /* whale_hpp */
