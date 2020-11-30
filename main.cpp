@@ -59,23 +59,55 @@ int main(int, char const**) {
     // MARK: Evolution vars
     //whale model points
     vector<vector3> pointlist;
+    vector<triangle> tlist;
     string check;
     float x;
     float y;
     float z;
+    int a;
+    int b;
+    int c;
+    int counter = 0;
+
     ifstream objfile;
     objfile.open("whalemodel.obj", ios::in);
     bool vert = true;
-    while(vert = true){
+
+    while(true){
         objfile>>check;
-        if(check != 'v'){
-            vert = false;
+        if(check == 'v'){
+            objfile>>x;
+            objfile>>y;
+            objfile>>z;
+            //vector3 A(x,y,z);
+            //A.print();
+            pointlist.push_back(vector3(x,y,z));
+
         }
-        objfile>>x;
-        objfile>>y;
-        objfile>>z;
-        pointlist.push_back(new vector3(x,y,z));
+        else if(check == 'f'){
+            objfile>>a;
+            objfile>>b;
+            objfile>>c;
+            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
+
+        }
+        else{
+            string s;
+            getline(objfile,s);
+        }
+
+
+
+//        string s;
+//        objfile>>s;
+//        cout<< s<< endl;
+        if(objfile.eof()){
+            break;
+        }
+
+
     }
+
     vector3  wp1(  -1,  1.2,     0),
              wp2( 0.5,    1,   0.5),
              wp3( 0.5,  0.1,  0.35),
