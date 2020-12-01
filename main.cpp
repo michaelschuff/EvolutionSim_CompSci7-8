@@ -88,7 +88,7 @@ int main(int, char const**) {
             objfile>>a;
             objfile>>b;
             objfile>>c;
-            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
+            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c],Color(0,0,70)));
 
         }
         else{
