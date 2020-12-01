@@ -88,7 +88,7 @@ int main(int, char const**) {
             objfile>>a;
             objfile>>b;
             objfile>>c;
-            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c],Color(0,0,70)));
+            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
 
         }
         else{
@@ -349,6 +349,14 @@ int main(int, char const**) {
 //            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
             for (int i = 0; i < simulation.whaleList.size(); i++) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i].velocity);
+
+
+                //add object loop that checks the obj file...
+//                while(true){
+//
+//
+//                }
+
                 objects.push_back(new triangle(simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[0]));
                 objects.push_back(new triangle(simulation.whaleList[i].position + wp5.rotated(q), simulation.whaleList[i].position + wp1.rotated(q), simulation.whaleList[i].position + wp3.rotated(q), whale_colors[0]));
 
