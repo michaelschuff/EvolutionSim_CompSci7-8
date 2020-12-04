@@ -66,7 +66,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     frameCounter = 0;
     fishTarget = 0;
 
-
     //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
     randChangeDense = (rand() % 5) - 2;
@@ -89,6 +88,8 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     //set velocity and position
     velocity = vel;
     position = pos;
+    cout << "eat dense fish: " << eatDenseFish << ", " << eatDenseFish / 1000.0f << endl;
+    cout << "eat close fish: " << eatCloseFish << ", " << eatCloseFish * radius << endl;
 }
 
 void whale::updatePosition (vector<fish> &fishList) {
@@ -105,23 +106,17 @@ void whale::updatePosition (vector<fish> &fishList) {
     //check if beyond boundaries
     position %= edges.x;
 
+    cout << "position: " << position.x << ", " << position.y << ", " << position.z << endl;
     cout << "dest: " << destination.x << ", " << destination.y << ", " << destination.z << endl << "velocity: " << velocity.x << ", " << velocity.y << ", " << velocity.z <<  endl;
     cout << "    " << fishTarget << endl << endl;
-
-    vector3 temp1 = destination;
-    vector3 temp2 = destination;
-
-    temp1.x += 1;
-    temp1.y += 1;
-    temp1.z += 1;
-    temp2.x -= 1;
-    temp2.y -= 1;
-    temp2.z -= 1;
-
-    if (position >= temp2 and position <= temp1)
+/* moved to decision--don't need atDest
+    //every 20 frames or when the whale reaches the destination, change target fish
+    if (closeEnough(destination, position, 1))
     {
+        cout << "change target close enough" << endl;
         atDest = true;
     }
+*/
 }
 
 void whale::decision(vector<fish> &fishList) {
@@ -140,8 +135,10 @@ void whale::decision(vector<fish> &fishList) {
     else {
 
         //only change destination if it reached the old one or every 20 frames
-        if (atDest or frameCounter % 20 == 0)
+        //if (closeEnough(destination, position, 1) or frameCounter % 20 == 0)
+        if (closeEnough(destination, position, 2))
         {
+            cout << "***change target***" << endl;
             decisionMove(fishList);
         }
         updatePosition(fishList);
@@ -163,6 +160,7 @@ void whale::decisionEat(int numFish) {
     }
 }
 
+//finds a new target fish
 void whale::decisionMove(vector<fish> &fishList) {
 
     atDest = false;
@@ -186,8 +184,10 @@ void whale::decisionMove(vector<fish> &fishList) {
                 }
             }
 
+            cout << "compare dense to " << (float)fishInReach / (float)volume << endl;
+
             //if the fish works, set destination to that fish and break
-            if (((float)fishInReach / (float)volume) >= (eatDenseFish * 1000.0f))
+            if (((float)fishInReach / (float)volume) >= (eatDenseFish / 1000.0f))
             {
                 fishTarget = fishList[ff].id;
                 cout << "works: " << fishInReach << endl;
@@ -238,7 +238,7 @@ void whale:: updateDestination (vector<fish> &fishList)
     {
         if (fishList[ff].id == fishTarget)
         {
-            vectorPos = fishList[ff].id;
+            vectorPos = ff;
         }
     }
 

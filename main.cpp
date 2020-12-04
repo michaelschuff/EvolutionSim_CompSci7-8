@@ -89,10 +89,13 @@ int main(int, char const**) {
     }
 
     //create a simulation object
-    int numWhales = 1;
+    //was 10
+    int numWhales = 10;
+    //was 300
+    int numFish = 300;
     vector3 limits(100, 100, 100);
 
-    evolutionSim simulation(numWhales, limits, framerate);
+    evolutionSim simulation(numWhales, numFish, limits, framerate);
 
     while (window.isOpen()) {
         active = window.hasFocus();
