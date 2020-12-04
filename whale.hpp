@@ -39,15 +39,14 @@ public:
 private:
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
-    void decisionEat (int);
-    void decisionMove(vector<fish>&);
+    void decisionEat (int); //sees if the fish around it match its traits to eat
+    void decisionMove(vector<fish>&); //finds a new target fish
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
     int fishTarget; //the fish whose location is the destination
-    bool closeEnough(vector3, vector3, int);
-    vector<int> sight(vector<fish>&, int);
-    bool atDest; //whether the whale should find a new destination in decisionMove
-    void updateDestination (vector<fish>&);
+    bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
+    vector<int> sight(vector<fish>&, int); //sees which fish are within eating distance
+    void updateDestination (vector<fish>&); //updates based on target fish
     int frameCounter;
 
 };
@@ -88,8 +87,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     //set velocity and position
     velocity = vel;
     position = pos;
-    cout << "eat dense fish: " << eatDenseFish << ", " << eatDenseFish / 1000.0f << endl;
-    cout << "eat close fish: " << eatCloseFish << ", " << eatCloseFish * radius << endl;
 }
 
 void whale::updatePosition (vector<fish> &fishList) {
@@ -105,18 +102,6 @@ void whale::updatePosition (vector<fish> &fishList) {
 
     //check if beyond boundaries
     position %= edges.x;
-
-    cout << "position: " << position.x << ", " << position.y << ", " << position.z << endl;
-    cout << "dest: " << destination.x << ", " << destination.y << ", " << destination.z << endl << "velocity: " << velocity.x << ", " << velocity.y << ", " << velocity.z <<  endl;
-    cout << "    " << fishTarget << endl << endl;
-/* moved to decision--don't need atDest
-    //every 20 frames or when the whale reaches the destination, change target fish
-    if (closeEnough(destination, position, 1))
-    {
-        cout << "change target close enough" << endl;
-        atDest = true;
-    }
-*/
 }
 
 void whale::decision(vector<fish> &fishList) {
@@ -135,10 +120,9 @@ void whale::decision(vector<fish> &fishList) {
     else {
 
         //only change destination if it reached the old one or every 20 frames
-        //if (closeEnough(destination, position, 1) or frameCounter % 20 == 0)
+        //if (closeEnough(destination, position, 1) or frameCounter % 20 == 0)   this doesn't seem to be necessary, but if whales are getting stuck add it
         if (closeEnough(destination, position, 2))
         {
-            cout << "***change target***" << endl;
             decisionMove(fishList);
         }
         updatePosition(fishList);
@@ -160,10 +144,8 @@ void whale::decisionEat(int numFish) {
     }
 }
 
-//finds a new target fish
 void whale::decisionMove(vector<fish> &fishList) {
 
-    atDest = false;
     int fishInReach = 0;
 
     //go through all fish
@@ -171,11 +153,10 @@ void whale::decisionMove(vector<fish> &fishList) {
     {
         fishInReach = 0;
 
-        //see if the fish is close enough
+        //see if the fish is close enough (using eatCloseFish)
         if (closeEnough(fishList[ff].position, position, eatCloseFish * radius))
         {
             //fish sees density of nearby fish (within a mouthful)
-
             for (int of = 0; of < fishList.size(); of ++)
             {
                 if (closeEnough(fishList[ff].position, fishList[of].position, radius))
@@ -184,13 +165,10 @@ void whale::decisionMove(vector<fish> &fishList) {
                 }
             }
 
-            cout << "compare dense to " << (float)fishInReach / (float)volume << endl;
-
             //if the fish works, set destination to that fish and break
             if (((float)fishInReach / (float)volume) >= (eatDenseFish / 1000.0f))
             {
                 fishTarget = fishList[ff].id;
-                cout << "works: " << fishInReach << endl;
 
                 break;
             }
