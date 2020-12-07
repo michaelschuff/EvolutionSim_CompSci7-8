@@ -370,7 +370,10 @@ int main(int, char const**) {
                             objfile>>b;
                             objfile>>c;
                             cout<< "we made it \n";
-                            objects.push_back(new triangle(simulation.whaleList[i].position + pointlist[a],simulation.whaleList[i].position + pointlist[b],simulation.whaleList[i].position + pointlist[c], whale_colors[3]));
+                            objects.push_back(new triangle(simulation.whaleList[i].position + pointlist[a],
+                                                           simulation.whaleList[i].position + pointlist[b],
+                                                           simulation.whaleList[i].position + pointlist[c],
+                                                            whale_colors[3]));
 
 
                         }
