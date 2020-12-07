@@ -382,6 +382,7 @@ int main(int, char const**) {
 
                         }
                         if(objfile.eof()){
+                            cout<< "end of file \n";
                             break;
 
                         }
