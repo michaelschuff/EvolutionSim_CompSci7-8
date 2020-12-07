@@ -333,8 +333,6 @@ int main(int, char const**) {
 //            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
 //            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
 //            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
-            
-            
 
             // MARK: Draw Shapes to Window
             circle* _circ = nullptr;
