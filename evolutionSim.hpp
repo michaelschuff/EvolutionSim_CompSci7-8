@@ -19,7 +19,7 @@
 
 class evolutionSim {
 public:
-    evolutionSim(int, vector3, int);
+    evolutionSim(int, int, vector3, int);
 
     vector<whale> whaleList;
     vector<fish> fishList;
@@ -40,7 +40,7 @@ private:
 
 };
 
-evolutionSim::evolutionSim(int numWhales, vector3 lim, int rate) {
+evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
     limits = lim;
     numReproduce = numWhales * 0.10;
     numDie = numWhales * 0.10;
@@ -54,7 +54,7 @@ evolutionSim::evolutionSim(int numWhales, vector3 lim, int rate) {
     }
 
     //make fish
-    for (int f = 0; f < 300; f++) {
+    for (int f = 0; f < numFish; f++) {
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         fishList.push_back(newFish);
     }
@@ -83,16 +83,12 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 
         whaleList[ww].decision(fishList);
 
+        /*
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
-            //killFish();
+            killFish();
         }
-
-        //move whale
-        else
-        {
-            whaleList[ww].updatePosition();
-        }
+        */
     }
 
     whaleReproduction ();

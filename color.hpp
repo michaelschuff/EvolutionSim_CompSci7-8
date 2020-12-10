@@ -20,7 +20,7 @@ public:
     color(float _r, float _g, float _b, float _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}
     color(double _r, double _g, double _b, double _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}
     color(const color &c) : r(c.r), g(c.g), b(c.b), a(c.a) {}
-    
+
     int &operator[](int i);
     std::string to_string();
     void print();

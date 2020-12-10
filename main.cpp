@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
+#include <time.h>
 #include <vector>
 #include <iomanip>
 #include "vector3.hpp"
@@ -91,10 +92,13 @@ int main(int, char const**) {
     }
 
     //create a simulation object
+    //was 10
     int numWhales = 10;
+    //was 300
+    int numFish = 300;
     vector3 limits(100, 100, 100);
 
-    evolutionSim simulation(numWhales, limits, framerate);
+    evolutionSim simulation(numWhales, numFish, limits, framerate);
 
     while (window.isOpen()) {
         active = window.hasFocus();
@@ -396,6 +400,7 @@ int main(int, char const**) {
         }
 
     }
+
 
     return EXIT_SUCCESS;
 }
