@@ -50,7 +50,7 @@ private:
     int reverseCloseFish; //used to determine if whale eats
 };
 
-whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
+whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
     int randChangeClose, randChangeDense;
 
     fishCounter = 0;
