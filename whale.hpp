@@ -49,9 +49,6 @@ private:
     void updateDestination (vector<fish>&); //updates based on target fish
     int frameCounter;
     int reverseCloseFish; //used to determine if whale eats
-    int blah;
-
-
 };
 
 whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel), framerate(_framerate) {
@@ -101,8 +98,6 @@ void whale::updatePosition (vector<fish> &fishList) {
     if (frameCounter % 5 == 0)
     {
         updateDestination(fishList);
-        cout << "position: " << position.x << ", " << position.y << ", " << position.z << endl;
-
     }
 
     position += speed * velocity / framerate;
@@ -131,11 +126,9 @@ void whale::decision(vector<fish> &fishList) {
     }
 
     //only change destination if it reached the old one or every 20 frames
-    //if (closeEnough(destination, position, 1) or frameCounter % 20 == 0)   this doesn't seem to be necessary, but if whales are getting stuck add it
     if (closeEnough(destination, position, 2))
     {
         decisionMove(fishList);
-        cout << "change target" << endl;
     }
 }
 
@@ -146,23 +139,9 @@ void whale::decisionEat(int numFish) {
     //see if foodList is dense enough
     float density = ((float)foodList.size() / (float)volume) * 1000.0f;
 
-    //see if fish are close enough considering all fish
-    //float percentTotal = ((float)foodList.size() / (float)numFish) * 1000.0f;
-
     if (density >= eatDenseFish) {
 
         eat = true;
-        cout << "eat!" << endl;
-        //cin >> blah;
-        //cout << endl;
-        /*
-        //make a weighted random decision for eatCloseFish
-        if ((rand()%10 + 1) <= reverseCloseFish)
-        {
-            eat = true;
-
-        }
-        */
     }
 }
 
@@ -170,7 +149,6 @@ void whale::decisionMove(vector<fish> &fishList) {
 
     int fishInReach = 0;
 
-    cout << "target start: " << fishTarget << endl;
     //go through all fish
     for (int ff = 0; ff < fishList.size(); ff++)
     {
@@ -192,7 +170,6 @@ void whale::decisionMove(vector<fish> &fishList) {
             if (((float)fishInReach / (float)volume) >= (eatDenseFish / 1000.0f))
             {
                 fishTarget = fishList[ff].id;
-                cout << "target: " << fishTarget << endl;
                 break;
             }
         }
@@ -255,8 +232,6 @@ void whale:: updateDestination (vector<fish> &fishList)
 
     //scale it to 2
     velocity *= 2;
-
-    cout << "destination: " << destination.x << ", " << destination.y << ", " << destination.z << endl;
 }
 
 #endif /* whale_hpp */
