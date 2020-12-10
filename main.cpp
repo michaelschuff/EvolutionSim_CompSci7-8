@@ -19,6 +19,7 @@
 #include <string>
 #include "whale.hpp"
 #include "fish.hpp"
+#include "bubbles.hpp"
 #include "SliderSFML.hpp"
 //#include "ResourcePath.hpp"
 

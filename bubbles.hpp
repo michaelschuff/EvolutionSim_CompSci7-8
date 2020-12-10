@@ -10,6 +10,7 @@
 class bubble {
 public:
     sf::CircleShape myShape; ///debugging only
+    bool deleteMe = false; //must be able to be accessed by evolutionSim
 
     bubble(vector3 pos, vector3 whaleVel, vector3 emissionVel) {
         setV0(whaleVel, emissionVel);
@@ -21,23 +22,29 @@ public:
     }
 
     void updateBubble();
-
 private:
     vector3 position, velocity;
     float speed = 0.1;
     void setV0(vector3, vector3); //calculate the bubble's first velocity
     void setNewVelocity();
+    float yBound = 0;
 };
 
 void bubble::setV0(vector3 whaleVel, vector3 emissionVel) {
-    velocity = (whaleVel + emissionVel).normalized(); //actually I think this is physically accurate
+    velocity = speed*(whaleVel + emissionVel).normalized(); //actually I think this is physically accurate
 
 }
 
 void bubble::updateBubble()
 {
-    ///deal with bubbles if they are out of bounds
     setNewVelocity();
+
+    //deal with bubbles if they are out of bounds.
+    if(position.z < yBound) {
+        deleteMe = true; //tells simulation evolutionSim to delete the bubble. If this isn't tied to evoSim, the bubble will just stay put
+        velocity = vector3(0, 0, 0);
+    }
+
     position += velocity;
 
     myShape.setPosition(position.x, position.z); ///debugging only
@@ -45,8 +52,9 @@ void bubble::updateBubble()
 
 void bubble::setNewVelocity()
 {
-    //could have something more fancy, but this is fine for now
-    velocity = speed * (velocity + vector3(0, 0, -0.0001)).normalized();
+    //This is roughly accurate according to Archimedes Principle
+    vector3 aFromFb(0, 0, -0.0005);
+    velocity += aFromFb;
 }
 
 #endif // BUBBLES_HPP_INCLUDED

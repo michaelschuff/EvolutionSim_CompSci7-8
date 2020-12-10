@@ -21,7 +21,7 @@ using namespace std;
 #include "fish.hpp"
 #include <cstdlib>
 #include <cmath>
-
+#include "bubbles.hpp"
 
 /*
 This file sets up the whale class, which is a child of the agent class.
@@ -42,6 +42,7 @@ public:
     int age;
     int speed = 20;
 
+    void blowBubbles(vector<bubble>&); ///I added this, may need to change it later
 private:
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
@@ -152,4 +153,14 @@ void whale::decisionMove() {
     velocity.rotate(temp, randPhi * 3.14159 / 180.0);
 }
 
+///This is the function I (Elaine) am adding. We can change it or move if need be
+void whale::blowBubbles(vector<bubble> &bubbleList){
+    float numBubbles = 20;
+    for(int ii = 0; ii < numBubbles; ii ++) {
+        vector3 emissionVelocity = vector3(rand() % 10, rand() % 10, rand() % 10);
+        bubbleList.push_back(bubble(position, velocity, emissionVelocity));
+    }
+
+
+}
 #endif /* whale_hpp */

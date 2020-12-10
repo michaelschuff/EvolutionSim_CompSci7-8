@@ -16,6 +16,7 @@
 #include "agent.hpp"
 #include "fish.hpp"
 #include "whale.hpp"
+#include "bubbles.hpp"
 
 class evolutionSim {
 public:
@@ -23,6 +24,7 @@ public:
 
     vector<whale> whaleList;
     vector<fish> fishList;
+    vector<bubble> bubbleList;
 
     void updateSim(float, float, float, float);
 
@@ -37,6 +39,7 @@ private:
     void killFish();
     void whaleReproduction();
     //void fishReproduction();
+    void deleteBubbles();
 
 };
 
@@ -96,6 +99,7 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
     }
 
     whaleReproduction ();
+    //deleteBubbles()
     frameCounter ++;
 }
 
@@ -152,6 +156,17 @@ void evolutionSim::whaleReproduction()
             cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
         }
         cout << endl;
+    }
+}
+
+///UNTESTED
+//Removes bubbles from bubble list if the bubble realizes it's out of bounds
+void evolutionSim::deleteBubbles()
+{
+    for(int ii = bubbleList.size() - 1; ii >= 0; ii --) {
+        if(bubbleList[ii].deleteMe) {
+            bubbleList.erase(bubbleList.begin() + ii);
+        }
     }
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED

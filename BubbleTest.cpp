@@ -19,7 +19,7 @@ int main()
 {
     RenderWindow window(VideoMode(1020, 600), "Bubble Visualization");
 
-    bubble FirstBubble(vector3(500, 0, 500), vector3(-55, -55, 55), vector3(-55, -55, 55));
+    bubble FirstBubble(vector3(500, 0, 400), vector3(-0.55, -0.55, 0.55), vector3(-0.55, -0.55, 0.55));
 
     //Make visualization of bubbles
     while(window.isOpen())
@@ -33,7 +33,6 @@ int main()
         FirstBubble.updateBubble();
         window.clear();
         window.draw(FirstBubble.myShape);
-
         window.display();
     }
     return 0;
