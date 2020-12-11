@@ -117,6 +117,27 @@ int main(int, char const**) {
         fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
 
+                int a,b,c;
+            objfile.open("whalemodel.obj", ios::in);
+
+        while(true){
+            objfile>>check;
+            if(check == 'f'){
+                objfile>>a;
+                objfile>>b;
+                objfile>>c;
+                tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
+            }
+            else{
+                string z;
+                getline(objfile,z);
+            }
+
+            if(objfile.eof()){
+                cout<< "File ended! \n";
+                break;
+            }
+        }
     //create a simulation object
     int numWhales = 10;
     vector3 limits(100, 100, 100);
@@ -321,14 +342,15 @@ int main(int, char const**) {
 
             }
             //ADD CODE TO DRAW WHALES HERE
+
             for (int j = 0; j < simulation.whaleList.size(); j++) {
                 for (int i = 0; i < tlist.size(); i++) {
                     objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1,
                                                    simulation.whaleList[j].position + tlist[i].v2,
-                                                   simulation.whaleList[j].position + tlist[i].v3));
+                                                   simulation.whaleList[j].position + tlist[i].v3, whale_colors[4]));
                 }
             }
-                                
+
 //            objects.push_back(new triangle(fp2, fp3, fp4, fish_colors[0]));
 //            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
 //            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
