@@ -49,6 +49,7 @@ vector3 &triangle::operator[](int i) {
     }
 }
 
+
 //void triangle::setTexture(sf::Image &_image, int x1, int y1, int x2, int y2, int x3, int y3) {
 //    image = _image;
 //    p1 = vector3(x1, 0, y1);
