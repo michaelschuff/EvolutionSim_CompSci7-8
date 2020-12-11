@@ -1,5 +1,7 @@
 #ifndef EVOLUTIONSIM_HPP_INCLUDED
 #define EVOLUTIONSIM_HPP_INCLUDED
+
+using namespace std;
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
@@ -8,6 +10,8 @@
 #include "agent.hpp"
 #include "fish.hpp"
 #include "whale.hpp"
+#include <cstdlib>
+
 
 class evolutionSim {
 public:
@@ -26,7 +30,7 @@ private:
 
     vector3 limits;
 
-    void killFish();
+    void killFish(int);
     void whaleReproduction();
     //void fishReproduction();
 
@@ -68,36 +72,33 @@ void evolutionSim::updateSim(float coh, float sep, float ali)
 
         whaleList[ww].decision(fishList);
 
-        /*
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
-            killFish();
+            cout << "killing fish" << endl;
+            killFish(ww);
         }
-        */
     }
 
     whaleReproduction ();
     frameCounter ++;
 }
 
-void evolutionSim::killFish()
+void evolutionSim::killFish(int positionInList)
 {
-    for (int ww = whaleList.size() -1; ww >= 0; ww--)
+    //go through the list of fish
+    for (int ff = fishList.size() - 1; ff >= 0; ff--)
     {
-        //go through the list of food
-        for (int ee = whaleList[ww].foodList.size() -1; ee >= 0; ee--)
+        //see if the IDs match those of fish
+        for (int fl = whaleList[positionInList].foodList.size() -1; fl >= 0; fl++)
         {
-            //see if the IDs match those of fish
-            for (int ff = fishList.size() - 1; ff >= 0; ff--)
+            if (fishList[ff].id == whaleList[positionInList].foodList[fl])
             {
+                cout << "dead: " << fishList[ff].id << endl;
 
-                if (fishList[ff].id == whaleList[ww].foodList[ee])
-                {
-                    //eat the fish
-
-                    fishList.erase(fishList.begin() + ff);
-                    whaleList[ww].foodList.erase(whaleList[ww].foodList.begin() + ee);
-                }
+                //eat the fish
+                fishList.erase(fishList.begin() + ff);
+                whaleList[positionInList].foodList.erase(whaleList[positionInList].foodList.begin() + fl);
+                break;
             }
         }
     }
