@@ -94,7 +94,10 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
     }
 
     whaleReproduction ();
-    if(frameCounter % 250 == 100) {fishReproduction ();}
+    if(frameCounter % 250 == 100) {
+        fishReproduction ();
+        cout << "num fish: " << fishList.size() << endl;
+    }
     frameCounter ++;
 }
 
@@ -152,10 +155,8 @@ void evolutionSim::whaleReproduction()
 
 void evolutionSim::fishReproduction()
 {
-
-    cout<<"Reproducing "<<fishList.size() * 0.5<<" fish"<<endl;
     //make fish
-    for (int f = 0; f < fishList.size() * 1.5; f++) {
+    for (int f = 0; f < 85; f++) {
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         fishList.push_back(newFish);
     }
