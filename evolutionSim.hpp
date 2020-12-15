@@ -32,7 +32,7 @@ private:
 
     void killFish(int);
     void whaleReproduction();
-    //void fishReproduction();
+    void fishReproduction();
 
 };
 
@@ -74,12 +74,12 @@ void evolutionSim::updateSim(float coh, float sep, float ali)
 
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
-            cout << "killing fish" << endl;
             killFish(ww);
         }
     }
 
     whaleReproduction ();
+    if(frameCounter % 250 == 100) {fishReproduction ();}
     frameCounter ++;
 }
 
@@ -93,8 +93,6 @@ void evolutionSim::killFish(int positionInList)
         {
             if (fishList[ff].id == whaleList[positionInList].foodList[fl])
             {
-                cout << "dead: " << fishList[ff].id << endl;
-
                 //eat the fish
                 fishList.erase(fishList.begin() + ff);
                 whaleList[positionInList].foodList.erase(whaleList[positionInList].foodList.begin() + fl);
@@ -135,5 +133,18 @@ void evolutionSim::whaleReproduction()
         }
         cout << endl;
     }
+}
+
+void evolutionSim::fishReproduction()
+{
+
+    cout<<"Reproducing "<<fishList.size() * 0.5<<" fish"<<endl;
+    //make fish
+    for (int f = 0; f < fishList.size() * 1.5; f++) {
+        fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
+        fishList.push_back(newFish);
+    }
+
+    cout<<"Finished reproducing"<<endl;
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED

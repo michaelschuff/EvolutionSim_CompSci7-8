@@ -142,7 +142,6 @@ void whale::decisionEat(int numFish) {
     if (density >= eatDenseFish) {
 
         eat = true;
-        cout << "eat " << foodList.size() << endl;
     }
 }
 
