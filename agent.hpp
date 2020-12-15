@@ -7,12 +7,15 @@ class agent {
 public:
     vector3 position;
     vector3 velocity;
+    int framerate;
 
     static int nextID;
     int id; //individual agent id
 
 protected:
-    agent(vector3 pos, vector3 vel) : position(pos), velocity(vel), id(nextID) {
+    //Constructor should only get accessed by child classes. (An amorphous agent has no meaning; must be a fish or a whale.)
+    agent(vector3 pos, vector3 vel, int fr) : position(pos), velocity(vel), id(nextID), framerate(fr) {
+        //each time a new agent is made, it gets a unique id. So no two whales, two fish, or whale and fish have the same id.
         nextID++;
     } //agent constructor takes in two vector3s to create instance of agent
 };

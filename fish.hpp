@@ -20,42 +20,44 @@ using namespace std;
 
 class fish : public agent {
 public:
-    float cohesion=0.1, separation=0.1, alignment=0.2;
-    float vision; ///could be private
-    int framerate;
+    //variables for boid movement
+    float cohesion=0.1, separation=0.1, alignment=0.2, avoidance=0.1;
+
+    //how fast the fish actually move
     float speed = 20;
-    //constructor. Same as agent constructor for now.
-    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel), framerate(_framerate), vision(_vision) {
+
+    //constructor. Assigns vision, framerate, etc.
+    fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel, _framerate), vision(_vision) {
 //        srand(time(NULL));
     }
 
 
-    void updateFish(vector<fish> &allFish);
+    void updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos);
 
-    void reportFishNumbers();
-    fish &operator=(const fish &f);
+    fish &operator=(const fish &f); ///what does this even do
 
 private:
     const float fishboundary = 100;
+
+    float vision;
+
     void fixOffScreen();
-    ///these should only be used if there is more than one fish around
-    //function to calculate separation velocity. Returns vector3
+
+    //The functions to calculate each of the velocities that contribute to boid movement. Require knowledge of where all the fish are
     vector3 vSeparation(vector<fish> &allFish);
-    //function to calculate alignment velocity. Returns vector3
     vector3 vAlignment(vector<fish> &allFish);
-    //function to calculate cohesion velocity. Returns vector3
     vector3 vCohesion(vector<fish> &allFish);
 
-    //void to update velocity
-    void updateVelocity(vector<fish> &allFish);
-    //void to update position based on current velocity
-    void updatePosition();
+    vector3 vAvoidWhales(vector<vector3> &allWhalePos);
 
-    //function to make vector of only other fish
-    //std::vector <fish> otherFishList();
+    //function to update velocity
+    void updateVelocity(vector<fish> &allFish, vector<vector3> &allWhalePos);
+    //function to update position based on current velocity
+    void updatePosition();
 
 };
 
+///Way to set one fish's movement values to those of another fish (I think)
 fish &fish::operator=(const fish &f) {
     cohesion=f.cohesion;
     separation=f.separation;
@@ -66,42 +68,67 @@ fish &fish::operator=(const fish &f) {
     return *this;
 }
 
-void fish::updateFish(vector<fish> &allFish) {
-    updateVelocity(allFish);
+//Calls all functions necessary to this one fish
+void fish::updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos) {
+    updateVelocity(allFish, allWhalePos);
     fixOffScreen();
     updatePosition();
 }
 
+//If fish are offscreen, this function fixes it. You can uncomment the portion with the behavior you want
 void fish::fixOffScreen() {
-//    vector3 screenCenter = vector3(500, 500, 0);
-//    //if fish is off screen, move it to the opposite side and let it continue
+    //if fish is off screen, move it to the opposite side and let it continue. Defines boundary to be cube starting at (0, 0, 0) and ending at (fishBoundary, fishBoundary, fishBoundary)
     position %= fishboundary;
-//    if(position.x > fishboundary || position.x < 0 || position.y > fishboundary || position.y < 0 || position.z > fishboundary || position.z < 0) {
-//        velocity = -speed * (position - 0.5 * vector3(fishboundary, fishboundary, fishboundary)).normalized();
-//    }
+
+/*  //Makes fish "bounce" of of edges. Admittedly is subject to a little error. Defines boundary as cube starting at (0, 0, 0) and ending at (fishBoundary, fishBoundary, fishBoundary)
+    if(position.x > fishboundary || position.x < 0 || position.y > fishboundary || position.y < 0 || position.z > fishboundary || position.z < 0) {
+        velocity = -speed * (position - 0.5 * vector3(fishboundary, fishboundary, fishboundary)).normalized();
+    }
+    */
 }
 
-void fish::updateVelocity(vector<fish> &allFish) {
-    velocity = speed * (separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
-//    float x = ((float) rand() / RAND_MAX);
-//    float y = ((float) rand() / RAND_MAX);
-//    float z = ((float) rand() / RAND_MAX);
-//    velocity += 0.1*vector3(x, y, z);
+//updates the velocity variable
+void fish::updateVelocity(vector<fish> &allFish, vector<vector3> &allWhalePos) {
+    velocity = speed * (avoidance * vAvoidWhales(allWhalePos) + separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
 }
 
+//updates the position variable. Call after updateVelocity
 void fish::updatePosition() {
     position += velocity / framerate;
 }
-//should work
+
+
+/* ************BOID MOVEMENT FUNCTIONS***********************/
+vector3 fish::vAvoidWhales(vector<vector3> &allWhalePos) {
+    vector3 finalV;
+    float r = vision * 2;
+
+    for(int ii = 0; ii < allWhalePos.size(); ii ++) {
+
+        float dist = position.distance(allWhalePos[ii]);
+
+        if(dist < r) {
+            finalV += (position - allWhalePos[ii]) / (dist*dist);
+        }
+    }
+
+    return finalV;
+}
+
+//Velocity for RULE: fish should move away from close fish
 vector3 fish::vSeparation(vector<fish> &allFish) {
+
     vector3 finalV; //will become the returned vector3
+
+    //radius of personal "space bubble"
+    float r = vision*0.99;
     //Evaluate each fish in the array
-    float r = vision;
     for (int ii = 0; ii < allFish.size(); ii ++) {
+        //check that the fish isn't me
         if(allFish[ii].id != id) {
+
             float dist = position.distance(allFish[ii].position);
 
-            //if dist btwn me and this fish is less than r...
             if (dist < r) {
                 //adjust finalV by: vector3 of movement away from fish, but move less for farther away fish
                 finalV += (position - allFish[ii].position) / (dist*dist);
@@ -110,13 +137,16 @@ vector3 fish::vSeparation(vector<fish> &allFish) {
     }
     return finalV;
 }
-//should work
+//Velocity for RULE: fish should move in the same direction as nearby fish
 vector3 fish::vAlignment(vector<fish> &allFish) {
-    vector3 finalV;
 
-    //sum all other fish velocities (if fish can be seen)
+    vector3 finalV;//vector3 that will get returned
+
+    //sum all other fish velocities (if fish can be seen), but add less for farther away velocities
     for(int ii = 0; ii < allFish.size(); ii++) {
+        //make sure that this fish isn't me (and has a different id)
         if(allFish[ii].id != id) {
+
             double dist = position.distance(allFish[ii].position);
             if (dist < vision) {
                 finalV += allFish[ii].velocity / (dist*dist);
@@ -127,28 +157,32 @@ vector3 fish::vAlignment(vector<fish> &allFish) {
     return finalV;
 }
 
-//should work
+//Velocity for RULE: fish should swim to the center of their local flock
 vector3 fish::vCohesion(vector<fish> &allFish) {
     vector3 avgPos;
-    int fishConsidering = 0;
+    int fishConsidering = 0; //how many fish are within my range of vision
 
+    //goes through each fish and adds the positions of all local fish to avgPos
     for (int ii = 0; ii < allFish.size(); ii++) {
+        //make sure this fish isn't me and has a different id
         if(allFish[ii].id != id) {
+
             float dist = position.distance(allFish[ii].position);
             if (dist < vision) {
+
                 fishConsidering++;
                 avgPos += allFish[ii].position;
             }
         }
     }
-
+    //check that fishConsidering isn't 0, b/c we're dividing avgPos by it
     if(fishConsidering > 0) {
-        avgPos /= fishConsidering;
-        //find vector from current position to average position
-        avgPos -= position;
+        avgPos /= fishConsidering; //turns avgPos to the actual average position
+
+        avgPos -= position;//find vector from current position to average position
     }
 
-    return avgPos;
+    return avgPos; //returns vector from current position to average position
 }
 
 #endif /* fish_hpp */
