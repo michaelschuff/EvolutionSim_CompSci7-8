@@ -89,7 +89,7 @@ void evolutionSim::killFish(int positionInList)
     for (int ff = fishList.size() - 1; ff >= 0; ff--)
     {
         //see if the IDs match those of fish
-        for (int fl = whaleList[positionInList].foodList.size() -1; fl >= 0; fl++)
+        for (int fl = whaleList[positionInList].foodList.size() -1; fl >= 0; fl--)
         {
             if (fishList[ff].id == whaleList[positionInList].foodList[fl])
             {

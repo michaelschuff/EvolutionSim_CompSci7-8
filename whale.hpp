@@ -211,6 +211,7 @@ bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
 
 void whale:: updateDestination (vector<fish> &fishList)
 {
+    bool fishAlive = false;
     int vectorPos;
 
     for (int ff = 0; ff < fishList.size(); ff ++)
@@ -218,21 +219,30 @@ void whale:: updateDestination (vector<fish> &fishList)
         if (fishList[ff].id == fishTarget)
         {
             vectorPos = ff;
+            fishAlive = true;
         }
     }
 
-    //update destination using the fish's position
-    destination = fishList[vectorPos].position;
+    //if the fish has been eaten, choose a new target
+    if (fishAlive == false)
+    {
+        decisionMove(fishList);
+    }
+    else
+    {
+        //update destination using the fish's position
+        destination = fishList[vectorPos].position;
 
-    //find velocity to reach fish
-    vector3 diff = fishList[vectorPos].position - position;
-    velocity = diff;
+        //find velocity to reach fish
+        vector3 diff = fishList[vectorPos].position - position;
+        velocity = diff;
 
-    //normalize velocity
-    velocity.normalize();
+        //normalize velocity
+        velocity.normalize();
 
-    //scale it to 2
-    velocity *= 2;
+        //scale it to 2
+        velocity *= 2;
+    }
 }
 
 #endif /* whale_hpp */
