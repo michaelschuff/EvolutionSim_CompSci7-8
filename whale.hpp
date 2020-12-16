@@ -47,7 +47,6 @@ private:
     vector<int> sight(vector<fish>&, int); //sees which fish are within eating distance
     void updateDestination (vector<fish>&); //updates based on target fish
     int frameCounter;
-    int reverseCloseFish; //used to determine if whale eats
 };
 
 whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
@@ -82,8 +81,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     } else if (eatDenseFish < 1) {
         eatDenseFish = 1;
     }
-
-    reverseCloseFish = 10 - eatCloseFish;
 
     //set velocity and position
     velocity = vel;
