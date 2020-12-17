@@ -69,7 +69,7 @@ int main(int, char const**) {
     int counter = 0;
 
     ifstream objfile;
-    objfile.open("whalemodel.obj", ios::in);
+    objfile.open("/Users/michael/Desktop/whalemodel.obj", ios::in);
     bool vert = true;
 
     while(true){
@@ -91,11 +91,6 @@ int main(int, char const**) {
             getline(objfile,s);
         }
 
-
-
-//        string s;
-//        objfile>>s;
-//        cout<< s<< endl;
         if(objfile.eof()){
             break;
         }
@@ -339,10 +334,22 @@ int main(int, char const**) {
 
             for (int i = 0; i < simulation.fishList.size(); i++) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[0]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp2.rotated(q), fish_colors[1]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp2.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[2]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q), simulation.fishList[i].position + fp3.rotated(q), simulation.fishList[i].position + fp4.rotated(q), fish_colors[3]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q),
+                                               simulation.fishList[i].position + fp3.rotated(q),
+                                               simulation.fishList[i].position + fp4.rotated(q),
+                                               fish_colors[0]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                               simulation.fishList[i].position + fp3.rotated(q),
+                                               simulation.fishList[i].position + fp2.rotated(q),
+                                               fish_colors[1]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                               simulation.fishList[i].position + fp2.rotated(q),
+                                               simulation.fishList[i].position + fp4.rotated(q),
+                                               fish_colors[2]));
+                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                               simulation.fishList[i].position + fp3.rotated(q),
+                                               simulation.fishList[i].position + fp4.rotated(q),
+                                               fish_colors[3]));
 
             }
             //ADD CODE TO DRAW WHALES HERE
@@ -350,9 +357,14 @@ int main(int, char const**) {
             for (int j = 0; j < simulation.whaleList.size(); j++) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[j].velocity);
                 for (int i = 0; i < tlist.size(); i++) {
-                    objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1.rotated(q),
-                                                   simulation.whaleList[j].position + tlist[i].v2.rotated(q),
-                                                   simulation.whaleList[j].position + tlist[i].v3.rotated(q), whale_colors[4]));
+//                    objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1.rotated(q),
+//                                                   simulation.whaleList[j].position + tlist[i].v2.rotated(q),
+//                                                   simulation.whaleList[j].position + tlist[i].v3.rotated(q),
+//                                                   whale_colors[i%19]));
+                    objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1,
+                                                   simulation.whaleList[j].position + tlist[i].v2,
+                                                   simulation.whaleList[j].position + tlist[i].v3,
+                                                   whale_colors[i%19]));
                 }
             }
 
