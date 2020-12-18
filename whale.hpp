@@ -58,7 +58,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     age = 0;
     speed = 20;
     vector3 destination (50, 50, 50);
-    int currentRadius;
     frameCounter = 0;
     fishTarget = 0;
 
@@ -105,7 +104,7 @@ void whale::decision(vector<fish> &fishList) {
         updatePosition(fishList);
     }
 
-    //only change destination if it reached the old one or every 20 frames
+    //only change destination if it reached the old one
     if (closeEnough(destination, position, 2))
     {
         decisionMove(fishList);
