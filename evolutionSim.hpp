@@ -35,6 +35,7 @@ private:
     int numDie;
     int frameCounter;
     int framerate;
+    int fishNum;
 
     vector3 limits;
 
@@ -50,6 +51,7 @@ evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
     numDie = numWhales * 0.10;
     frameCounter = 0;
     framerate = rate;
+    fishNum = numFish;
 
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
@@ -94,7 +96,7 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
     }
 
     whaleReproduction ();
-    if(frameCounter % 250 == 100) {
+    if(frameCounter % 150 == 100) {
         fishReproduction ();
         cout << "num fish: " << fishList.size() << endl;
     }
@@ -156,7 +158,7 @@ void evolutionSim::whaleReproduction()
 void evolutionSim::fishReproduction()
 {
     //make fish
-    for (int f = 0; f < 85; f++) {
+    for (int f = 0; f < fishNum * 0.75; f++) {
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         fishList.push_back(newFish);
     }
