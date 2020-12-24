@@ -312,6 +312,7 @@ vector3 camera::point_relative_to_camera(vector3 _point) {
     quaternion forward_to_y = get_quaternion(forward, vector3(0, 1, 0));
     quaternion up_to_z = get_quaternion(up.rotated(forward_to_y), vector3(0, 0, 1));
     quaternion right_to_x = get_quaternion(right.rotated(forward_to_y).rotated(up_to_z), vector3(1, 0, 0));
+    
     return P.rotated(forward_to_y).rotated(up_to_z).rotated(right_to_x);
 }
 
@@ -320,7 +321,7 @@ vector3 camera::move_to_clipping_plane(vector3 v1, vector3 v2) {
 }
 
 void camera::rotate(const quaternion &q) {
-    position.rotate(q);
+//    position.rotate(q);
     up.rotate(q);
     right.rotate(q);
     forward.rotate(q);

@@ -69,7 +69,7 @@ int main(int, char const**) {
     int counter = 0;
 
     ifstream objfile;
-    objfile.open("/Users/michael/Desktop/whalemodel.obj", ios::in);
+    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
     bool vert = true;
 
     while(true){
@@ -113,10 +113,10 @@ int main(int, char const**) {
         fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
 
-                int a,b,c;
-            objfile.open("whalemodel.obj", ios::in);
+    int a,b,c;
+    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
 
-        while(true){
+    while(true){
             objfile>>check;
             if(check == 'f'){
                 objfile>>a;
