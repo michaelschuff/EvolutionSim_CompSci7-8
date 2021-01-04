@@ -123,7 +123,22 @@ void whale::updatePosition (vector<fish> &fishList) {
     position += speed * velocity / framerate;
 
     //check if beyond boundaries
-    position %= edges.x;
+
+    //check if beyond boundaries
+    if (position.x > edges.x or position.x < 0)
+    {
+        position.x = abs(position.x - edges.x);
+    }
+
+    if (position.y > edges.y or position.y < 0)
+    {
+        position.y = abs(position.y - edges.y);
+    }
+
+    if (position.z > edges.z or position.z < 0)
+    {
+        position.z = abs(position.z - edges.z);
+    }
 }
 
 vector<int> whale::sight(vector<fish> &fishList, int maxDist)
