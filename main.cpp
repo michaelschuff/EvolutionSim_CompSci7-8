@@ -114,7 +114,7 @@ int main(int, char const**) {
     }
 
     int a,b,c;
-    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
+    objfile.open("whalemodel.obj", ios::in);
 
     while(true){
         objfile>>check;
@@ -267,12 +267,12 @@ int main(int, char const**) {
         // MARK: Handle Inputs
         Vector2i mouse_position = Mouse::getPosition(window);
         if (mouse_position.x != width / 2) {
-//                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
+//            cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
         }
         if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-//                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
+//            cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
         }
-//            Mouse::setPosition(Vector2i(width/2, height/2), window);
+//        Mouse::setPosition(Vector2i(width/2, height/2), window);
 
         if (iDown) {
             cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
