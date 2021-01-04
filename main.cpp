@@ -117,23 +117,23 @@ int main(int, char const**) {
     objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
 
     while(true){
-            objfile>>check;
-            if(check == 'f'){
-                objfile>>a;
-                objfile>>b;
-                objfile>>c;
-                tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
-            }
-            else{
-                string z;
-                getline(objfile,z);
-            }
-
-            if(objfile.eof()){
-                cout<< "File ended! \n";
-                break;
-            }
+        objfile>>check;
+        if(check == 'f'){
+            objfile>>a;
+            objfile>>b;
+            objfile>>c;
+            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
         }
+        else{
+            string z;
+            getline(objfile,z);
+        }
+
+        if(objfile.eof()){
+            cout<< "File ended! \n";
+            break;
+        }
+    }
     //create a simulation object
     //was 10
     int numWhales = 10;
@@ -144,7 +144,6 @@ int main(int, char const**) {
     evolutionSim simulation(numWhales, numFish, limits, framerate);
 
     while (window.isOpen()) {
-        active = window.hasFocus();
         // MARK: Handle Events
         Event event;
         while (window.pollEvent(event)) {
@@ -265,150 +264,134 @@ int main(int, char const**) {
             }
         }
 
-        if (active) {
-            // MARK: Handle Inputs
-            Vector2i mouse_position = Mouse::getPosition(window);
-            if (mouse_position.x != width / 2) {
+        // MARK: Handle Inputs
+        Vector2i mouse_position = Mouse::getPosition(window);
+        if (mouse_position.x != width / 2) {
 //                cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
-            }
-            if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
+        }
+        if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
 //                cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
-            }
+        }
 //            Mouse::setPosition(Vector2i(width/2, height/2), window);
 
-            if (iDown) {
-                cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
-            }
-            if (kDown) {
-                cam.rotate(cam.right, -sensitivity * 20 * 3.14159 / 180.0);
-            }
-            if (jDown) {
-                cam.rotate(vector3(0, 1, 0), sensitivity * 20 * 3.14159 / 180.0);
-            }
-            if (lDown) {
-                cam.rotate(vector3(0, 1, 0), -sensitivity * 20 * 3.14159 / 180.0);
-            }
-            if (wDown) {
-                cam.position += speed * cam.forward / 60.0;
-            }
-            if (sDown) {
-                cam.position -= speed * cam.forward / 60.0;
-            }
-            if (aDown) {
-                cam.position -= speed * cam.right / 60.0;
-            }
-            if (dDown) {
-                cam.position += speed * cam.right / 60.0;
-            }
-            if (eDown) {
-                cam.position += speed * cam.up / 60.0;
-            }
-            if (qDown) {
-                cam.position -= speed * cam.up / 60.0;
-            }
-
-            //update simulation
-            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
-
-            window.clear();
-
-
-            objects = {
-                new line(vector3(0, 0, 0), vector3(100, 0, 0), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 0, 0), vector3(100, 0, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 0, 100), vector3(0, 0, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(0, 0, 100), vector3(0, 0, 0), color(0.5, 0.5, 0.5)),
-                new line(vector3(0, 0, 0), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 0, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
-                new line(vector3(0, 0, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 0, 100), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(0, 100, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 100, 0), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(100, 100, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
-                new line(vector3(0, 100, 100), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
-            };
-
-//            for (int i = 0; i < fishList.size(); i++) {
-//                objects.push_back(new vector3(fishList[i].position));
-//            }
-
-            for (int i = 0; i < simulation.fishList.size(); i++) {
-                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q),
-                                               simulation.fishList[i].position + fp3.rotated(q),
-                                               simulation.fishList[i].position + fp4.rotated(q),
-                                               fish_colors[0]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                               simulation.fishList[i].position + fp3.rotated(q),
-                                               simulation.fishList[i].position + fp2.rotated(q),
-                                               fish_colors[1]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                               simulation.fishList[i].position + fp2.rotated(q),
-                                               simulation.fishList[i].position + fp4.rotated(q),
-                                               fish_colors[2]));
-                objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                               simulation.fishList[i].position + fp3.rotated(q),
-                                               simulation.fishList[i].position + fp4.rotated(q),
-                                               fish_colors[3]));
-
-            }
-            //ADD CODE TO DRAW WHALES HERE
-
-            for (int j = 0; j < simulation.whaleList.size(); j++) {
-                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[j].velocity);
-                for (int i = 0; i < tlist.size(); i++) {
-//                    objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1.rotated(q),
-//                                                   simulation.whaleList[j].position + tlist[i].v2.rotated(q),
-//                                                   simulation.whaleList[j].position + tlist[i].v3.rotated(q),
-//                                                   whale_colors[i%19]));
-                    objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1,
-                                                   simulation.whaleList[j].position + tlist[i].v2,
-                                                   simulation.whaleList[j].position + tlist[i].v3,
-                                                   whale_colors[i%19]));
-                }
-            }
-
-//            objects.push_back(new triangle(fp2, fp3, fp4, fish_colors[0]));
-//            objects.push_back(new triangle(fp1, fp3, fp2, fish_colors[1]));
-//            objects.push_back(new triangle(fp1, fp2, fp4, fish_colors[2]));
-//            objects.push_back(new triangle(fp1, fp3, fp4, fish_colors[3]));
-
-            // MARK: Draw Shapes to Window
-            circle* _circ = nullptr;
-            rectangle* _rect = nullptr;
-            convexshape* _convexshape = nullptr;
-            vector<object2D*> shapes = cam.get_view(objects);
-            for (int i = 0; i < shapes.size(); i++) {
-                if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
-                    CircleShape c(_circ->r);
-                    c.setOrigin(_circ->r, _circ->r);
-                    c.setPosition(width/2 + (width/2)*_circ->x, height/2 - (height/2)*_circ->y);
-                    c.setFillColor(_circ->c);
-
-                    window.draw(c);
-                } else if ((_rect = dynamic_cast<rectangle*>(shapes[i]))) {
-                    RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
-                    r.setOrigin(0.5, 0.5);
-                    r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
-                    r.rotate(-_rect->theta * 180.0 / 3.14159);
-                    r.setFillColor(_rect->c);
-
-                    window.draw(r);
-                } else if ((_convexshape = dynamic_cast<convexshape*>(shapes[i]))) {
-                    ConvexShape c(_convexshape->points.size());
-                    for (int j = 0; j < _convexshape->points.size(); j++) {
-                        c.setPoint(j, Vector2f(width/2 + (width/2)*(_convexshape->points[j][0]), height/2 - (height/2)*(_convexshape->points[j][1])));
-                    }
-                    c.setFillColor(_convexshape->c);
-                    window.draw(c);
-                }
-            }
-            coh.draw(window);
-            sep.draw(window);
-            ali.draw(window);
-            avo.draw(window);
-            window.display();
+        if (iDown) {
+            cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
         }
+        if (kDown) {
+            cam.rotate(cam.right, -sensitivity * 20 * 3.14159 / 180.0);
+        }
+        if (jDown) {
+            cam.rotate(vector3(0, 1, 0), sensitivity * 20 * 3.14159 / 180.0);
+        }
+        if (lDown) {
+            cam.rotate(vector3(0, 1, 0), -sensitivity * 20 * 3.14159 / 180.0);
+        }
+        if (wDown) {
+            cam.position += speed * cam.forward / 60.0;
+        }
+        if (sDown) {
+            cam.position -= speed * cam.forward / 60.0;
+        }
+        if (aDown) {
+            cam.position -= speed * cam.right / 60.0;
+        }
+        if (dDown) {
+            cam.position += speed * cam.right / 60.0;
+        }
+        if (eDown) {
+            cam.position += speed * cam.up / 60.0;
+        }
+        if (qDown) {
+            cam.position -= speed * cam.up / 60.0;
+        }
+
+        simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
+
+        window.clear();
+
+
+        objects = {
+            new line(vector3(0, 0, 0), vector3(100, 0, 0), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 0, 0), vector3(100, 0, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 0, 100), vector3(0, 0, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(0, 0, 100), vector3(0, 0, 0), color(0.5, 0.5, 0.5)),
+            new line(vector3(0, 0, 0), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 0, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
+            new line(vector3(0, 0, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 0, 100), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(0, 100, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 100, 0), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(100, 100, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
+            new line(vector3(0, 100, 100), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
+        };
+
+        for (int i = 0; i < simulation.fishList.size(); i++) {
+            quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+            objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q),
+                                           simulation.fishList[i].position + fp3.rotated(q),
+                                           simulation.fishList[i].position + fp4.rotated(q),
+                                           fish_colors[0]));
+            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                           simulation.fishList[i].position + fp3.rotated(q),
+                                           simulation.fishList[i].position + fp2.rotated(q),
+                                           fish_colors[1]));
+            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                           simulation.fishList[i].position + fp2.rotated(q),
+                                           simulation.fishList[i].position + fp4.rotated(q),
+                                           fish_colors[2]));
+            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
+                                           simulation.fishList[i].position + fp3.rotated(q),
+                                           simulation.fishList[i].position + fp4.rotated(q),
+                                           fish_colors[3]));
+
+        }
+
+        for (int j = 0; j < simulation.whaleList.size(); j++) {
+            quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[j].velocity);
+            for (int i = 0; i < tlist.size(); i++) {
+                objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1.rotated(q),
+                                               simulation.whaleList[j].position + tlist[i].v2.rotated(q),
+                                               simulation.whaleList[j].position + tlist[i].v3.rotated(q),
+                                               whale_colors[i%19]));
+            }
+        }
+
+
+        // MARK: Draw Shapes to Window
+        circle* _circ = nullptr;
+        rectangle* _rect = nullptr;
+        convexshape* _convexshape = nullptr;
+        vector<object2D*> shapes = cam.get_view(objects);
+        for (int i = 0; i < shapes.size(); i++) {
+            if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
+                CircleShape c(_circ->r);
+                c.setOrigin(_circ->r, _circ->r);
+                c.setPosition(width/2 + (width/2)*_circ->x, height/2 - (height/2)*_circ->y);
+                c.setFillColor(_circ->c);
+
+                window.draw(c);
+            } else if ((_rect = dynamic_cast<rectangle*>(shapes[i]))) {
+                RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
+                r.setOrigin(0.5, 0.5);
+                r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
+                r.rotate(-_rect->theta * 180.0 / 3.14159);
+                r.setFillColor(_rect->c);
+
+                window.draw(r);
+            } else if ((_convexshape = dynamic_cast<convexshape*>(shapes[i]))) {
+                ConvexShape c(_convexshape->points.size());
+                for (int j = 0; j < _convexshape->points.size(); j++) {
+                    c.setPoint(j, Vector2f(width/2 + (width/2)*(_convexshape->points[j][0]), height/2 - (height/2)*(_convexshape->points[j][1])));
+                }
+                c.setFillColor(_convexshape->c);
+                window.draw(c);
+            }
+        }
+        coh.draw(window);
+        sep.draw(window);
+        ali.draw(window);
+        avo.draw(window);
+        window.display();
 
     }
 
