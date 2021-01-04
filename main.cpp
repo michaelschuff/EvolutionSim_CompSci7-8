@@ -69,7 +69,7 @@ int main(int, char const**) {
     int counter = 0;
 
     ifstream objfile;
-    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
+    objfile.open("whalemodel.obj", ios::in);
     bool vert = true;
 
     while(true){
@@ -113,27 +113,6 @@ int main(int, char const**) {
         fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
     }
 
-    int a,b,c;
-    objfile.open("whalemodel.obj", ios::in);
-
-    while(true){
-        objfile>>check;
-        if(check == 'f'){
-            objfile>>a;
-            objfile>>b;
-            objfile>>c;
-            tlist.push_back(triangle(pointlist[a],pointlist[b],pointlist[c]));
-        }
-        else{
-            string z;
-            getline(objfile,z);
-        }
-
-        if(objfile.eof()){
-            cout<< "File ended! \n";
-            break;
-        }
-    }
     //create a simulation object
     //was 10
     int numWhales = 10;
