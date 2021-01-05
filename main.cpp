@@ -114,9 +114,8 @@ int main(int, char const**) {
     }
 
     //create a simulation object
-    //was 10
     int numWhales = 10;
-    //was 300
+    //400 is too many for processing
     int numFish = 300;
     vector3 limits(100, 100, 100);
 

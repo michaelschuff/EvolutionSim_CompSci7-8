@@ -23,8 +23,6 @@ class whale : public agent {
 public:
     whale(int, int, vector3, vector3, vector3, int);
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    void updatePosition(vector<fish>&); //update position every frame based on velocity and time
-    void whaleMove(); //given a location, move towards it frame by frame
     void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
     bool eat; //whether or not to eat the fish
@@ -38,16 +36,16 @@ public:
 private:
     int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
-    void decisionEat (int); //sees if the fish around it match its traits to eat
-    void decisionMove(vector<fish>&); //finds a new target fish
+    int frameCounter;
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
     int fishTarget; //the fish whose location is the destination
     bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
     vector<int> sight(vector<fish>&, int); //sees which fish are within eating distance
     void updateDestination (vector<fish>&); //updates based on target fish
-    int frameCounter;
-    int reverseCloseFish; //used to determine if whale eats
+    void updatePosition(vector<fish>&); //update position every frame based on velocity and time
+    void decisionEat (int); //sees if the fish around it match its traits to eat
+    void decisionMove(vector<fish>&); //finds a new target fish
 };
 
 whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
@@ -60,7 +58,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     age = 0;
     speed = 20;
     vector3 destination (50, 50, 50);
-    int currentRadius;
     frameCounter = 0;
     fishTarget = 0;
 
@@ -83,26 +80,9 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
         eatDenseFish = 1;
     }
 
-    reverseCloseFish = 10 - eatCloseFish;
-
     //set velocity and position
     velocity = vel;
     position = pos;
-}
-
-void whale::updatePosition (vector<fish> &fishList) {
-    frameCounter ++;
-
-    //every 5 frames, update destination and velocity
-    if (frameCounter % 5 == 0)
-    {
-        updateDestination(fishList);
-    }
-
-    position += speed * velocity / framerate;
-
-    //check if beyond boundaries
-    position %= edges.x;
 }
 
 void whale::decision(vector<fish> &fishList) {
@@ -124,11 +104,57 @@ void whale::decision(vector<fish> &fishList) {
         updatePosition(fishList);
     }
 
-    //only change destination if it reached the old one or every 20 frames
+    //only change destination if it reached the old one
     if (closeEnough(destination, position, 2))
     {
         decisionMove(fishList);
     }
+}
+
+void whale::updatePosition (vector<fish> &fishList) {
+    frameCounter ++;
+
+    //every 5 frames, update destination and velocity
+    if (frameCounter % 5 == 0)
+    {
+        updateDestination(fishList);
+    }
+
+    position += speed * velocity / framerate;
+
+    //check if beyond boundaries
+
+    //check if beyond boundaries
+    if (position.x > edges.x or position.x < 0)
+    {
+        position.x = abs(position.x - edges.x);
+    }
+
+    if (position.y > edges.y or position.y < 0)
+    {
+        position.y = abs(position.y - edges.y);
+    }
+
+    if (position.z > edges.z or position.z < 0)
+    {
+        position.z = abs(position.z - edges.z);
+    }
+}
+
+vector<int> whale::sight(vector<fish> &fishList, int maxDist)
+{
+    //see which fish are within a certain distance of a given position
+    vector<int> fishWork;
+
+    for (int f = 0; f < fishList.size(); f++) {
+
+        if (closeEnough(fishList[f].position, position, maxDist)) {
+            fishWork.push_back(fishList[f].id);
+        }
+    }
+
+    //return a vector of fish IDs
+    return fishWork;
 }
 
 void whale::decisionEat(int numFish) {
@@ -175,30 +201,17 @@ void whale::decisionMove(vector<fish> &fishList) {
     }
 }
 
-vector<int> whale::sight(vector<fish> &fishList, int maxDist)
-{
-    //see which fish are within a certain distance of a given position
-    vector<int> fishWork;
-
-    for (int f = 0; f < fishList.size(); f++) {
-
-        if (closeEnough(fishList[f].position, position, maxDist)) {
-            fishWork.push_back(fishList[f].id);
-        }
-    }
-
-    //return a vector of fish IDs
-    return fishWork;
-}
-
 bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
 {
     bool withinDist = false;
+    vector3 difference;
+    double actualRadius;
 
     //use 3D Pythagorean theorem to find the radius value
-    float actualRadius = (otherPos - myPos).magnitude();
+    difference = otherPos - myPos;
+    actualRadius = sqrt(pow(difference.x, 2) + pow(difference.y, 2)+ pow(difference.z, 2));
 
-    //if it's less than r add that fish's id to the list
+    //if it's less than r the fish is close enough
     if (actualRadius <= maxDist) {
         withinDist = true;
     }
@@ -209,6 +222,7 @@ bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
 
 void whale:: updateDestination (vector<fish> &fishList)
 {
+    bool fishAlive = false;
     int vectorPos;
 
     for (int ff = 0; ff < fishList.size(); ff ++)
@@ -216,21 +230,30 @@ void whale:: updateDestination (vector<fish> &fishList)
         if (fishList[ff].id == fishTarget)
         {
             vectorPos = ff;
+            fishAlive = true;
         }
     }
 
-    //update destination using the fish's position
-    destination = fishList[vectorPos].position;
+    //if the fish has been eaten, choose a new target
+    if (fishAlive == false)
+    {
+        decisionMove(fishList);
+    }
+    else
+    {
+        //update destination using the fish's position
+        destination = fishList[vectorPos].position;
 
-    //find velocity to reach fish
-    vector3 diff = fishList[vectorPos].position - position;
-    velocity = diff;
+        //find velocity to reach fish
+        vector3 diff = fishList[vectorPos].position - position;
+        velocity = diff;
 
-    //normalize velocity
-    velocity.normalize();
+        //normalize velocity
+        velocity.normalize();
 
-    //scale it to 2
-    velocity *= 2;
+        //scale it to 2
+        velocity *= 2;
+    }
 }
 
 #endif /* whale_hpp */
