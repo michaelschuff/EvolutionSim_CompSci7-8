@@ -55,7 +55,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
 
     fishCounter = 0;
     radius = 5;
-    volume = (float) (4.0/3.0) * M_PI * pow(radius, 3);
+    volume = (float) (4.0/3.0) * 3.14159265359 * pow(radius, 3);
     edges = boundary;
     age = 0;
     speed = 20;
