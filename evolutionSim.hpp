@@ -36,6 +36,7 @@ private:
 
     void killFish();
     void whaleReproduction();
+    void evaluateBubbleNetFeeding(); //run at some constant interval
     //void fishReproduction();
 
 };
@@ -149,5 +150,25 @@ void evolutionSim::whaleReproduction()
         }
         cout << endl;
     }
+}
+
+void evolutionSim::evaluateBubbleNetFeeding()
+{
+    //search through all whales. Check if they are bubble net feeding.
+    vector<whale> BNFeedingWhales;
+    for(int ww = 0; ww < whaleList.size(); ww ++) {
+        if( true /*whaleList[ww].isBNF*/) {
+            whale &myWhale = whaleList[ww];
+            BNFeedingWhales.push_back(myWhale);
+        }
+    }
+
+    //
+}
+
+//function to sort whales into individual groups based on location
+vector<vector<whale>> evolutionSim::groupWhales(vector<whale>)
+{
+
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
