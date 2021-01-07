@@ -36,9 +36,16 @@ private:
 
     void killFish();
     void whaleReproduction();
-    void evaluateBubbleNetFeeding(); //run at some constant interval
     //void fishReproduction();
 
+
+    void evaluateBubbleNetFeeding(); //run at some constant interval
+    ///The following two functions should be lists OF references (or a list of lists of references to whales)
+    vector<vector<whale>> groupsOfBubbleNettingWhales; //an empty list to be filled by a function
+    vector<whale> currentBubbleNettingWhales; //another empty list to be filled by a function
+    //These two functions evaluate the variables above
+    void groupWhales(); //evaluates groupsOfBubbleNettingWhales
+    void findBubbleNettingWhales(); //evaluates groupsOfBubbleNettingWhales
 };
 
 evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
@@ -152,22 +159,35 @@ void evolutionSim::whaleReproduction()
     }
 }
 
+/**************Everything below here is untested********************************************
+Things that really need to be tested:
+  * Whether these functions are actually adding whale REFERENCES to their respective variables.
+    They should NOT be adding copies of whales, that'd be bad.
+*/
 void evolutionSim::evaluateBubbleNetFeeding()
 {
-    //search through all whales. Check if they are bubble net feeding.
-    vector<whale> BNFeedingWhales;
-    for(int ww = 0; ww < whaleList.size(); ww ++) {
-        if( true /*whaleList[ww].isBNF*/) {
-            whale &myWhale = whaleList[ww];
-            BNFeedingWhales.push_back(myWhale);
-        }
-    }
+    findBubbleNettingWhales();
+    groupWhales();
+    //actually evaluate whether the bubble feeding is successful
 
     //
 }
+//evaluates the value of currentBubbleNettingWhales
+void evolutionSim::findBubbleNettingWhales()
+{
+    //search through all whales. Check if they are bubble net feeding.
+    currentBubbleNettingWhales.clear();
 
+    for(int ww = 0; ww < whaleList.size(); ww ++) {
+        if( true /*whaleList[ww].isBNF*/) {
+            whale &myWhale = whaleList[ww];
+            currentBubbleNettingWhales.push_back(myWhale);
+        }
+    }
+}
 //function to sort whales into individual groups based on location
-vector<vector<whale>> evolutionSim::groupWhales(vector<whale>)
+//basically just evaluates the value of groupsOfBubbleNettingWhales
+void evolutionSim::groupWhales()
 {
 
 }
