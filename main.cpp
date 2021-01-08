@@ -38,8 +38,16 @@ int main(int, char const**) {
     camera cam(vector3(0, 150, -80), vector3(0.253319, -0.590397, 0.76476).normalized(), vector3(0.185644, 0.805622, 0.560449).normalized(), vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(framerate);
     int frameCounter = 0;
-
-
+    Font font()
+    Text cohTxt, sepTxt, aliTxt, avoTxt;
+    cohTxt.setString("Fish Cohesion");
+    sepTxt.setString("Fish Separation");
+    aliTxt.setString("Fish Alignment");
+    avoTxt.setString("Fish Avoidance");
+    cohTxt.setFont(font);
+    sepTxt.setFont(font);
+    aliTxt.setFont(font);
+    avoTxt.setFont(font);
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
