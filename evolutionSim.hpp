@@ -42,6 +42,7 @@ private:
     void killFish(int);
     void whaleReproduction();
     void fishReproduction();
+    void bnfBehavior();
 
 };
 
@@ -55,7 +56,7 @@ evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
 
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
-        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
+        whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, (rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
         whaleList.push_back(newWhale);
     }
 
@@ -87,7 +88,7 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 
     for (int ww = 0; ww < whaleList.size(); ww++) {
 
-        whaleList[ww].decision(fishList);
+        whaleList[ww].decision(fishList, whaleList);
 
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
@@ -98,7 +99,7 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
     whaleReproduction ();
     if(frameCounter % 150 == 100) {
         fishReproduction ();
-        cout << "num fish: " << fishList.size() << endl;
+        //cout << "num fish: " << fishList.size() << endl;
     }
     frameCounter ++;
 }
@@ -143,13 +144,13 @@ void evolutionSim::whaleReproduction()
 
         //top 10% reproduce
         for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
-            whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].position, whaleList[r].velocity, limits, framerate);
+            whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].bubbleNetFeed, whaleList[r].position, whaleList[r].velocity, limits, framerate);
             whaleList.push_back(newWhale);
         }
 
         for (int ww = 0; ww < whaleList.size(); ww++)
         {
-            cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << endl;
+            cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << ", bubble net feed: " << whaleList[ww].bubbleNetFeed << endl;
         }
         cout << endl;
     }
@@ -162,7 +163,21 @@ void evolutionSim::fishReproduction()
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         fishList.push_back(newFish);
     }
+}
 
-    cout<<"Finished reproducing"<<endl;
+void evolutionSim::bnfBehavior()
+{
+    int radiusbnf;
+    int whalesInGroup = 0;
+    //find the groups of whales who are bnf
+
+    //determine the radius of bnf
+    //radiusbnf = whalesInGroup + avg bnf trait value
+
+    //trap fish in the radius when they swim into it
+
+    //determine when it's done for each group
+
+    //divide the fish by the whales in the group
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
