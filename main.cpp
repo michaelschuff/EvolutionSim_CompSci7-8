@@ -38,7 +38,10 @@ int main(int, char const**) {
     camera cam(vector3(0, 150, -80), vector3(0.253319, -0.590397, 0.76476).normalized(), vector3(0.185644, 0.805622, 0.560449).normalized(), vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(framerate);
     int frameCounter = 0;
-    Font font()
+    Font font;
+    if(!font.loadFromFile("oswald.ttf")){
+        cout<< "font error \n";
+    }
     Text cohTxt, sepTxt, aliTxt, avoTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
@@ -48,6 +51,10 @@ int main(int, char const**) {
     sepTxt.setFont(font);
     aliTxt.setFont(font);
     avoTxt.setFont(font);
+    cohTxt.setPosition(5,10);
+    sepTxt.setPosition(5,70);
+    aliTxt.setPosition(5,130);
+    avoTxt.setPosition(500,10);
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -86,13 +93,15 @@ int main(int, char const**) {
             objfile>>x;
             objfile>>y;
             objfile>>z;
+            cout<< x << " "<< y << " " << z << endl;
             pointlist.push_back(vector3(x,y,z));
 
         } else if (check == 'f'){
             objfile>>x;
             objfile>>y;
             objfile>>z;
-            tlist.push_back(triangle(pointlist[x],pointlist[y],pointlist[z]));
+            cout<< x << " "<< y << " " << z << endl;
+            tlist.push_back(triangle(pointlist[x-1],pointlist[y-1],pointlist[z-1]));
 
         } else{
             string s;
@@ -377,6 +386,10 @@ int main(int, char const**) {
         sep.draw(window);
         ali.draw(window);
         avo.draw(window);
+        window.draw(cohTxt);
+        window.draw(sepTxt);
+        window.draw(aliTxt);
+        window.draw(avoTxt);
         window.display();
 
     }
