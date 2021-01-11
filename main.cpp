@@ -62,17 +62,17 @@ int main(int, char const**) {
     vector<vector3> pointlist;
     vector<triangle> tlist;
     string check;
-    float x;
-    float y;
-    float z;
 
     int counter = 0;
 
     ifstream objfile;
-    objfile.open("whalemodel.obj", ios::in);
+    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
     bool vert = true;
 
     while(true){
+        float x;
+        float y;
+        float z;
         objfile>>check;
         if(check == 'v'){
             objfile>>x;
