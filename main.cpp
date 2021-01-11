@@ -196,8 +196,6 @@ int main(int, char const**) {
             window.draw(aliTxt);
             window.draw(avoTxt);
         }
-
-
         window.display();
 
     }
