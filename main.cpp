@@ -135,6 +135,8 @@ int main(int, char const**) {
                     break;
                 }
             }
+            //if button is pushed make start = true
+
         }
 
 
@@ -186,7 +188,9 @@ int main(int, char const**) {
                 }
             }
 
-            //MARK: DRAW THEM
+        }
+
+
             coh.draw(window);
             sep.draw(window);
             ali.draw(window);
