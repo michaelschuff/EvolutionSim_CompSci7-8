@@ -137,6 +137,7 @@ int main(int, char const**) {
     vector3 limits(100, 100, 100);
 
     evolutionSim simulation(numWhales, numFish, limits, framerate);
+    bool start = false;
 
     while (window.isOpen()) {
         // MARK: Handle Events
@@ -257,6 +258,8 @@ int main(int, char const**) {
                     speed /= 1.01;
                 }
             }
+            //if button is pushed make start = true
+
         }
 
         // MARK: Handle Inputs
@@ -353,43 +356,49 @@ int main(int, char const**) {
 
 
         // MARK: Draw Shapes to Window
-        circle* _circ = nullptr;
-        rectangle* _rect = nullptr;
-        convexshape* _convexshape = nullptr;
-        vector<object2D*> shapes = cam.get_view(objects);
-        for (int i = 0; i < shapes.size(); i++) {
-            if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
-                CircleShape c(_circ->r);
-                c.setOrigin(_circ->r, _circ->r);
-                c.setPosition(width/2 + (width/2)*_circ->x, height/2 - (height/2)*_circ->y);
-                c.setFillColor(_circ->c);
+        if(start == true){
 
-                window.draw(c);
-            } else if ((_rect = dynamic_cast<rectangle*>(shapes[i]))) {
-                RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
-                r.setOrigin(0.5, 0.5);
-                r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
-                r.rotate(-_rect->theta * 180.0 / 3.14159);
-                r.setFillColor(_rect->c);
-
-                window.draw(r);
-            } else if ((_convexshape = dynamic_cast<convexshape*>(shapes[i]))) {
-                ConvexShape c(_convexshape->points.size());
-                for (int j = 0; j < _convexshape->points.size(); j++) {
-                    c.setPoint(j, Vector2f(width/2 + (width/2)*(_convexshape->points[j][0]), height/2 - (height/2)*(_convexshape->points[j][1])));
-                }
-                c.setFillColor(_convexshape->c);
-                window.draw(c);
-            }
         }
-        coh.draw(window);
-        sep.draw(window);
-        ali.draw(window);
-        avo.draw(window);
-        window.draw(cohTxt);
-        window.draw(sepTxt);
-        window.draw(aliTxt);
-        window.draw(avoTxt);
+        else{
+            circle* _circ = nullptr;
+            rectangle* _rect = nullptr;
+            convexshape* _convexshape = nullptr;
+            vector<object2D*> shapes = cam.get_view(objects);
+            for (int i = 0; i < shapes.size(); i++) {
+                if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
+                    CircleShape c(_circ->r);
+                    c.setOrigin(_circ->r, _circ->r);
+                    c.setPosition(width/2 + (width/2)*_circ->x, height/2 - (height/2)*_circ->y);
+                    c.setFillColor(_circ->c);
+
+                    window.draw(c);
+                } else if ((_rect = dynamic_cast<rectangle*>(shapes[i]))) {
+                    RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
+                    r.setOrigin(0.5, 0.5);
+                    r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
+                    r.rotate(-_rect->theta * 180.0 / 3.14159);
+                    r.setFillColor(_rect->c);
+
+                    window.draw(r);
+                } else if ((_convexshape = dynamic_cast<convexshape*>(shapes[i]))) {
+                    ConvexShape c(_convexshape->points.size());
+                    for (int j = 0; j < _convexshape->points.size(); j++) {
+                        c.setPoint(j, Vector2f(width/2 + (width/2)*(_convexshape->points[j][0]), height/2 - (height/2)*(_convexshape->points[j][1])));
+                    }
+                    c.setFillColor(_convexshape->c);
+                    window.draw(c);
+                }
+            }
+            coh.draw(window);
+            sep.draw(window);
+            ali.draw(window);
+            avo.draw(window);
+            window.draw(cohTxt);
+            window.draw(sepTxt);
+            window.draw(aliTxt);
+            window.draw(avoTxt);
+        }
+
         window.display();
 
     }
