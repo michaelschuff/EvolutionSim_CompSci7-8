@@ -90,6 +90,7 @@ int main(int, char const**) {
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
 
+
     double sensitivity = 0.05, speed = 20;
     vector<color> fish_colors;
 
@@ -184,12 +185,8 @@ int main(int, char const**) {
                     shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
                     shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
                     window.draw(shape);
-
                 }
             }
-
-        }
-
 
             coh.draw(window);
             sep.draw(window);
