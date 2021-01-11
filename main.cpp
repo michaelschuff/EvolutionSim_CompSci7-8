@@ -67,6 +67,11 @@ int main(int, char const**) {
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
+
+    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,30);
+    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,15);
+    titleTxt.setPosition(300, 50);
+
     vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
         new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
@@ -356,8 +361,8 @@ int main(int, char const**) {
 
 
         // MARK: Draw Shapes to Window
-        if(start == true){
-
+        if(start == false){
+            window.draw()
         }
         else{
             circle* _circ = nullptr;
