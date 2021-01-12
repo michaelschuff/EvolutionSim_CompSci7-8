@@ -21,6 +21,7 @@
 #include "whale.hpp"
 #include "fish.hpp"
 #include "SliderSFML.hpp"
+#include "bnfGroup.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;

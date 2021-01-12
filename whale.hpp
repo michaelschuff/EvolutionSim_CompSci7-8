@@ -113,10 +113,17 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
     //bubble net feed
     if (bnfCurrently)
     {
+        /*
         //only bubble net feed for 20 frames
         if ((frameCounter - bubbleNetStart) == 20)
         {
             bubbleNetFeed = false;
+        }
+        */
+
+        if(!bnfCurrently)
+        {
+            eat = true;
         }
     }
 
