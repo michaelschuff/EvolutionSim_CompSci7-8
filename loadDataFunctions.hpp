@@ -67,7 +67,8 @@ mesh getWhaleMesh() {
     mesh m;
     vector<vector3> whale_obj_points;
     string check;
-    ifstream whale_file("/Users/michael/Downloads/whalemodel.obj");
+//    ifstream whale_file("/Users/michael/Downloads/whalemodel.obj");
+    ifstream whale_file("whalemodel.obj");
     while (!whale_file.eof()) {
         float x, y, z;
         whale_file>>check;
@@ -96,7 +97,8 @@ mesh getFishMesh() {
     mesh m;
     vector<vector3> fish_obj_points;
     string check;
-    ifstream fish_file("/Users/michael/Downloads/fishmodel.obj");
+//    ifstream fish_file("/Users/michael/Downloads/fishmodel.obj");
+    ifstream fish_file("fishmodel.obj");
     while (!fish_file.eof()) {
         float x, y, z;
         fish_file>>check;
