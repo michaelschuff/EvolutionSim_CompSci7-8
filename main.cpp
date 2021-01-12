@@ -91,6 +91,7 @@ int main(int, char const**) {
     avo.setSliderValue(0);
 
 
+
     double sensitivity = 0.05, speed = 20;
     vector<color> fish_colors;
 
@@ -100,7 +101,6 @@ int main(int, char const**) {
     mesh whale_mesh = getWhaleMesh();
 
     scene world(getPoints(), getLines(), vector<triangle>(0), getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh));
-
 
 
     while (window.isOpen()) {
@@ -136,6 +136,7 @@ int main(int, char const**) {
                     break;
                 }
             }
+
             //if button is pushed make start = true
 
         }
