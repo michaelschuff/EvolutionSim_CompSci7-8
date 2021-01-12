@@ -90,9 +90,9 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         whaleList[ww].decision(fishList);
 
         // when whales are able to eat
-//        if (whaleList[ww].eat == true) {
-//            killFish(ww);
-//        }
+        if (whaleList[ww].eat == true) {
+            killFish(ww);
+        }
     }
 
     whaleReproduction ();

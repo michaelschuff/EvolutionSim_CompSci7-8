@@ -29,7 +29,7 @@
 using namespace sf;
 using namespace std;
 
-//int agent::nextID = 0;
+int agent::nextID = 0;
 
 int main(int, char const**) {
     srand(time(NULL));
@@ -67,13 +67,10 @@ int main(int, char const**) {
 
     evolutionSim simulation(10, 300, vector3(100, 100, 100), framerate);
     
-    vector<vector3> points = getPoints();
-    vector<line> lines = getLines();
     mesh fish_mesh = getFishMesh();
     mesh whale_mesh = getWhaleMesh();
-    vector<mesh> bodies = getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh);
     
-    scene world(points, lines, vector<triangle>(0), bodies);
+    scene world(getPoints(), getLines(), vector<triangle>(0), getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh));
     
     
     
@@ -117,17 +114,16 @@ int main(int, char const**) {
         for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
             if (i < simulation.fishList.size()) {
                 quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                world.meshes.push_back(simulation.fishList[i].position + fish_mesh);//.rotated(q));
+                world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
             } else {
                 quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
-                world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh);//.rotated(q));
+                world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));
             }
         }
 
         vector<triangle> tris = cam.get_view(world);
         for (triangle tri: tris) {
             if (tri.v2 != tri.v3) {
-                tri.print();
                 ConvexShape shape(3);
                 shape.setPoint(0, Vector2f(tri.v1.x, height-tri.v1.z));
                 shape.setPoint(1, Vector2f(tri.v2.x, height-tri.v2.z));
