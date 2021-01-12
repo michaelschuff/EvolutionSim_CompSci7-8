@@ -20,6 +20,9 @@
 
 using namespace std;
 
+//static string file_path = "/Users/michael/Downloads/";
+static string file_path = "";
+
 vector<vector3> getPoints() {
     return {
         
@@ -67,8 +70,7 @@ mesh getWhaleMesh() {
     mesh m;
     vector<vector3> whale_obj_points;
     string check;
-//    ifstream whale_file("/Users/michael/Downloads/whalemodel.obj");
-    ifstream whale_file("whalemodel.obj");
+    ifstream whale_file(file_path + "whalemodel.obj");
     while (!whale_file.eof()) {
         float x, y, z;
         whale_file>>check;
@@ -97,8 +99,7 @@ mesh getFishMesh() {
     mesh m;
     vector<vector3> fish_obj_points;
     string check;
-//    ifstream fish_file("/Users/michael/Downloads/fishmodel.obj");
-    ifstream fish_file("fishmodel.obj");
+    ifstream fish_file(file_path + "fishmodel.obj");
     while (!fish_file.eof()) {
         float x, y, z;
         fish_file>>check;
