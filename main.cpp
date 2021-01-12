@@ -47,8 +47,6 @@ int main(int, char const**) {
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     
-    
-
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -80,9 +78,9 @@ int main(int, char const**) {
             if (event.type == Event::Closed) {
                 window.close();
             } else if (event.type == Event::KeyPressed) {
-                HandleKeyPressedEvent;
+                HandleKeyPressedEvent;// garbage.hpp
             } else if (event.type == Event::KeyReleased) {
-                HandleKeyReleasedEvent;
+                HandleKeyReleasedEvent;// garbage.hpp
             } else if (event.type == Event::MouseWheelScrolled) {
                 for (int i = 0; i < event.mouseWheelScroll.delta; i++) {
                     speed *= 1.01;
@@ -93,16 +91,7 @@ int main(int, char const**) {
             }
         }
 
-        /*Vector2i mouse_position = Mouse::getPosition(window);
-        if (mouse_position.x != width / 2) {
-            cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
-        }
-        if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-            cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
-        }
-        Mouse::setPosition(Vector2i(width/2, height/2), window);*/
-
-        MoveCamera;
+        MoveCamera;// garbage.hpp
 
         simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
 
