@@ -14,7 +14,7 @@
 #include <iostream>
 #include "triangle.hpp"
 #include "object.hpp"
-
+#include "quaternion.hpp"
 class mesh : public object {
 public:
     std::vector<triangle> triangles;
@@ -30,9 +30,35 @@ public:
     void push_back(const triangle &tri);
     void insert(int i, const triangle &tri);
     
+    mesh rotated(const quaternion& q);
+    
     std::string to_string();
     void print();
 };
+
+mesh mesh::rotated(const quaternion& q) {
+    mesh m1;
+    for (int i = 0; i < triangles.size(); i++) {
+        m1.push_back(triangles[i].rotated(q));
+    }
+    return m1;
+}
+
+mesh operator+(const mesh& m, const vector3& v) {
+    mesh m1;
+    for (int i = 0; i < m.triangles.size(); i++) {
+        m1.push_back(v + m.triangles[i]);
+    }
+    return m1;
+}
+
+mesh operator+(const vector3& v, const mesh& m) {
+    mesh m1;
+    for (int i = 0; i < m.triangles.size(); i++) {
+        m1.push_back(v + m.triangles[i]);
+    }
+    return m1;
+}
 
 triangle &mesh::operator[](int i) {
     assert(i>=0 && i<(*this).size());
@@ -60,6 +86,7 @@ void mesh::remove(int i, int j = -1) {
 
 void mesh::push_back(const triangle &tri) {
     triangles.push_back(tri);
+//    triangles[triangles.size() - 1].c = tri.c;
 }
 
 void mesh::insert(int i, const triangle &tri) {

@@ -3,7 +3,7 @@
 //  CompSci78
 //
 //  Created by Bronte McKinnis and Elaine Demetrion on 11/12/20.
-//  Copyright © 2020 Bronte McKinnis and Elaine Demetrion. All rights reserved.
+//  Copyright ï¿½ 2020 Bronte McKinnis and Elaine Demetrion. All rights reserved.
 //
 
 #ifndef EVOLUTIONSIM_HPP_INCLUDED
@@ -90,9 +90,9 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         whaleList[ww].decision(fishList);
 
         // when whales are able to eat
-        if (whaleList[ww].eat == true) {
-            killFish(ww);
-        }
+//        if (whaleList[ww].eat == true) {
+//            killFish(ww);
+//        }
     }
 
     whaleReproduction ();

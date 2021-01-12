@@ -25,7 +25,7 @@ public:
     int fishCounter; //how many fish the whale has eaten, used for ranking
     void decision (vector<fish>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
-    bool eat; //whether or not to eat the fish
+    bool eat = false; //whether or not to eat the fish
     int age;
     int speed;
 

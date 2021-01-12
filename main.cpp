@@ -21,24 +21,33 @@
 #include "whale.hpp"
 #include "fish.hpp"
 #include "SliderSFML.hpp"
+#include "scene.hpp"
+#include "loadDataFunctions.hpp"
+#include "garbage.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
 using namespace std;
 
-int agent::nextID = 0;
+//int agent::nextID = 0;
 
 int main(int, char const**) {
-    // MARK: Program vars
     srand(time(NULL));
+    // MARK: Program vars
     const int width = 800, height = 800, framerate = 60;
-    bool active = true, qDown = false, wDown = false, eDown = false, aDown = false,sDown = false, dDown = false, lcontrolDown = false, jDown = false, kDown = false, lDown = false, iDown = false;
+    bool active = true, qDown = false, wDown = false, eDown = false,
+         aDown = false, sDown = false, dDown = false, lcontrolDown = false,
+         jDown = false, kDown = false, lDown = false, iDown = false;
+    
     RenderWindow window(VideoMode(width, height), "SFML window");
-//    window.setMouseCursorVisible(false);
-    camera cam(vector3(0, 150, -80), vector3(0.253319, -0.590397, 0.76476).normalized(), vector3(0.185644, 0.805622, 0.560449).normalized(), vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     window.setFramerateLimit(framerate);
-    int frameCounter = 0;
-
+    
+    camera cam(vector3(0, 150, -80),
+               vector3(0.253319, -0.590397, 0.76476).normalized(),
+               vector3(0.185644, 0.805622, 0.560449).normalized(),
+               vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
+    
+    
 
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
@@ -52,186 +61,31 @@ int main(int, char const**) {
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
-    vector<object*> objects = {
-        new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 1.5, 0), color(0, 255, 0)),
-        new line(vector3(0, 0, 0), vector3(0, 0, 1.5), color(0, 0, 255)),
-    };
-    // MARK: Evolution vars
-    //whale model points
-    vector<vector3> pointlist;
-    vector<triangle> tlist;
-    string check;
+    
+    double sensitivity = 0.05, speed = 20;
+    vector<color> fish_colors;
 
-    int counter = 0;
-
-    ifstream objfile;
-    objfile.open("/Users/michael/Downloads/whalemodel.obj", ios::in);
-    bool vert = true;
-
-    while(true){
-        float x;
-        float y;
-        float z;
-        objfile>>check;
-        if(check == 'v'){
-            objfile>>x;
-            objfile>>y;
-            objfile>>z;
-            pointlist.push_back(vector3(x,y,z));
-
-        } else if (check == 'f'){
-            objfile>>x;
-            objfile>>y;
-            objfile>>z;
-            tlist.push_back(triangle(pointlist[x],pointlist[y],pointlist[z]));
-
-        } else{
-            string s;
-            getline(objfile,s);
-        }
-
-        if(objfile.eof()){
-            break;
-        }
-
-
-    }
-    objfile.close();
-    //fish model points
-    vector3  fp1(1,   0,     0),
-             fp2(0, 0.2,     0),
-             fp3(0,-0.1,-0.172),
-             fp4(0,-0.1, 0.172);
-
-    double sensitivity = 0.1, speed = 5;
-    vector<color> whale_colors, fish_colors;
-    for (int i = 0; i < 19; i++) {
-        whale_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
-    }
-    for (int i = 0; i < 4; i++) {
-        fish_colors.push_back(color((float) rand()/RAND_MAX, (float) rand()/RAND_MAX, (float) rand()/RAND_MAX));
-    }
-
-    //create a simulation object
-    int numWhales = 10;
-    //400 is too many for processing
-    int numFish = 300;
-    vector3 limits(100, 100, 100);
-
-    evolutionSim simulation(numWhales, numFish, limits, framerate);
-
+    evolutionSim simulation(10, 300, vector3(100, 100, 100), framerate);
+    
+    vector<vector3> points = getPoints();
+    vector<line> lines = getLines();
+    mesh fish_mesh = getFishMesh();
+    mesh whale_mesh = getWhaleMesh();
+    vector<mesh> bodies = getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh);
+    
+    scene world(points, lines, vector<triangle>(0), bodies);
+    
+    
+    
     while (window.isOpen()) {
-        // MARK: Handle Events
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
-            } else if (event.type == Event::GainedFocus) {
-//                window.setMouseCursorVisible(false);
             } else if (event.type == Event::KeyPressed) {
-                switch (event.key.code) {
-                    case Keyboard::A:
-                        aDown = true;
-                        break;
-                    case Keyboard::D:
-                        dDown = true;
-                        break;
-                    case Keyboard::S:
-                        sDown = true;
-                        break;
-                    case Keyboard::W:
-                        wDown = true;
-                        break;
-                    case Keyboard::I:
-                        iDown = true;
-                        break;
-                    case Keyboard::J:
-                        jDown = true;
-                        break;
-                    case Keyboard::K:
-                        kDown = true;
-                        break;
-                    case Keyboard::L:
-                        lDown = true;
-                        break;
-                    case Keyboard::LShift:
-                        qDown = true;
-                        break;
-                    case Keyboard::LControl:
-                        lcontrolDown = true;
-                        break;
-                    case Keyboard::Space:
-                        eDown = true;
-                        break;
-                    case Keyboard::Left:
-                        aDown = true;
-                        break;
-                    case Keyboard::Right:
-                        dDown = true;
-                        break;
-                    case Keyboard::Up:
-                        wDown = true;
-                        break;
-                    case Keyboard::Down:
-                        sDown = true;
-                        break;
-                    default:
-                        break;
-                }
+                HandleKeyPressedEvent;
             } else if (event.type == Event::KeyReleased) {
-                switch (event.key.code) {
-                    case Keyboard::A:
-                        aDown = false;
-                        break;
-                    case Keyboard::D:
-                        dDown = false;
-                        break;
-                    case Keyboard::S:
-                        sDown = false;
-                        break;
-                    case Keyboard::W:
-                        wDown = false;
-                        break;
-                    case Keyboard::I:
-                        iDown = false;
-                        break;
-                    case Keyboard::J:
-                        jDown = false;
-                        break;
-                    case Keyboard::K:
-                        kDown = false;
-                        break;
-                    case Keyboard::L:
-                        lDown = false;
-                        break;
-                    case Keyboard::Escape:
-                        window.close();
-                        break;
-                    case Keyboard::LShift:
-                        qDown = false;
-                        break;
-                    case Keyboard::LControl:
-                        lcontrolDown = false;
-                        break;
-                    case Keyboard::Space:
-                        eDown = false;
-                        break;
-                    case Keyboard::Left:
-                        aDown = false;
-                        break;
-                    case Keyboard::Right:
-                        dDown = false;
-                        break;
-                    case Keyboard::Up:
-                        wDown = false;
-                        break;
-                    case Keyboard::Down:
-                        sDown = false;
-                        break;
-                    default:
-                        break;
-                }
+                HandleKeyReleasedEvent;
             } else if (event.type == Event::MouseWheelScrolled) {
                 for (int i = 0; i < event.mouseWheelScroll.delta; i++) {
                     speed *= 1.01;
@@ -242,129 +96,57 @@ int main(int, char const**) {
             }
         }
 
-        // MARK: Handle Inputs
-        Vector2i mouse_position = Mouse::getPosition(window);
+        /*Vector2i mouse_position = Mouse::getPosition(window);
         if (mouse_position.x != width / 2) {
-//            cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
+            cam.rotate(vector3(0, 1, 0), sensitivity * -(mouse_position.x - width/2) * 3.14159 / 180.0);
         }
         if (mouse_position.y != height / 2 && cam.up.rotated(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0).y > 0) {
-//            cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
+            cam.rotate(cam.right, sensitivity * -(mouse_position.y - height/2) * 3.14159 / 180.0);
         }
-//        Mouse::setPosition(Vector2i(width/2, height/2), window);
+        Mouse::setPosition(Vector2i(width/2, height/2), window);*/
 
-        if (iDown) {
-            cam.rotate(cam.right, sensitivity * 20 * 3.14159 / 180.0);
-        }
-        if (kDown) {
-            cam.rotate(cam.right, -sensitivity * 20 * 3.14159 / 180.0);
-        }
-        if (jDown) {
-            cam.rotate(vector3(0, 1, 0), sensitivity * 20 * 3.14159 / 180.0);
-        }
-        if (lDown) {
-            cam.rotate(vector3(0, 1, 0), -sensitivity * 20 * 3.14159 / 180.0);
-        }
-        if (wDown) {
-            cam.position += speed * cam.forward / 60.0;
-        }
-        if (sDown) {
-            cam.position -= speed * cam.forward / 60.0;
-        }
-        if (aDown) {
-            cam.position -= speed * cam.right / 60.0;
-        }
-        if (dDown) {
-            cam.position += speed * cam.right / 60.0;
-        }
-        if (eDown) {
-            cam.position += speed * cam.up / 60.0;
-        }
-        if (qDown) {
-            cam.position -= speed * cam.up / 60.0;
-        }
+        MoveCamera;
 
         simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
 
         window.clear();
 
 
-        objects = {
-            new line(vector3(0, 0, 0), vector3(100, 0, 0), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 0, 0), vector3(100, 0, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 0, 100), vector3(0, 0, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(0, 0, 100), vector3(0, 0, 0), color(0.5, 0.5, 0.5)),
-            new line(vector3(0, 0, 0), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 0, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
-            new line(vector3(0, 0, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 0, 100), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(0, 100, 0), vector3(100, 100, 0), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 100, 0), vector3(100, 100, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(100, 100, 100), vector3(0, 100, 100), color(0.5, 0.5, 0.5)),
-            new line(vector3(0, 100, 100), vector3(0, 100, 0), color(0.5, 0.5, 0.5)),
-        };
-
-        for (int i = 0; i < simulation.fishList.size(); i++) {
-            quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-            objects.push_back(new triangle(simulation.fishList[i].position + fp2.rotated(q),
-                                           simulation.fishList[i].position + fp3.rotated(q),
-                                           simulation.fishList[i].position + fp4.rotated(q),
-                                           fish_colors[0]));
-            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                           simulation.fishList[i].position + fp3.rotated(q),
-                                           simulation.fishList[i].position + fp2.rotated(q),
-                                           fish_colors[1]));
-            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                           simulation.fishList[i].position + fp2.rotated(q),
-                                           simulation.fishList[i].position + fp4.rotated(q),
-                                           fish_colors[2]));
-            objects.push_back(new triangle(simulation.fishList[i].position + fp1.rotated(q),
-                                           simulation.fishList[i].position + fp3.rotated(q),
-                                           simulation.fishList[i].position + fp4.rotated(q),
-                                           fish_colors[3]));
-
-        }
-
-        for (int j = 0; j < simulation.whaleList.size(); j++) {
-            quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[j].velocity);
-            for (int i = 0; i < tlist.size(); i++) {
-                objects.push_back(new triangle(simulation.whaleList[j].position + tlist[i].v1.rotated(q),
-                                               simulation.whaleList[j].position + tlist[i].v2.rotated(q),
-                                               simulation.whaleList[j].position + tlist[i].v3.rotated(q),
-                                               whale_colors[i%19]));
+        //MARK: UPDATE WHALE+FISH TRIANGLES
+        world.meshes.clear();
+        for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
+            if (i < simulation.fishList.size()) {
+                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+                world.meshes.push_back(simulation.fishList[i].position + fish_mesh);//.rotated(q));
+            } else {
+                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
+                world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh);//.rotated(q));
             }
         }
 
-
-        // MARK: Draw Shapes to Window
-        circle* _circ = nullptr;
-        rectangle* _rect = nullptr;
-        convexshape* _convexshape = nullptr;
-        vector<object2D*> shapes = cam.get_view(objects);
-        for (int i = 0; i < shapes.size(); i++) {
-            if ((_circ = dynamic_cast<circle*>(shapes[i]))) {
-                CircleShape c(_circ->r);
-                c.setOrigin(_circ->r, _circ->r);
-                c.setPosition(width/2 + (width/2)*_circ->x, height/2 - (height/2)*_circ->y);
-                c.setFillColor(_circ->c);
-
-                window.draw(c);
-            } else if ((_rect = dynamic_cast<rectangle*>(shapes[i]))) {
-                RectangleShape r(Vector2f(width/2 * _rect->width, _rect->height));
-                r.setOrigin(0.5, 0.5);
-                r.setPosition(width/2 + (width/2)*_rect->x, height/2 - (height/2)*_rect->y);
-                r.rotate(-_rect->theta * 180.0 / 3.14159);
-                r.setFillColor(_rect->c);
-
-                window.draw(r);
-            } else if ((_convexshape = dynamic_cast<convexshape*>(shapes[i]))) {
-                ConvexShape c(_convexshape->points.size());
-                for (int j = 0; j < _convexshape->points.size(); j++) {
-                    c.setPoint(j, Vector2f(width/2 + (width/2)*(_convexshape->points[j][0]), height/2 - (height/2)*(_convexshape->points[j][1])));
-                }
-                c.setFillColor(_convexshape->c);
-                window.draw(c);
+        vector<triangle> tris = cam.get_view(world);
+        for (triangle tri: tris) {
+            if (tri.v2 != tri.v3) {
+                tri.print();
+                ConvexShape shape(3);
+                shape.setPoint(0, Vector2f(tri.v1.x, height-tri.v1.z));
+                shape.setPoint(1, Vector2f(tri.v2.x, height-tri.v2.z));
+                shape.setPoint(2, Vector2f(tri.v3.x, height-tri.v3.z));
+                shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
+                window.draw(shape);
+            } else {
+                float dx = tri.v2.x - tri.v1.x;
+                float dy = tri.v2.z - tri.v1.z;
+                RectangleShape shape(Vector2f(sqrt(dx*dx + dy*dy), 1));
+                shape.setPosition(tri.v1.x, height-tri.v1.z);
+                shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
+                shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
+                window.draw(shape);
+                
             }
         }
+        
+        //MARK: DRAW THEM
         coh.draw(window);
         sep.draw(window);
         ali.draw(window);

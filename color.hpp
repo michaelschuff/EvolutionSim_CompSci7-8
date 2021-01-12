@@ -21,9 +21,9 @@ public:
     color(double _r, double _g, double _b, double _a = 1) : r(255*_r), g(255*_g), b(255*_b), a(255*_a) {}
     color(const color &c) : r(c.r), g(c.g), b(c.b), a(c.a) {}
 
-    int &operator[](int i);
-    std::string to_string();
-    void print();
+    int& operator[](int i);
+    std::string to_string() const;
+    void print() const;
 };
 
 int &color::operator[](int i) {
@@ -40,11 +40,11 @@ int &color::operator[](int i) {
     }
 }
 
-std::string color::to_string() {
+std::string color::to_string() const {
     return "<" + std::to_string(r) + ", " + std::to_string(g) + ", " + std::to_string(b) + ">, " + std::to_string(a);
 }
 
-void color::print() {
+void color::print() const {
     std::cout << (*this).to_string() << std::endl;
 }
 

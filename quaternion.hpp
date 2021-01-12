@@ -184,16 +184,27 @@ quaternion operator*(const vector3 &v1, const vector3 &v2) {
     return cross_product(v1, v2) - dot_product(v1, v2);
 }
 
-vector3 vector3::rotated(const quaternion &q) {
+vector3 vector3::rotated(const quaternion &q) const {
     return (q * (0 + *this) * q.conjugate()).v;
 }
 
-vector3 vector3::rotated(vector3 axis, float theta) {
+vector3 vector3::rotated(const vector3& axis, float theta) const {
     return rotated(cos(theta/2) + axis.normalized() * sin(theta)/2);
 }
 
-void vector3::rotate(vector3 axis, float theta) {
+vector3 vector3::rotated(const vector3& axis, float theta, const vector3& origin) const {
+    return ((*this - origin).rotated(cos(theta/2) + axis.normalized() * sin(theta)/2)) + origin;
+}
+
+void vector3::rotate(const vector3& axis, float theta) {
     rotate(cos(theta/2) + axis.normalized() * sin(theta)/2);
+}
+
+void vector3::rotate(const vector3& axis, float theta, const vector3& origin) {
+    vector3 v = this->rotated(axis, theta, origin);
+    x = v.x;
+    y = v.y;
+    z = v.z;
 }
 
 void vector3::rotate(const quaternion &q) {
