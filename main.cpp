@@ -138,7 +138,7 @@ int main(int, char const**) {
                 float dx = tri.v2.x - tri.v1.x;
                 float dy = tri.v2.z - tri.v1.z;
                 RectangleShape shape(Vector2f(sqrt(dx*dx + dy*dy), 1));
-                r.setOrigin(0.5, 0.5);
+                shape.setOrigin(0.5, 0.5);
                 shape.setPosition(tri.v1.x, height-tri.v1.z);
                 shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
                 shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
