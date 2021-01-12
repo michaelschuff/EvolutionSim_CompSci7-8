@@ -68,9 +68,17 @@ int main(int, char const**) {
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
 
-    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,30);
-    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,15);
-    titleTxt.setPosition(300, 50);
+    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
+    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
+    Text startTxt("Start",font, 35);
+    subTxt.setPosition(50, 250);
+    titleTxt.setPosition(50, 150);
+    RectangleShape button;
+    button.setSize(Vector2f(140,60));
+    button.setFillColor(Color::White);
+    button.setPosition(50,500);
+    startTxt.setPosition(50,500);
+    startTxt.setFillColor(Color::Black);
 
     vector<object*> objects = {
         new line(vector3(0, 0, 0), vector3(1.5, 0, 0), color(255, 0, 0)),
@@ -143,6 +151,7 @@ int main(int, char const**) {
 
     evolutionSim simulation(numWhales, numFish, limits, framerate);
     bool start = false;
+    bool leftDown = false;
 
     while (window.isOpen()) {
         // MARK: Handle Events
@@ -262,7 +271,18 @@ int main(int, char const**) {
                 for (int i = 0; i > event.mouseWheelScroll.delta; i--) {
                     speed /= 1.01;
                 }
+            } else if (event.type == Event::MouseButtonPressed){
+                if(event.mouseButton.button == Mouse::Left){
+                    leftDown = true;
+                }
+
+            }else if (event.type == Event::MouseButtonReleased and leftDown == true){
+                if(event.mouseButton.button == Mouse::Left){
+                    leftDown = false;
+                }
+
             }
+
             //if button is pushed make start = true
 
         }
@@ -362,7 +382,14 @@ int main(int, char const**) {
 
         // MARK: Draw Shapes to Window
         if(start == false){
-            window.draw()
+            window.draw(titleTxt);
+            window.draw(subTxt);
+            window.draw(button);
+            window.draw(startTxt);
+            if(leftDown == true and button.getGlobalBounds().contains(mouse_position.x,mouse_position.y)){
+                start = true;
+            }
+
         }
         else{
             circle* _circ = nullptr;
