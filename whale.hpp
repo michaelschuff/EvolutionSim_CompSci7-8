@@ -42,7 +42,7 @@ private:
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
     int fishTarget; //the fish whose location is the destination
-    bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
+    //bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
     vector<int> sight(vector<fish>&, int); //sees which fish are within eating distance
     void updateDestination (vector<fish>&); //updates based on target fish
     void updatePosition(vector<fish>&); //update position every frame based on velocity and time
@@ -101,7 +101,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
 }
 
 void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
-    cout << bnfCurrently << endl;
+
     if (!bnfCurrently)
     {
         decisionBubbleNet(fishList, whaleList);
@@ -272,7 +272,7 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
         cout << "bubble net feeding: " << decisionValue << endl;
     }
 }
-
+/*
 bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
 {
     bool withinDist = false;
@@ -291,7 +291,7 @@ bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
     //return a bool
     return withinDist;
 }
-
+*/
 void whale:: updateDestination (vector<fish> &fishList)
 {
     bool fishAlive = false;

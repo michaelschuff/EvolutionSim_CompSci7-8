@@ -101,6 +101,9 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         fishReproduction ();
         //cout << "num fish: " << fishList.size() << endl;
     }
+
+    bnfBehavior();
+
     frameCounter ++;
 }
 
@@ -169,15 +172,34 @@ void evolutionSim::bnfBehavior()
 {
     int radiusbnf;
     int whalesInGroup = 0;
-    //find the groups of whales who are bnf
+    vector3 center;
 
-    //determine the radius of bnf
-    //radiusbnf = whalesInGroup + avg bnf trait value
+    //find the groups of whales who are bnf (maybe have a vector of vectors? Some way to organize it)
+    //whale groupings should be vector w/ [0] = fishCount
+    //!are whale groups static or can new whales join?
 
-    //trap fish in the radius when they swim into it
+    //go through all the whale groups
 
-    //determine when it's done for each group
+        //determine the radius of bnf (do this before if whale groups are static)
+        //radiusbnf = whalesInGroup + (avg bnf trait value * avg eatDenseFish)/avg eatCloseFish
 
-    //divide the fish by the whales in the group
-}
+        //trap fish in the radius when they swim into it
+        /*
+        for (int ff = 0; ff < fishList.size(); ff ++)
+        {
+            //if fish is within radius, stop moving
+            if (fishList[ff].closeEnough(fishList[ff].position, center, radiusbnf))
+            {
+                //stop moving
+                [0] ++
+            }
+        }
+        */
+
+        //determine when it's done for group or each whale
+            //divide the fish by the whales in the group, they're eaten (kill fish, separate from function?)
+            //for all whales in group:
+                //fishCounter += fishCount / vector.size()
+                //that many fish are eaten
+    }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
