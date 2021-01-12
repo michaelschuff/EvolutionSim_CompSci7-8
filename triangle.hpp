@@ -161,7 +161,8 @@ void triangle::rotate(const quaternion& q) {
 triangle triangle::rotated(const quaternion& q) const {
     return triangle(v1.rotated(q),
                     v2.rotated(q),
-                    v3.rotated(q));
+                    v3.rotated(q),
+                    c);
 }
 
 void triangle::rotate(const vector3& axis,
@@ -188,7 +189,8 @@ triangle triangle::rotated(const vector3& axis,
                            const vector3& origin) const {
     return triangle(v1.rotated(axis, theta, origin),
                     v2.rotated(axis, theta, origin),
-                    v3.rotated(axis, theta, origin));
+                    v3.rotated(axis, theta, origin),
+                    c);
 }
 
 std::string triangle::to_string() const {
