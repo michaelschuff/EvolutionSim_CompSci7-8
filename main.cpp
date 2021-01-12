@@ -4,6 +4,11 @@
 #include <time.h>
 #include <vector>
 #include <iomanip>
+#include <math.h>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <string>
 #include "vector3.hpp"
 #include "triangle.hpp"
 #include "mesh.hpp"
@@ -11,19 +16,15 @@
 #include "object.hpp"
 #include "objects2d.hpp"
 #include "evolutionSim.hpp"
-#include <math.h>
 #include "quaternion.hpp"
-#include <cstdlib>
-#include <ctime>
 #include "color.hpp"
-#include <fstream>
-#include <string>
 #include "whale.hpp"
 #include "fish.hpp"
 #include "SliderSFML.hpp"
 #include "scene.hpp"
 #include "loadDataFunctions.hpp"
 #include "garbage.hpp"
+#include "bnfGroup.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
