@@ -37,7 +37,8 @@ int main(int, char const**) {
     const int width = 800, height = 800, framerate = 60;
     bool active = true, qDown = false, wDown = false, eDown = false,
          aDown = false, sDown = false, dDown = false, lcontrolDown = false,
-         jDown = false, kDown = false, lDown = false, iDown = false;
+         jDown = false, kDown = false, lDown = false, iDown = false,
+         leftDown = false, hasStarted = false;
     
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setFramerateLimit(framerate);
@@ -75,18 +76,34 @@ int main(int, char const**) {
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
-            if (event.type == Event::Closed) {
-                window.close();
-            } else if (event.type == Event::KeyPressed) {
-                HandleKeyPressedEvent;// garbage.hpp
-            } else if (event.type == Event::KeyReleased) {
-                HandleKeyReleasedEvent;// garbage.hpp
-            } else if (event.type == Event::MouseWheelScrolled) {
-                for (int i = 0; i < event.mouseWheelScroll.delta; i++) {
-                    speed *= 1.01;
-                }
-                for (int i = 0; i > event.mouseWheelScroll.delta; i--) {
-                    speed /= 1.01;
+            switch (event.type) {
+                case Event::Closed: {
+                    window.close();
+                    break;
+                } case Event::KeyPressed: {
+                    HandleKeyPressedEvent;// garbage.hpp
+                    break;
+                } case Event::KeyReleased: {
+                    HandleKeyReleasedEvent;// garbage.hpp
+                    break;
+                } case Event::MouseWheelScrolled: {
+                    for (int i = 0; i < event.mouseWheelScroll.delta; i++) {
+                        speed *= 1.01;
+                    }
+                    for (int i = 0; i > event.mouseWheelScroll.delta; i--) {
+                        speed /= 1.01;
+                    }
+                    break;
+                } case Event::MouseButtonPressed: {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        leftDown = true;
+                    }
+                    break;
+                } case Event::MouseButtonReleased: {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        leftDown = false;
+                    }
+                    break;
                 }
             }
         }
