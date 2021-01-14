@@ -21,13 +21,13 @@ using namespace std;
 class bnfGroup {
 public:
     bnfGroup(vector<whale *>);
-    void addWhale(whale *);
-    vector<whale *> pod;
-    vector3 center;
-    float radius;
-    void trapFish(vector<fish>&);
+    void addWhale(whale *); //to add a whale after the group has been made
+    vector<whale *> pod; //all of the whales in the group
+    vector3 center; //of the pod
+    float radius; //how far the bnf goes
+    void trapFish(vector<fish>&); //sees which fish swim into the radius
     void bnfUpdate();
-    bool done;
+    bool done; //end bnf
 
 private:
     int fishCounter;
@@ -51,6 +51,7 @@ void bnfGroup::addWhale(whale* newWhale)
 
 void bnfGroup::calculateCenter()
 {
+    //find the avg position of the whales for the center of the pod
     vector3 sum;
 
     for (int aa = 0; aa < pod.size(); aa++)
@@ -63,6 +64,8 @@ void bnfGroup::calculateCenter()
 
 void bnfGroup::calculateRadius()
 {
+    //radius is determined by several factors of the pod
+
     float avgBNF = 0;
     float avgDense =0;
     float avgClose = 0;
@@ -110,6 +113,7 @@ void bnfGroup::endSession()
         }
     }
 
+    //change bnfCurrently to false for all whales
     for (int ww = 0; ww < pod.size(); ww++)
     {
         *pod[ww].bnfCurrently = false;
@@ -120,8 +124,11 @@ void bnfGroup::endSession()
 
 void bnfGroup::bnfUpdate()
 {
+    calculateCenter();
+    calculateRadius();
     trapFish();
 
+    //check if the bnf session is over
     for (int ww = 0; ww < pod.size(); ww++)
     {
         if (!*pod[ww].bnfCurrently)
@@ -129,8 +136,6 @@ void bnfGroup::bnfUpdate()
             endSession();
         }
     }
-
-    endSession();
 }
 
 #endif // BNFGROUP_HPP_INCLUDED
