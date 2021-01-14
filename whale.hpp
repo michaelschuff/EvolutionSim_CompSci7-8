@@ -124,6 +124,7 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
         if(!bnfCurrently)
         {
             eat = true;
+            fishCounter += foodList.size();
         }
     }
 
@@ -279,26 +280,7 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
         cout << "bubble net feeding: " << decisionValue << endl;
     }
 }
-/*
-bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
-{
-    bool withinDist = false;
-    vector3 difference;
-    double actualRadius;
 
-    //use 3D Pythagorean theorem to find the radius value
-    difference = otherPos - myPos;
-    actualRadius = sqrt(pow(difference.x, 2) + pow(difference.y, 2)+ pow(difference.z, 2));
-
-    //if it's less than r the fish is close enough
-    if (actualRadius <= maxDist) {
-        withinDist = true;
-    }
-
-    //return a bool
-    return withinDist;
-}
-*/
 void whale:: updateDestination (vector<fish> &fishList)
 {
     bool fishAlive = false;
