@@ -388,6 +388,7 @@ int main(int, char const**) {
             window.draw(startTxt);
             if(leftDown == true and button.getGlobalBounds().contains(mouse_position.x,mouse_position.y)){
                 start = true;
+                cout<< "started\n";
             }
 
         }
