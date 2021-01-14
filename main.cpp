@@ -47,36 +47,36 @@ int main(int, char const**) {
                vector3(0.253319, -0.590397, 0.76476).normalized(),
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
-//    Font font;
-//    if(!font.loadFromFile("oswald.ttf")){
-//        cout<< "font error \n";
-//    }
+    Font font;
+    if(!font.loadFromFile("oswald.ttf")){
+        cout<< "font error \n";
+    }
     Text cohTxt, sepTxt, aliTxt, avoTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
     aliTxt.setString("Fish Alignment");
     avoTxt.setString("Fish Avoidance");
-//    cohTxt.setFont(font);
-//    sepTxt.setFont(font);
-//    aliTxt.setFont(font);
-//    avoTxt.setFont(font);
+    cohTxt.setFont(font);
+    sepTxt.setFont(font);
+    aliTxt.setFont(font);
+    avoTxt.setFont(font);
     cohTxt.setPosition(5,10);
     sepTxt.setPosition(5,70);
     aliTxt.setPosition(5,130);
     avoTxt.setPosition(500,10);
 
-//    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
-//    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
-//    Text startTxt("Start",font, 35);
-//    subTxt.setPosition(50, 250);
-//    titleTxt.setPosition(50, 150);
+    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
+    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
+    Text startTxt("Start",font, 35);
+    subTxt.setPosition(50, 250);
+    titleTxt.setPosition(50, 150);
     RectangleShape button;
     button.setSize(Vector2f(140,60));
     button.setFillColor(Color::White);
     button.setPosition(50,500);
-//    startTxt.setPosition(50,500);
-//    startTxt.setFillColor(Color::Black);
-//
+    startTxt.setPosition(50,500);
+    startTxt.setFillColor(Color::Black);
+
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -141,10 +141,10 @@ int main(int, char const**) {
 
         window.clear();
         if (!hasStarted){
-//            window.draw(titleTxt);
-//            window.draw(subTxt);
+            window.draw(titleTxt);
+            window.draw(subTxt);
             window.draw(button);
-//            window.draw(startTxt);
+            window.draw(startTxt);
             Vector2i mouse_position = Mouse::getPosition(window);
             if(leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)){
                 hasStarted = true;
