@@ -47,36 +47,36 @@ int main(int, char const**) {
                vector3(0.253319, -0.590397, 0.76476).normalized(),
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
-    Font font;
-    if(!font.loadFromFile("oswald.ttf")){
-        cout<< "font error \n";
-    }
+//    Font font;
+//    if(!font.loadFromFile("oswald.ttf")){
+//        cout<< "font error \n";
+//    }
     Text cohTxt, sepTxt, aliTxt, avoTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
     aliTxt.setString("Fish Alignment");
     avoTxt.setString("Fish Avoidance");
-    cohTxt.setFont(font);
-    sepTxt.setFont(font);
-    aliTxt.setFont(font);
-    avoTxt.setFont(font);
+//    cohTxt.setFont(font);
+//    sepTxt.setFont(font);
+//    aliTxt.setFont(font);
+//    avoTxt.setFont(font);
     cohTxt.setPosition(5,10);
     sepTxt.setPosition(5,70);
     aliTxt.setPosition(5,130);
     avoTxt.setPosition(500,10);
 
-    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
-    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
-    Text startTxt("Start",font, 35);
-    subTxt.setPosition(50, 250);
-    titleTxt.setPosition(50, 150);
+//    Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
+//    Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
+//    Text startTxt("Start",font, 35);
+//    subTxt.setPosition(50, 250);
+//    titleTxt.setPosition(50, 150);
     RectangleShape button;
     button.setSize(Vector2f(140,60));
     button.setFillColor(Color::White);
     button.setPosition(50,500);
-    startTxt.setPosition(50,500);
-    startTxt.setFillColor(Color::Black);
-    
+//    startTxt.setPosition(50,500);
+//    startTxt.setFillColor(Color::Black);
+//
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
@@ -136,53 +136,68 @@ int main(int, char const**) {
                 }
             }
         }
-
-        MoveCamera;// garbage.hpp
-
-        simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
+        
+        
 
         window.clear();
-
-
-        //MARK: UPDATE WHALE+FISH TRIANGLES
-        world.meshes.clear();
-        for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
-            if (i < simulation.fishList.size()) {
-                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
-            } else {
-                quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
-                world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));
+        if (!hasStarted){
+//            window.draw(titleTxt);
+//            window.draw(subTxt);
+            window.draw(button);
+//            window.draw(startTxt);
+            Vector2i mouse_position = Mouse::getPosition(window);
+            if(leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)){
+                hasStarted = true;
             }
-        }
-
-        vector<triangle> tris = cam.get_view(world);
-        for (triangle tri: tris) {
-            if (tri.v2 != tri.v3) {
-                ConvexShape shape(3);
-                shape.setPoint(0, Vector2f(tri.v1.x, height-tri.v1.z));
-                shape.setPoint(1, Vector2f(tri.v2.x, height-tri.v2.z));
-                shape.setPoint(2, Vector2f(tri.v3.x, height-tri.v3.z));
-                shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
-                window.draw(shape);
-            } else {
-                float dx = tri.v2.x - tri.v1.x;
-                float dy = tri.v2.z - tri.v1.z;
-                RectangleShape shape(Vector2f(sqrt(dx*dx + dy*dy), 1));
-                shape.setOrigin(0.5, 0.5);
-                shape.setPosition(tri.v1.x, height-tri.v1.z);
-                shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
-                shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
-                window.draw(shape);
-                
+        } else {
+            MoveCamera;// garbage.hpp
+            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
+            
+            world.meshes.clear();
+            for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
+                if (i < simulation.fishList.size()) {
+                    quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+                    world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
+                } else {
+                    quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
+                    world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));
+                }
             }
+
+            vector<triangle> tris = cam.get_view(world);
+            for (triangle tri: tris) {
+                if (tri.v2 != tri.v3) {
+                    ConvexShape shape(3);
+                    shape.setPoint(0, Vector2f(tri.v1.x, height-tri.v1.z));
+                    shape.setPoint(1, Vector2f(tri.v2.x, height-tri.v2.z));
+                    shape.setPoint(2, Vector2f(tri.v3.x, height-tri.v3.z));
+                    shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
+                    window.draw(shape);
+                } else {
+                    float dx = tri.v2.x - tri.v1.x;
+                    float dy = tri.v2.z - tri.v1.z;
+                    RectangleShape shape(Vector2f(sqrt(dx*dx + dy*dy), 1));
+                    shape.setOrigin(0.5, 0.5);
+                    shape.setPosition(tri.v1.x, height-tri.v1.z);
+                    shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
+                    shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
+                    window.draw(shape);
+                    
+                }
+            }
+            
+            //MARK: DRAW THEM
+            coh.draw(window);
+            sep.draw(window);
+            ali.draw(window);
+            avo.draw(window);
+            window.draw(cohTxt);
+            window.draw(sepTxt);
+            window.draw(aliTxt);
+            window.draw(avoTxt);
         }
         
-        //MARK: DRAW THEM
-        coh.draw(window);
-        sep.draw(window);
-        ali.draw(window);
-        avo.draw(window);
+        
         window.display();
 
     }
