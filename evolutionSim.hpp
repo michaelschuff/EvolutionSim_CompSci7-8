@@ -180,9 +180,10 @@ void evolutionSim::bnfBehavior()
     //find the groups of whales who are bnf & add to bnfPods vector
 
     //go through all the whale groups
+    /*
     for (int bb = 0; bb < bnfPods.size(); bb++)
     {
-        bnfPods[bb].bnfUpdate();
+        bnfPods[bb].bnfUpdate(fishList);
 
         //see if the group is no longer bubble net feeding
         if (bnfPods[bb].done)
@@ -190,6 +191,6 @@ void evolutionSim::bnfBehavior()
             bnfPods.erase(bnfPods.begin() + bb);
         }
     }
-
+    */
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
