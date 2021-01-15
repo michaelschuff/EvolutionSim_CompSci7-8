@@ -109,14 +109,14 @@ void bnfGroup::endSession()
             fishCounter ++;
 
             //add the next fish to a whale's foodList
-            *pod[fishCounter % pod.size()].foodList.push_back(fishList[ff].id);
+            pod[fishCounter % pod.size()]->foodList.push_back(fishList[ff].id);
         }
     }
 
     //change bnfCurrently to false for all whales
     for (int ww = 0; ww < pod.size(); ww++)
     {
-        *pod[ww].bnfCurrently = false;
+        pod[ww]->bnfCurrently = false;
     }
 
     done = true;
@@ -131,7 +131,7 @@ void bnfGroup::bnfUpdate()
     //check if the bnf session is over
     for (int ww = 0; ww < pod.size(); ww++)
     {
-        if (!*pod[ww].bnfCurrently)
+        if (!pod[ww]->bnfCurrently)
         {
             endSession();
         }
