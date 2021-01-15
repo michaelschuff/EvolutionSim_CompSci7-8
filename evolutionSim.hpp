@@ -41,8 +41,8 @@ private:
 
     void evaluateBubbleNetFeeding(); //run at some constant interval
     ///The following two functions should be lists OF references (or a list of lists of references to whales)
-    vector<vector<whale>> groupsOfBubbleNettingWhales; //an empty list to be filled by a function
-    vector<whale> currentBubbleNettingWhales; //another empty list to be filled by a function
+    vector<vector<whale*>> groupsOfBubbleNettingWhales; //an empty list to be filled by a function
+    vector<whale*> currentBubbleNettingWhales; //another empty list to be filled by a function
     //These two functions evaluate the variables above
     void groupWhales(); //evaluates groupsOfBubbleNettingWhales
     void findBubbleNettingWhales(); //evaluates groupsOfBubbleNettingWhales
@@ -180,8 +180,8 @@ void evolutionSim::findBubbleNettingWhales()
 
     for(int ww = 0; ww < whaleList.size(); ww ++) {
         if( true /*whaleList[ww].isBNF*/) {
-            whale &myWhale = whaleList[ww];
-            currentBubbleNettingWhales.push_back(myWhale);
+            whale *myWhale = &whaleList[ww]; //creates a pointer
+            currentBubbleNettingWhales.push_back(myWhale); //adds the pointer to this list
         }
     }
 }
@@ -189,6 +189,16 @@ void evolutionSim::findBubbleNettingWhales()
 //basically just evaluates the value of groupsOfBubbleNettingWhales
 void evolutionSim::groupWhales()
 {
+    vector<whale*> ungroupedWhales = currentBubbleNettingWhales;
+    ///maybe randomize order of ungrouped whales?
+    vector<whale*> groupedWhales; ///what's this vector for right now?
 
+    vector<whale*> group;
+
+    for(int ww = 0; ww < ungroupedWhales.size(); ww ++) { ///check for out of bounds error if ungroupedWhales.size() doesn't update as ungroupedWhales shrinks
+        for(int tt = ungroupedWhales.size() - 1; tt >= 0; tt --){
+            if(group.size() <= 5 && /**it's within r units of the original group center*/)
+        }
+    }
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
