@@ -26,14 +26,14 @@ public:
     vector3 center; //of the pod
     float radius; //how far the bnf goes
     void trapFish(vector<fish>&); //sees which fish swim into the radius
-    void bnfUpdate();
+    void bnfUpdate(vector<fish>&);
     bool done; //end bnf
 
 private:
     int fishCounter;
     void calculateRadius();
     void calculateCenter();
-    void endSession();
+    void endSession(vector<fish>&);
 };
 
 bnfGroup::bnfGroup(vector<whale*> initialWhales)
@@ -91,7 +91,7 @@ void bnfGroup::trapFish(vector<fish> &fishList)
     for (int ff = 0; ff < fishList.size(); ff ++)
     {
         //if fish is within radius, stop moving
-        if (fishList[ff].closeEnough(fishList[ff].position, center, radiusbnf))
+        if (fishList[ff].closeEnough(fishList[ff].position, center, radius))
         {
             fishCounter ++;
             fishList[ff].velocity = vector3();
@@ -99,12 +99,12 @@ void bnfGroup::trapFish(vector<fish> &fishList)
     }
 }
 
-void bnfGroup::endSession()
+void bnfGroup::endSession(vector<fish> &fishList)
 {
     for (int ff = 0; ff < fishList.size(); ff ++)
     {
         //if fish is within radius, add to food list
-        if (fishList[ff].closeEnough(fishList[ff].position, center, radiusbnf))
+        if (fishList[ff].closeEnough(fishList[ff].position, center, radius))
         {
             fishCounter ++;
 
@@ -122,18 +122,18 @@ void bnfGroup::endSession()
     done = true;
 }
 
-void bnfGroup::bnfUpdate()
+void bnfGroup::bnfUpdate(vector<fish> &fishList)
 {
     calculateCenter();
     calculateRadius();
-    trapFish();
+    trapFish(fishList);
 
     //check if the bnf session is over
     for (int ww = 0; ww < pod.size(); ww++)
     {
         if (!pod[ww]->bnfCurrently)
         {
-            endSession();
+            endSession(fishList);
         }
     }
 }
