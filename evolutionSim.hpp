@@ -202,6 +202,15 @@ vector<whale *> evolutionSim::unassignedBNFWhales()
 {
     vector<whale *> v;
 
+    for (whale w: whaleList){
+        if(w.bnfCurrently && !w.isAssignedToPod) {
+
+            whale *ptr_to_whale = &w;
+            v.push_back(ptr_to_whale);
+
+        }
+    }
+
     return v;
 }
 /*
