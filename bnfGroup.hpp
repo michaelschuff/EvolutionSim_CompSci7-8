@@ -42,11 +42,18 @@ bnfGroup::bnfGroup(vector<whale*> initialWhales)
     calculateCenter();
     fishCounter = 0;
     done = false;
+
+    //make all whales aware that they are assigned to a pod
+    for (int ww = 0; ww < pod.size(); ww++)
+    {
+        (* (pod[ww])).isAssignedToPod = true;
+    }
 }
 
 void bnfGroup::addWhale(whale* newWhale)
 {
     pod.push_back(newWhale);
+    (*newWhale).isAssignedToPod = true;
 }
 
 void bnfGroup::calculateCenter()
@@ -117,6 +124,7 @@ void bnfGroup::endSession(vector<fish> &fishList)
     for (int ww = 0; ww < pod.size(); ww++)
     {
         (*(pod[ww])).bnfCurrently = false;
+        (* (pod[ww])).isAssignedToPod = false;
     }
 
     done = true;
