@@ -39,10 +39,10 @@ int main(int, char const**) {
          aDown = false, sDown = false, dDown = false, lcontrolDown = false,
          jDown = false, kDown = false, lDown = false, iDown = false,
          leftDown = false, hasStarted = false;
-    
+
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setFramerateLimit(framerate);
-    
+
     camera cam(vector3(0, 150, -80),
                vector3(0.253319, -0.590397, 0.76476).normalized(),
                vector3(0.185644, 0.805622, 0.560449).normalized(),
@@ -89,19 +89,19 @@ int main(int, char const**) {
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
-    
+
     double sensitivity = 0.05, speed = 20;
     vector<color> fish_colors;
 
     evolutionSim simulation(10, 300, vector3(100, 100, 100), framerate);
-    
+
     mesh fish_mesh = getFishMesh();
     mesh whale_mesh = getWhaleMesh();
-    
+
     scene world(getPoints(), getLines(), vector<triangle>(0), getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh));
-    
-    
-    
+
+
+
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -136,8 +136,8 @@ int main(int, char const**) {
                 }
             }
         }
-        
-        
+
+
 
         window.clear();
         if (!hasStarted){
@@ -152,7 +152,7 @@ int main(int, char const**) {
         } else {
             MoveCamera;// garbage.hpp
             simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
-            
+
             world.meshes.clear();
             for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
                 if (i < simulation.fishList.size()) {
@@ -182,10 +182,10 @@ int main(int, char const**) {
                     shape.rotate(-atan2(dy, dx) * 180.0 / 3.14159);
                     shape.setFillColor(Color(tri.c.r, tri.c.g, tri.c.b));
                     window.draw(shape);
-                    
+
                 }
             }
-            
+
             //MARK: DRAW THEM
             coh.draw(window);
             sep.draw(window);
@@ -196,8 +196,8 @@ int main(int, char const**) {
             window.draw(aliTxt);
             window.draw(avoTxt);
         }
-        
-        
+
+
         window.display();
 
     }
