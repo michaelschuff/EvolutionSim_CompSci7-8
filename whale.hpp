@@ -103,14 +103,13 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
 }
 
 void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
+    foodList.clear();
+    age++;
 
     if (!bnfCurrently)
     {
         decisionBubbleNet(fishList, whaleList);
     }
-    foodList.clear();
-
-    age++;
 
     //bubble net feed
     if (bnfCurrently)
@@ -269,8 +268,6 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
 
     //add #whales nearby
     decisionValue += numWhales;
-
-    //add density of fish in radius area???
 
     if (decisionValue > 11)
     {

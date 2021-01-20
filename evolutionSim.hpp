@@ -176,14 +176,11 @@ void evolutionSim::fishReproduction()
 
 void evolutionSim::bnfBehavior()
 {
-    int radiusbnf;
-    int whalesInGroup = 0;
-    vector3 center;
-
     //find the groups of whales who are bnf & add to bnfPods vector
 
+    //see if new whales need to be added
+
     //go through all the whale groups
-    /*
     for (int bb = 0; bb < bnfPods.size(); bb++)
     {
         bnfPods[bb].bnfUpdate(fishList);
@@ -194,7 +191,6 @@ void evolutionSim::bnfBehavior()
             bnfPods.erase(bnfPods.begin() + bb);
         }
     }
-    */
 }
 
 ///MUST GET WRITTEN
