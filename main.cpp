@@ -337,8 +337,10 @@ int main(int, char const**) {
         if (qDown) {
             cam.position -= speed * cam.up / 60.0;
         }
+        if(start == true){
+            simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
+        }
 
-        simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
 
         window.clear();
 
