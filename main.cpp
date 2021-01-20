@@ -29,6 +29,8 @@ using namespace std;
 int agent::nextID = 0;
 
 int main(int, char const**) {
+
+    bool start = false;
     // MARK: Program vars
     srand(time(NULL));
     const int width = 800, height = 800, framerate = 60;
@@ -42,11 +44,13 @@ int main(int, char const**) {
     if(!font.loadFromFile("oswald.ttf")){
         cout<< "font error \n";
     }
-    Text cohTxt, sepTxt, aliTxt, avoTxt;
+    Text cohTxt, sepTxt, aliTxt, avoTxt, whaleInpTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
     aliTxt.setString("Fish Alignment");
     avoTxt.setString("Fish Avoidance");
+    whaleInpTxt.setString("Adjust the amount of whales 1 to 20");
+    whaleInpTxt.setFont(font);
     cohTxt.setFont(font);
     sepTxt.setFont(font);
     aliTxt.setFont(font);
@@ -55,18 +59,22 @@ int main(int, char const**) {
     sepTxt.setPosition(5,70);
     aliTxt.setPosition(5,130);
     avoTxt.setPosition(500,10);
+    whaleInpTxt.setPosition(50,390);
     SliderSFML coh(5, 30);
     SliderSFML sep(5, 90);
     SliderSFML ali(5, 150);
     SliderSFML avo(500, 30);
+    SliderSFML whaleInp(50, 370);
     coh.create(0, 1);
     sep.create(0, 1);
     ali.create(0, 1);
     avo.create(0, 1);
+    whaleInp.create(1,20);
     coh.setSliderValue(0.1);
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
+    whaleInp.setSliderValue(10);
 
     Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
     Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
@@ -106,14 +114,14 @@ int main(int, char const**) {
             objfile>>x;
             objfile>>y;
             objfile>>z;
-            cout<< x << " "<< y << " " << z << endl;
+            //cout<< x << " "<< y << " " << z << endl;
             pointlist.push_back(vector3(x,y,z));
 
         } else if (check == 'f'){
             objfile>>x;
             objfile>>y;
             objfile>>z;
-            cout<< x << " "<< y << " " << z << endl;
+            //cout<< x << " "<< y << " " << z << endl;
             tlist.push_back(triangle(pointlist[x-1],pointlist[y-1],pointlist[z-1]));
 
         } else{
@@ -148,9 +156,11 @@ int main(int, char const**) {
     //400 is too many for processing
     int numFish = 300;
     vector3 limits(100, 100, 100);
-
+    //add if start here
     evolutionSim simulation(numWhales, numFish, limits, framerate);
-    bool start = false;
+
+
+
     bool leftDown = false;
 
     while (window.isOpen()) {
@@ -390,6 +400,11 @@ int main(int, char const**) {
                 start = true;
                 cout<< "started\n";
             }
+            whaleInp.draw(window);
+            window.draw(whaleInpTxt);
+            numWhales = (int)whaleInp.getSliderValue();
+            //cout<< numWhales << endl;
+
 
         }
         else{
