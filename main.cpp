@@ -48,6 +48,7 @@ int main(int, char const**) {
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     Font font;
+//    if(!font.loadFromFile("/Users/michael/Downloads/oswald.ttf")){
     if(!font.loadFromFile("oswald.ttf")){
         cout<< "font error \n";
     }
