@@ -48,6 +48,13 @@ bnfGroup::bnfGroup(vector<whale*> initialWhales)
     {
         pod[ww]->isAssignedToPod = true;
     }
+
+    cout << "assigned whales: ";
+    for (int uu = 0; uu < pod.size(); uu ++)
+    {
+        cout << (* (pod[uu])).id << ", ";
+    }
+    cout << endl << endl;
 }
 
 void bnfGroup::addWhale(whale* newWhale)

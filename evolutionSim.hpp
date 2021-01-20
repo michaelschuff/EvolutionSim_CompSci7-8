@@ -47,7 +47,7 @@ private:
 
     void bnfBehavior();
     void updateBNFPods();
-    vector<whale *> unassignedBNFWhales();
+    vector<whale *> unassignedBNFWhales(); //creates a list of whales who aren't in a pod and who are bnf
 
 };
 
@@ -100,13 +100,13 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
-            killFish(ww);
+            //killFish(ww);
         }
     }
 
     whaleReproduction ();
     if(frameCounter % 150 == 100) {
-        fishReproduction ();
+        //fishReproduction ();
         //cout << "num fish: " << fishList.size() << endl;
     }
 
@@ -177,8 +177,8 @@ void evolutionSim::fishReproduction()
 void evolutionSim::bnfBehavior()
 {
     //find the groups of whales who are bnf & add to bnfPods vector
-
     //see if new whales need to be added
+    updateBNFPods();
 
     //go through all the whale groups
     for (int bb = 0; bb < bnfPods.size(); bb++)
@@ -193,32 +193,40 @@ void evolutionSim::bnfBehavior()
     }
 }
 
-///MUST GET WRITTEN
 vector<whale *> evolutionSim::unassignedBNFWhales()
 {
     vector<whale *> v;
 
     for (whale w: whaleList){
         if(w.bnfCurrently && !w.isAssignedToPod) {
-
+            cout << w.id << " is in need of a pod" << endl;
             whale *ptr_to_whale = &w;
             v.push_back(ptr_to_whale);
-
+            //cout << (*(v[v.size() -1])).id << end;
         }
     }
 
     return v;
 }
-/*
-For each whale that hasn't been assigned to a bnfGroup:
-    - go through each bnf group
-    - If there's a group within radius and not maxed out on members, join it and terminate loop
-    - If not, make new group with just this whale
-*/
+
 ///NOT TESTED!!!!!
 void evolutionSim::updateBNFPods()
 {
+    /*
+    For each whale that hasn't been assigned to a bnfGroup:
+        - go through each bnf group
+        - If there's a group within radius and not maxed out on members, join it and terminate loop
+        - If not, make new group with just this whale
+    */
+
     vector<whale *> unassigned = unassignedBNFWhales();
+    cout << "unassigned whales: ";
+    for (int uu = 0; uu < unassigned.size(); uu ++)
+    {
+        cout << (* (unassigned[uu])).id << ", ";
+    }
+    cout << endl << endl;
+
     bool whaleGotAssigned;
 
     for(whale * w: unassigned) {
@@ -228,7 +236,7 @@ void evolutionSim::updateBNFPods()
         for(bnfGroup pod: bnfPods) {//I don't *think* this needs to be a pointer?
 
             bool podIsCloseEnough = pod.center.distance((*w).position) < pod.radius;
-            bool podIsSmallEnough = pod.pod.size() < 5; ///should we change this number?
+            bool podIsSmallEnough = pod.pod.size() < 5; //could change this number
 
             //if there's a group within radius, not maxed out on members, this whale will join that group
             if(podIsCloseEnough && podIsSmallEnough) {
@@ -244,6 +252,5 @@ void evolutionSim::updateBNFPods()
             bnfPods.push_back(newGroup);
         }
     }
-
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
