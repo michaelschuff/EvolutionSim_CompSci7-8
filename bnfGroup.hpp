@@ -20,9 +20,9 @@ using namespace std;
 
 class bnfGroup {
 public:
-    bnfGroup(vector<whale *>);
-    void addWhale(whale *); //to add a whale after the group has been made
-    vector<whale *> pod; //all of the whales in the group
+    bnfGroup(vector<whale*>);
+    void addWhale(whale*); //to add a whale after the group has been made
+    vector<whale*> pod; //all of the whales in the group
     vector3 center; //of the pod
     float radius; //how far the bnf goes
     void trapFish(vector<fish>&); //sees which fish swim into the radius
@@ -50,9 +50,8 @@ bnfGroup::bnfGroup(vector<whale*> initialWhales)
     }
 
     cout << "assigned whales: ";
-    for (int uu = 0; uu < pod.size(); uu ++)
-    {
-        cout << (* (pod[uu])).id << ", ";
+    for (int uu = 0; uu < pod.size(); uu++) {
+        cout << pod[uu]->id << ", ";
     }
     cout << endl << endl;
 }
@@ -98,11 +97,10 @@ void bnfGroup::calculateRadius()
     radius = pod.size() + (avgBNF * avgDense)/avgClose;
 }
 
-void bnfGroup::trapFish(vector<fish> &fishList)
-{
+void bnfGroup::trapFish(vector<fish> &fishList) {
     fishCounter = 0;
 
-    for (int ff = 0; ff < fishList.size(); ff ++)
+    for (int ff = 0; ff < fishList.size(); ff++)
     {
         //if fish is within radius, stop moving
         if (fishList[ff].closeEnough(fishList[ff].position, center, radius))
