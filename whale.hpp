@@ -34,6 +34,7 @@ public:
     int eatDenseFish; //trait that determines how efficient the whale is
     int bubbleNetFeed; //trait that determines how likely the whale is to bnf
     bool bnfCurrently; //whether the whale is bubble net feeding
+    bool isAssignedToPod; //whether the whale is assigned to a bnfGroup
     int radius; //how far around the whale it can eat
 
 private:
@@ -66,6 +67,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
     frameCounter = 0;
     fishTarget = 0;
     bnfCurrently = false;
+    isAssignedToPod = false;
     bubbleNetStart = 0;
 
     //set up traits with some randomness, based on a given initial value

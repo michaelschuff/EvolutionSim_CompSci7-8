@@ -44,7 +44,10 @@ private:
     void killFish(int);
     void whaleReproduction();
     void fishReproduction();
+
     void bnfBehavior();
+    void updateBNFPods();
+    vector<whale *> unassignedBNFWhales();
 
 };
 
@@ -188,5 +191,59 @@ void evolutionSim::bnfBehavior()
             bnfPods.erase(bnfPods.begin() + bb);
         }
     }
+}
+
+///MUST GET WRITTEN
+vector<whale *> evolutionSim::unassignedBNFWhales()
+{
+    vector<whale *> v;
+
+    for (whale w: whaleList){
+        if(w.bnfCurrently && !w.isAssignedToPod) {
+
+            whale *ptr_to_whale = &w;
+            v.push_back(ptr_to_whale);
+
+        }
+    }
+
+    return v;
+}
+/*
+For each whale that hasn't been assigned to a bnfGroup:
+    - go through each bnf group
+    - If there's a group within radius and not maxed out on members, join it and terminate loop
+    - If not, make new group with just this whale
+*/
+///NOT TESTED!!!!!
+void evolutionSim::updateBNFPods()
+{
+    vector<whale *> unassigned = unassignedBNFWhales();
+    bool whaleGotAssigned;
+
+    for(whale * w: unassigned) {
+        whaleGotAssigned = false;
+
+        //go through each bnfGroup
+        for(bnfGroup pod: bnfPods) {//I don't *think* this needs to be a pointer?
+
+            bool podIsCloseEnough = pod.center.distance((*w).position) < pod.radius;
+            bool podIsSmallEnough = pod.pod.size() < 5; ///should we change this number?
+
+            //if there's a group within radius, not maxed out on members, this whale will join that group
+            if(podIsCloseEnough && podIsSmallEnough) {
+                pod.addWhale(w);
+                whaleGotAssigned = true;
+                break; //Should just break out of inner loop according to the internet
+            }
+        }
+
+        //if whale didn't get assigned, start a new pod
+        if(!whaleGotAssigned) {
+            vector<whale *> newGroup = {w};
+            bnfPods.push_back(newGroup);
+        }
+    }
+
 }
 #endif // EVOLUTIONSIM_HPP_INCLUDED
