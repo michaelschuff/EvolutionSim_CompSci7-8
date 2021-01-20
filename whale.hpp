@@ -105,6 +105,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
 void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
     foodList.clear();
     age++;
+    frameCounter ++;
 
     if (!bnfCurrently)
     {
@@ -118,12 +119,14 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
         if ((frameCounter - bubbleNetStart) == 20)
         {
             bnfCurrently = false;
+            cout << id << ": end bnf" << endl;
         }
 
         if(!bnfCurrently)
         {
             eat = true;
             fishCounter += foodList.size();
+            cout << "    added " << foodList.size() << " fish" << endl;
         }
     }
 
@@ -153,8 +156,6 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
 }
 
 void whale::updatePosition (vector<fish> &fishList) {
-    frameCounter ++;
-
     //every 5 frames, update destination and velocity
     if (frameCounter % 5 == 0)
     {
@@ -273,8 +274,7 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
     {
         bnfCurrently = true;
         bubbleNetStart = frameCounter;
-
-        cout << "bubble net feeding: " << decisionValue << endl;
+        cout <<id << ": bnf" << endl;
     }
 }
 
