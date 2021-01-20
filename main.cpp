@@ -51,11 +51,13 @@ int main(int, char const**) {
     if(!font.loadFromFile("oswald.ttf")){
         cout<< "font error \n";
     }
-    Text cohTxt, sepTxt, aliTxt, avoTxt;
+    Text cohTxt, sepTxt, aliTxt, avoTxt, whaleInpTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
     aliTxt.setString("Fish Alignment");
     avoTxt.setString("Fish Avoidance");
+    whaleInpTxt.setString("Adjust the amount of whales 1 to 20");
+    whaleInpTxt.setFont(font);
     cohTxt.setFont(font);
     sepTxt.setFont(font);
     aliTxt.setFont(font);
@@ -64,6 +66,7 @@ int main(int, char const**) {
     sepTxt.setPosition(5,70);
     aliTxt.setPosition(5,130);
     avoTxt.setPosition(500,10);
+    whaleInpTxt.setPosition(50,390);
 
     Text titleTxt("Whale Bubble Net Feeding Simulation" ,font,45);
     Text subTxt("by Bronte McKinnis, Elaine Demetrion, Jack Weinberg and Michael Schuff ",font,22);
@@ -167,6 +170,9 @@ int main(int, char const**) {
                     world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));
                 }
             }
+            window.draw(whaleInpTxt);
+            //cout<< numWhales << endl;
+
 
             vector<triangle> tris = cam.get_view(world);
             for (triangle tri: tris) {
