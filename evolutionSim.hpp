@@ -3,7 +3,7 @@
 //  CompSci78
 //
 //  Created by Bronte McKinnis and Elaine Demetrion on 11/12/20.
-//  Copyright © 2020 Bronte McKinnis and Elaine Demetrion. All rights reserved.
+//  Copyright ï¿½ 2020 Bronte McKinnis and Elaine Demetrion. All rights reserved.
 //
 
 #ifndef EVOLUTIONSIM_HPP_INCLUDED
@@ -195,21 +195,18 @@ void evolutionSim::bnfBehavior()
 
 vector<whale *> evolutionSim::unassignedBNFWhales()
 {
-    vector<whale *> v;
+    vector<whale*> v;
 
-    for (whale w: whaleList){
-        if(w.bnfCurrently && !w.isAssignedToPod) {
-            cout << w.id << " is in need of a pod" << endl;
-            whale *ptr_to_whale = &w;
-            v.push_back(ptr_to_whale);
-            //cout << (*(v[v.size() -1])).id << end;
+    for (int ww = 0; ww < whaleList.size(); ww++){
+        if(whaleList[ww].bnfCurrently && !whaleList[ww].isAssignedToPod) {
+            cout << whaleList[ww].id << " is in need of a pod" << ", position: " << whaleList[ww].position.x << ", " << whaleList[ww].position.y << ", " << whaleList[ww].position.z << endl;
+            v.push_back(&whaleList[ww]);
         }
     }
 
     return v;
 }
 
-///NOT TESTED!!!!!
 void evolutionSim::updateBNFPods()
 {
     /*
@@ -220,13 +217,14 @@ void evolutionSim::updateBNFPods()
     */
 
     vector<whale *> unassigned = unassignedBNFWhales();
+    /*
     cout << "unassigned whales: ";
     for (int uu = 0; uu < unassigned.size(); uu ++)
     {
         cout << (* (unassigned[uu])).id << ", ";
     }
     cout << endl << endl;
-
+    */
     bool whaleGotAssigned;
 
     for(whale * w: unassigned) {

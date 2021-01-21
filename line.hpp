@@ -17,6 +17,7 @@ public:
     vector3 tail, head, body;
     color c;
     
+    line() : object(true), c(color()), tail(vector3(0, 0, 0)), head(vector3(0, 0, 0)), body(vector3(0, 0, 0)) {}
     line(float x1, float y1, float z1, float x2, float y2, float z2, color _c = color(), bool visable = true) : object(visable), c(_c), tail(vector3(x1, y1, z1)), head(vector3(x2, y2, z2)), body(vector3(x2-x1, y2-y1, z2-z1)) {}
     line(vector3 _tail, float x2, float y2, float z2, color _c = color(), bool visable = true) : object(visable), c(_c), tail(_tail), head(vector3(x2, y2, z2)), body(vector3(x2-_tail.x, y2-_tail.y, z2-_tail.z)) {}
     line(float x1, float y1, float z1, vector3 _head, color _c = color(), bool visable = true) : object(visable), c(_c), tail(vector3(x1, y1, z1)), head(_head), body(vector3(_head.x-x1, _head.y-y1, _head.z-z1)) {}
