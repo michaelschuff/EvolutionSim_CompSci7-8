@@ -53,6 +53,7 @@ evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
     framerate = rate;
     fishNum = numFish;
 
+
     //make whales w/ random starting traits
     for (int w = 0; w < numWhales; w++) {
         whale newWhale((rand() % 10) + 1,(rand() % 10) + 1, vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(rand(), rand(), rand()).normalized(), limits, framerate);
