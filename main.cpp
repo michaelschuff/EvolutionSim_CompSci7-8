@@ -4,6 +4,12 @@
 #include <time.h>
 #include <vector>
 #include <iomanip>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <math.h>
+
 #include "vector3.hpp"
 #include "triangle.hpp"
 #include "mesh.hpp"
@@ -11,13 +17,8 @@
 #include "object.hpp"
 #include "objects2d.hpp"
 #include "evolutionSim.hpp"
-#include <math.h>
 #include "quaternion.hpp"
-#include <cstdlib>
-#include <ctime>
 #include "color.hpp"
-#include <fstream>
-#include <string>
 #include "whale.hpp"
 #include "fish.hpp"
 #include "SliderSFML.hpp"
@@ -48,8 +49,8 @@ int main(int, char const**) {
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     Font font;
-//    if(!font.loadFromFile("/Users/michael/Downloads/oswald.ttf")){
-    if(!font.loadFromFile("oswald.ttf")){
+    if(!font.loadFromFile("/Users/michael/Downloads/oswald.ttf")){
+//    if(!font.loadFromFile("oswald.ttf")){
         cout<< "font error \n";
     }
     Text cohTxt, sepTxt, aliTxt, avoTxt;
@@ -141,13 +142,13 @@ int main(int, char const**) {
 
 
         window.clear();
-        if (!hasStarted){
+        if (!hasStarted) {
             window.draw(titleTxt);
             window.draw(subTxt);
             window.draw(button);
             window.draw(startTxt);
             Vector2i mouse_position = Mouse::getPosition(window);
-            if(leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)){
+            if (leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
                 hasStarted = true;
             }
         } else {
@@ -165,6 +166,8 @@ int main(int, char const**) {
                 }
             }
 
+            
+            // MARK: Get SFML Shapes
             vector<triangle> tris = cam.get_view(world);
             for (triangle tri: tris) {
                 if (tri.v2 != tri.v3) {

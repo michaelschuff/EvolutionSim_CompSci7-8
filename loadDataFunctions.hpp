@@ -8,13 +8,14 @@
 
 #ifndef loadDataFunctions_hpp
 #define loadDataFunctions_hpp
+
 #include <vector>
+#include <fstream>
 #include "line.hpp"
 #include "color.hpp"
 #include "vector3.hpp"
 #include "triangle.hpp"
 #include "mesh.hpp"
-#include <fstream>
 #include "whale.hpp"
 #include "fish.hpp"
 
