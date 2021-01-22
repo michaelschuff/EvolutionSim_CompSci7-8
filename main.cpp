@@ -140,7 +140,6 @@ int main(int, char const**) {
         }
 
 
-
         window.clear();
         if (!hasStarted) {
             window.draw(titleTxt);
