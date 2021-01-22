@@ -36,6 +36,7 @@ public:
     bool bnfCurrently; //whether the whale is bubble net feeding
     bool isAssignedToPod; //whether the whale is assigned to a bnfGroup
     int radius; //how far around the whale it can eat
+    bool distributeFish; //after bnf session ends
 
 private:
     long int volume; //the volume of water the fish can eat from
@@ -69,6 +70,7 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
     bnfCurrently = false;
     isAssignedToPod = false;
     bubbleNetStart = 0;
+    distributeFish = false;
 
     //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
@@ -103,7 +105,6 @@ whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector
 }
 
 void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
-    foodList.clear();
     age++;
     frameCounter ++;
 
@@ -113,25 +114,27 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
     }
 
     //bubble net feed
-    if (bnfCurrently)
+    if (bnfCurrently or distributeFish)
     {
         //only bubble net feed for 20 frames
-        if ((frameCounter - bubbleNetStart) == 20)
+        if (bnfCurrently && ((frameCounter - bubbleNetStart) == 20))
         {
             bnfCurrently = false;
             cout << id << ": end bnf" << endl;
         }
 
-        if(!bnfCurrently)
+        if(!bnfCurrently and distributeFish)
         {
             eat = true;
             fishCounter += foodList.size();
-            cout << "    added " << foodList.size() << " fish" << endl;
+            cout << "   amount of food to end: " << fishCounter << endl;
+            distributeFish = false;
         }
     }
 
     else
     {
+        foodList.clear();
         foodList = sight(fishList, radius);
         decisionEat(fishList.size());
 
@@ -275,6 +278,7 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
         bnfCurrently = true;
         bubbleNetStart = frameCounter;
         cout <<id << ": bnf" << endl;
+        cout << "   amount of food to start: " << fishCounter << endl;
     }
 }
 

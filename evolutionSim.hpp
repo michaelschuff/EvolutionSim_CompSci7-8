@@ -91,9 +91,6 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         fishList[i].updateFish(fishList, whalePositions);
     }
 
-    //go through bubble net feeding groups
-    bnfBehavior();
-
     for (int ww = 0; ww < whaleList.size(); ww++) {
 
         whaleList[ww].decision(fishList, whaleList);
@@ -103,6 +100,9 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
             //killFish(ww);
         }
     }
+
+    //go through bubble net feeding groups
+    bnfBehavior();
 
     whaleReproduction ();
     if(frameCounter % 150 == 100) {

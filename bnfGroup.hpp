@@ -119,6 +119,7 @@ void bnfGroup::trapFish(vector<fish> &fishList) {
 
 void bnfGroup::endSession(vector<fish> &fishList)
 {
+    fishCounter = 0;
     int whichWhale = 0;
 
     cout << "   end session!!!" << endl;
@@ -131,7 +132,7 @@ void bnfGroup::endSession(vector<fish> &fishList)
             cout << endl << "   " << fishList[ff].id << endl;
             fishCounter ++;
 
-            if (whichWhale > pod.size())
+            if (whichWhale >= pod.size())
             {
                 whichWhale = 0;
             }
@@ -152,6 +153,7 @@ void bnfGroup::endSession(vector<fish> &fishList)
     {
         pod[ww]->bnfCurrently = false;
         pod[ww]->isAssignedToPod = false;
+        pod[ww]->distributeFish = true;
     }
 
     done = true;
