@@ -217,7 +217,7 @@ void evolutionSim::updateBNFPods()
     */
 
     vector<whale *> unassigned = unassignedBNFWhales();
-    cout << "unassigned whales: ";
+    if(unassigned.size() > 0) {cout << "unassigned whales: ";}
     for (int uu = 0; uu < unassigned.size(); uu ++)
     {
         cout << (* (unassigned[uu])).id << ", ";
