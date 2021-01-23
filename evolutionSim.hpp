@@ -134,18 +134,20 @@ void evolutionSim::killFish(int positionInList)
 
 void evolutionSim::whaleReproduction()
 {
-    //sort the whales based on number of fish they've eaten
-    for (int i = 0; i < whaleList.size(); i++) {
-        int j = i;
-        while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
-            swap(whaleList[j], whaleList[j - 1]);
-            j = j - 1;
-        }
-    }
+    vector<whale*> pointerList;
 
     //every 500 frames whales reproduce/die
     if ((frameCounter % 500) == 0)
     {
+        //sort the whales based on number of fish they've eaten
+        for (int i = 0; i < whaleList.size(); i++) {
+            int j = i;
+            while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
+                swap(whaleList[j], whaleList[j - 1]);
+                j = j - 1;
+            }
+        }
+
         //bottom 10% die
         for (int d = 0; d < numDie; d++) {
             whaleList.erase(whaleList.begin() + d);
@@ -155,6 +157,18 @@ void evolutionSim::whaleReproduction()
         for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
             whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].bubbleNetFeed, whaleList[r].position, whaleList[r].velocity, limits, framerate);
             whaleList.push_back(newWhale);
+        }
+
+        //make a vector of pointers
+        for (int ww = 0; ww < whaleList.size(); ww ++)
+        {
+            pointerList.push_back(&whaleList[ww]);
+        }
+
+        //update each pod
+        for (int wp = 0; wp < bnfPods.size(); wp ++)
+        {
+            bnfPods[wp].redoPointers(pointerList);
         }
 
         for (int ww = 0; ww < whaleList.size(); ww++)

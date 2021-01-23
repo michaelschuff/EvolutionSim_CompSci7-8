@@ -28,12 +28,14 @@ public:
     void trapFish(vector<fish>&); //sees which fish swim into the radius
     void bnfUpdate(vector<fish>&);
     bool done; //end bnf
+    void redoPointers(vector<whale*>); //redos the address of the pointers for whales
 
 private:
     int fishCounter;
     void calculateRadius();
     void calculateCenter();
     void endSession(vector<fish>&);
+    vector<int> whaleIDs;
 };
 
 bnfGroup::bnfGroup(vector<whale*> initialWhales)
@@ -47,6 +49,7 @@ bnfGroup::bnfGroup(vector<whale*> initialWhales)
     for (int ww = 0; ww < pod.size(); ww++)
     {
         pod[ww]->isAssignedToPod = true;
+        whaleIDs.push_back(pod[ww]->id);
     }
 
     cout << "pod: ";
@@ -61,6 +64,7 @@ void bnfGroup::addWhale(whale* newWhale)
 {
     pod.push_back(newWhale);
     newWhale->isAssignedToPod = true;
+    whaleIDs.push_back(newWhale->id);
 }
 
 void bnfGroup::calculateCenter()
@@ -178,6 +182,25 @@ void bnfGroup::bnfUpdate(vector<fish> &fishList)
         if (!pod[ww]->bnfCurrently)
         {
             endSession(fishList);
+        }
+    }
+}
+
+void bnfGroup::redoPointers(vector<whale*> whalePointers)
+{
+    //clear pod
+    pod.clear();
+
+    //pass bnf group a vector of all whales in pointer form
+    for (int pp = 0; pp < whalePointers.size(); pp++)
+    {
+        for (int ii = 0; ii < whaleIDs.size(); ii ++)
+        {
+            //add whales w/ correct ids (unless dead) to pod
+            if (whalePointers[pp]->id == whaleIDs[ii])
+            {
+                pod.push_back(whalePointers[pp]);
+            }
         }
     }
 }
