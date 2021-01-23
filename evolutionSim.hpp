@@ -231,30 +231,34 @@ void evolutionSim::updateBNFPods()
     */
 
     vector<whale *> unassigned = unassignedBNFWhales();
-    /*
-    cout << "unassigned whales: ";
+    if(unassigned.size() > 0) {cout << "unassigned whales: ";}
     for (int uu = 0; uu < unassigned.size(); uu ++)
     {
         cout << (* (unassigned[uu])).id << ", ";
     }
     cout << endl << endl;
-    */
+
     bool whaleGotAssigned;
 
     for(whale * w: unassigned) {
+        cout<<"Trying to assign whale "<<(*w).id<<" at position ("<<(*w).position.x<<", "<<(*w).position.y<<", "<<(*w).position.z<<")"<<endl;
         whaleGotAssigned = false;
 
         //go through each bnfGroup
-        for(bnfGroup pod: bnfPods) {//I don't *think* this needs to be a pointer?
-
-            bool podIsCloseEnough = pod.center.distance((*w).position) < pod.radius;
-            bool podIsSmallEnough = pod.pod.size() < 5; //could change this number
+        for(int ii = 0; ii < bnfPods.size(); ii ++) {
+            //cout<<"     Checking pod at location ("<<bnfPods[ii].center.x<<", "<<bnfPods[ii].center.y<<", "<<bnfPods[ii].center.z<<") with radius "<<bnfPods[ii].radius<<" and "<<bnfPods[ii].pod.size()<<" whales"<<endl;
+            bool podIsCloseEnough = bnfPods[ii].center.distance((*w).position) < bnfPods[ii].radius;
+            bool podIsSmallEnough = bnfPods[ii].pod.size() < 5; //could change this number
 
             //if there's a group within radius, not maxed out on members, this whale will join that group
             if(podIsCloseEnough && podIsSmallEnough) {
-                pod.addWhale(w);
+                bnfPods[ii].addWhale(w);
                 whaleGotAssigned = true;
+                //cout<<"     * This pod works! It now has "<<bnfPods[ii].pod.size()<<" whales"<<endl;
                 break; //Should just break out of inner loop according to the internet
+            }
+            else{
+                //cout<<"     * This pod is too far away or has too many whales in it"<<endl;
             }
         }
 
