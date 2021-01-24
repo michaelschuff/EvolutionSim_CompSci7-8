@@ -26,11 +26,12 @@ public:
     //how fast the fish actually move
     float speed = 20;
 
+    bool inBubbleNet;
+
     //constructor. Assigns vision, framerate, etc.
     fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel, _framerate), vision(_vision) {
-//        srand(time(NULL));
+        inBubbleNet = false; ///change this to false when done debugging
     }
-
 
     void updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos);
 
@@ -73,6 +74,9 @@ void fish::updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos) {
     updateVelocity(allFish, allWhalePos);
     fixOffScreen();
     updatePosition();
+    if(inBubbleNet) {
+        ///cout<<"ID: "<<id<<" is in a bubble net. I am at position "<<position.x<<","<<position.y<<","<<position.z<<endl;
+    }
 }
 
 //If fish are offscreen, this function fixes it. You can uncomment the portion with the behavior you want
@@ -90,6 +94,9 @@ void fish::fixOffScreen() {
 //updates the velocity variable
 void fish::updateVelocity(vector<fish> &allFish, vector<vector3> &allWhalePos) {
     velocity = speed * (avoidance * vAvoidWhales(allWhalePos) + separation*vSeparation(allFish) + alignment*vAlignment(allFish) + cohesion*vCohesion(allFish)).normalized();
+    if(inBubbleNet) {
+        velocity = vector3(0, 0, 0);
+    }
 }
 
 //updates the position variable. Call after updateVelocity

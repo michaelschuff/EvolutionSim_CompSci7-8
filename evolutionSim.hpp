@@ -89,6 +89,8 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         fishList[i].alignment = ali;
         fishList[i].avoidance = avo;
         fishList[i].updateFish(fishList, whalePositions);
+
+        fishList[i].inBubbleNet = false;
     }
 
     for (int ww = 0; ww < whaleList.size(); ww++) {
@@ -134,18 +136,20 @@ void evolutionSim::killFish(int positionInList)
 
 void evolutionSim::whaleReproduction()
 {
-    //sort the whales based on number of fish they've eaten
-    for (int i = 0; i < whaleList.size(); i++) {
-        int j = i;
-        while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
-            swap(whaleList[j], whaleList[j - 1]);
-            j = j - 1;
-        }
-    }
+    vector<whale*> pointerList;
 
     //every 500 frames whales reproduce/die
     if ((frameCounter % 500) == 0)
     {
+        //sort the whales based on number of fish they've eaten
+        for (int i = 0; i < whaleList.size(); i++) {
+            int j = i;
+            while (j > 0 and ((float) whaleList[j].fishCounter / whaleList[j].age) < ((float) whaleList[j-1].fishCounter / whaleList[j-1].age)) {
+                swap(whaleList[j], whaleList[j - 1]);
+                j = j - 1;
+            }
+        }
+
         //bottom 10% die
         for (int d = 0; d < numDie; d++) {
             whaleList.erase(whaleList.begin() + d);
@@ -155,6 +159,18 @@ void evolutionSim::whaleReproduction()
         for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
             whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].bubbleNetFeed, whaleList[r].position, whaleList[r].velocity, limits, framerate);
             whaleList.push_back(newWhale);
+        }
+
+        //make a vector of pointers
+        for (int ww = 0; ww < whaleList.size(); ww ++)
+        {
+            pointerList.push_back(&whaleList[ww]);
+        }
+
+        //update each pod
+        for (int wp = 0; wp < bnfPods.size(); wp ++)
+        {
+            bnfPods[wp].redoPointers(pointerList);
         }
 
         for (int ww = 0; ww < whaleList.size(); ww++)
@@ -217,30 +233,34 @@ void evolutionSim::updateBNFPods()
     */
 
     vector<whale *> unassigned = unassignedBNFWhales();
-    /*
-    cout << "unassigned whales: ";
+    if(unassigned.size() > 0) {cout << "unassigned whales: ";}
     for (int uu = 0; uu < unassigned.size(); uu ++)
     {
         cout << (* (unassigned[uu])).id << ", ";
     }
     cout << endl << endl;
-    */
+
     bool whaleGotAssigned;
 
     for(whale * w: unassigned) {
+        cout<<"Trying to assign whale "<<(*w).id<<" at position ("<<(*w).position.x<<", "<<(*w).position.y<<", "<<(*w).position.z<<")"<<endl;
         whaleGotAssigned = false;
 
         //go through each bnfGroup
-        for(bnfGroup pod: bnfPods) {//I don't *think* this needs to be a pointer?
-
-            bool podIsCloseEnough = pod.center.distance((*w).position) < pod.radius;
-            bool podIsSmallEnough = pod.pod.size() < 5; //could change this number
+        for(int ii = 0; ii < bnfPods.size(); ii ++) {
+            //cout<<"     Checking pod at location ("<<bnfPods[ii].center.x<<", "<<bnfPods[ii].center.y<<", "<<bnfPods[ii].center.z<<") with radius "<<bnfPods[ii].radius<<" and "<<bnfPods[ii].pod.size()<<" whales"<<endl;
+            bool podIsCloseEnough = bnfPods[ii].center.distance((*w).position) < bnfPods[ii].radius;
+            bool podIsSmallEnough = bnfPods[ii].pod.size() < 5; //could change this number
 
             //if there's a group within radius, not maxed out on members, this whale will join that group
             if(podIsCloseEnough && podIsSmallEnough) {
-                pod.addWhale(w);
+                bnfPods[ii].addWhale(w);
                 whaleGotAssigned = true;
+                //cout<<"     * This pod works! It now has "<<bnfPods[ii].pod.size()<<" whales"<<endl;
                 break; //Should just break out of inner loop according to the internet
+            }
+            else{
+                //cout<<"     * This pod is too far away or has too many whales in it"<<endl;
             }
         }
 
