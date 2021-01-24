@@ -51,23 +51,11 @@ bnfGroup::bnfGroup(vector<whale*> initialWhales)
         pod[ww]->isAssignedToPod = true;
         whaleIDs.push_back(pod[ww]->id);
     }
-
-   /* cout << "pod: ";
-    for (int uu = 0; uu < pod.size(); uu ++)
-    {
-        cout << (* (pod[uu])).id << ", ";
-    }
-    cout << endl << endl;*/
 }
 
 void bnfGroup::addWhale(whale* newWhale)
 {
     pod.push_back(newWhale);
-    /**cout<<"     Whales in this pod: ";
-    for(int i = 0; i < pod.size(); i ++) {
-        cout<<pod[i]->id<<", ";
-    }
-    cout<<endl;*/
     newWhale->isAssignedToPod = true;
     whaleIDs.push_back(newWhale->id);
 }
@@ -83,7 +71,6 @@ void bnfGroup::calculateCenter()
     }
 
     center = sum / pod.size();
-    //cout << "   center: " << center.x << ", " << center.y << ", " << center.z << endl;
 }
 
 void bnfGroup::calculateRadius()
@@ -105,26 +92,21 @@ void bnfGroup::calculateRadius()
     avgDense = avgDense / pod.size();
     avgClose = avgClose / pod.size();
 
-    radius = 5*(pod.size() + (avgBNF * avgDense)/avgClose);
-    cout << "   radius: " << radius << endl;
+    radius = (pod.size() + (avgBNF * avgDense)/avgClose);
 }
 
 void bnfGroup::trapFish(vector<fish> &fishList) {
 
-    //cout << "   fish in bnf: ";
     for (int ff = 0; ff < fishList.size(); ff ++)
     {
         //if fish is within radius, stop moving
         if (!fishList[ff].inBubbleNet && fishList[ff].closeEnough(fishList[ff].position, center, radius))
         {
-            //cout << fishList[ff].id << ", ";
-            //fishList[ff].velocity = vector3();
             fishList[ff].inBubbleNet = true;
         }
 
 
     }
-    //cout << endl << "      " << fishCounter << endl;
 }
 
 void bnfGroup::endSession(vector<fish> &fishList)
@@ -132,31 +114,24 @@ void bnfGroup::endSession(vector<fish> &fishList)
     fishCounter = 0;
     int whichWhale = 0;
 
-    cout << "   end session!!!" << endl;
-
     for (int ff = 0; ff < fishList.size(); ff ++)
     {
         //if fish is within radius, add to food list
         if (fishList[ff].closeEnough(fishList[ff].position, center, radius))
         {
-            //cout << endl << "   " << fishList[ff].id << endl;
             fishCounter ++;
 
             if (whichWhale >= pod.size())
             {
                 whichWhale = 0;
             }
-            //cout << "   fish counter: " << fishCounter << ", pod size: " << pod.size() << endl;
 
             //add the next fish to a whale's foodList
             (*(pod[whichWhale])).foodList.push_back(fishList[ff].id);
-            //cout << "   correct? " << pod.size() % fishCounter << endl;
-            //cout << "   whale " << whichWhale << ": food list size: " << (*(pod[whichWhale])).foodList.size() << endl;
 
             whichWhale ++;
         }
     }
-    //cout << "   !ENDING fish counter: " << fishCounter << endl;
 
     //change bnfCurrently to false for all whales
     for (int ww = 0; ww < pod.size(); ww++)
