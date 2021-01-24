@@ -4,11 +4,12 @@
 #include <time.h>
 #include <vector>
 #include <iomanip>
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
+#include <math.h>
+
 #include "vector3.hpp"
 #include "triangle.hpp"
 #include "mesh.hpp"
@@ -39,7 +40,7 @@ int main(int, char const**) {
     bool active = true, qDown = false, wDown = false, eDown = false,
          aDown = false, sDown = false, dDown = false, lcontrolDown = false,
          jDown = false, kDown = false, lDown = false, iDown = false,
-         leftDown = false, hasStarted = false;
+         leftDown = false, hasStarted = false, updated = false;
 
     RenderWindow window(VideoMode(width, height), "SFML window");
     window.setFramerateLimit(framerate);
@@ -53,7 +54,8 @@ int main(int, char const**) {
     if(!font.loadFromFile("Resources/oswald.ttf")){
         cout<< "font error \n";
     }
-    Text cohTxt, sepTxt, aliTxt, avoTxt;
+    int numWhales = 10;
+    Text cohTxt, sepTxt, aliTxt, avoTxt, whaleInpTxt;
     cohTxt.setString("Fish Cohesion");
     sepTxt.setString("Fish Separation");
     aliTxt.setString("Fish Alignment");
@@ -91,11 +93,19 @@ int main(int, char const**) {
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
+    whaleInpTxt.setString("Adjust the amount of whales 1 to 20");
+    whaleInpTxt.setFont(font);
+    whaleInpTxt.setPosition(50,390);
+    SliderSFML whaleInp(50, 370);
+    whaleInp.create(1,20);
+    whaleInp.setSliderValue(10);
 
     double sensitivity = 0.05, speed = 20;
     vector<color> fish_colors;
 
-    evolutionSim simulation(10, 300, vector3(100, 100, 100), framerate);
+    evolutionSim simulation(numWhales, 300, vector3(100, 100, 100), framerate);
+
+
 
     mesh fish_mesh = getFishMesh();
     mesh whale_mesh = getWhaleMesh();
@@ -140,18 +150,30 @@ int main(int, char const**) {
         }
 
 
-
         window.clear();
-        if (!hasStarted){
+        if (!hasStarted) {
             window.draw(titleTxt);
             window.draw(subTxt);
             window.draw(button);
             window.draw(startTxt);
+            whaleInp.draw(window);
+            window.draw(whaleInpTxt);
+            numWhales = (int)whaleInp.getSliderValue();
+
+
+            //evolutionSim.
             Vector2i mouse_position = Mouse::getPosition(window);
-            if(leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)){
+            if (leftDown and button.getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
                 hasStarted = true;
             }
+
         } else {
+            if(!updated){
+                simulation = evolutionSim(numWhales, 300, vector3(100, 100, 100), framerate);
+                world = scene(getPoints(), getLines(), vector<triangle>(0), getBodies(simulation.fishList, simulation.whaleList, fish_mesh, whale_mesh));
+                updated = true;
+            }
+
             MoveCamera;// garbage.hpp
             simulation.updateSim(coh.getSliderValue(), sep.getSliderValue(), ali.getSliderValue(), avo.getSliderValue());
 
@@ -170,6 +192,8 @@ int main(int, char const**) {
                 }
             }
 
+            
+            // MARK: Get SFML Shapes
             vector<triangle> tris = cam.get_view(world);
             for (triangle tri: tris) {
                 if (tri.v2 != tri.v3) {
