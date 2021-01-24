@@ -99,7 +99,7 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 
         // when whales are able to eat
         if (whaleList[ww].eat == true) {
-            //killFish(ww);
+            killFish(ww);
         }
     }
 
@@ -108,8 +108,8 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
 
     whaleReproduction ();
     if(frameCounter % 150 == 100) {
-        //fishReproduction ();
-        //cout << "num fish: " << fishList.size() << endl;
+        fishReproduction ();
+        cout << "num fish: " << fishList.size() << endl;
     }
 
     frameCounter ++;
