@@ -30,12 +30,12 @@ public:
 
     //constructor. Assigns vision, framerate, etc.
     fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel, _framerate), vision(_vision) {
-        inBubbleNet = false; ///change this to false when done debugging
+        inBubbleNet = false;
     }
 
     void updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos);
 
-    fish &operator=(const fish &f); ///what does this even do
+    fish &operator=(const fish &f);
 
 private:
     const float fishboundary = 100;
@@ -74,21 +74,12 @@ void fish::updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos) {
     updateVelocity(allFish, allWhalePos);
     fixOffScreen();
     updatePosition();
-    if(inBubbleNet) {
-        ///cout<<"ID: "<<id<<" is in a bubble net. I am at position "<<position.x<<","<<position.y<<","<<position.z<<endl;
-    }
 }
 
 //If fish are offscreen, this function fixes it. You can uncomment the portion with the behavior you want
 void fish::fixOffScreen() {
     //if fish is off screen, move it to the opposite side and let it continue. Defines boundary to be cube starting at (0, 0, 0) and ending at (fishBoundary, fishBoundary, fishBoundary)
     position %= fishboundary;
-
-/*  //Makes fish "bounce" of of edges. Admittedly is subject to a little error. Defines boundary as cube starting at (0, 0, 0) and ending at (fishBoundary, fishBoundary, fishBoundary)
-    if(position.x > fishboundary || position.x < 0 || position.y > fishboundary || position.y < 0 || position.z > fishboundary || position.z < 0) {
-        velocity = -speed * (position - 0.5 * vector3(fishboundary, fishboundary, fishboundary)).normalized();
-    }
-    */
 }
 
 //updates the velocity variable

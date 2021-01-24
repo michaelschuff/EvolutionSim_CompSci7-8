@@ -104,8 +104,6 @@ void bnfGroup::trapFish(vector<fish> &fishList) {
         {
             fishList[ff].inBubbleNet = true;
         }
-
-
     }
 }
 
@@ -113,6 +111,14 @@ void bnfGroup::endSession(vector<fish> &fishList)
 {
     fishCounter = 0;
     int whichWhale = 0;
+
+    cout<< "Pod with: ";
+
+    for (int w = 0; w < pod.size(); w ++)
+    {
+        cout << pod[w] -> id << ", ";
+    }
+    cout << "..... at location ("<<center.x<<","<<center.y<<","<<center.z<<") with radius "<<radius<<endl;
 
     for (int ff = 0; ff < fishList.size(); ff ++)
     {
@@ -153,13 +159,6 @@ void bnfGroup::bnfUpdate(vector<fish> &fishList)
     }
 
     else{
-        cout<< "Pod with: ";
-
-        for (int w = 0; w < pod.size(); w ++)
-        {
-            cout << pod[w] -> id << ", ";
-        }
-        cout << "..... at location ("<<center.x<<","<<center.y<<","<<center.z<<") with radius "<<radius<<endl;
         calculateCenter();
         calculateRadius();
         trapFish(fishList);

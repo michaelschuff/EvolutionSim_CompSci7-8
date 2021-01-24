@@ -117,17 +117,15 @@ void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
     if (bnfCurrently or distributeFish)
     {
         //only bubble net feed for 20 frames
-        if (bnfCurrently && ((frameCounter - bubbleNetStart) == 20))
+        if (bnfCurrently && ((frameCounter - bubbleNetStart) == 50))
         {
             bnfCurrently = false;
-            //cout << id << ": end bnf" << endl;
         }
 
         if(!bnfCurrently and distributeFish)
         {
             eat = true;
             fishCounter += foodList.size();
-            //cout << "   amount of food to end: " << fishCounter << endl;
             distributeFish = false;
         }
     }
@@ -277,8 +275,6 @@ void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
     {
         bnfCurrently = true;
         bubbleNetStart = frameCounter;
-        //cout <<id << ": bnf" << endl;
-        //cout << "   amount of food to start: " << fishCounter << endl;
     }
 }
 

@@ -107,10 +107,8 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
     bnfBehavior();
 
     whaleReproduction ();
-    if(frameCounter % 150 == 100) {
-        fishReproduction ();
-        cout << "num fish: " << fishList.size() << endl;
-    }
+
+    fishReproduction ();
 
     frameCounter ++;
 }
@@ -178,13 +176,16 @@ void evolutionSim::whaleReproduction()
             cout << whaleList[ww].id << ": (" << whaleList[ww].age << "): " << whaleList[ww].fishCounter << ", dense: " << whaleList[ww].eatDenseFish << ", close: " << whaleList[ww].eatCloseFish << ", bubble net feed: " << whaleList[ww].bubbleNetFeed << endl;
         }
         cout << endl;
+
+        cout << "num fish: " << fishList.size() << endl<< endl;
+
     }
 }
 
 void evolutionSim::fishReproduction()
 {
     //make fish
-    for (int f = 0; f < fishNum * 0.75; f++) {
+    for (int f = 0; f < fishNum - fishList.size(); f++) {
         fish newFish(vector3((rand() % (int) limits.x), (rand() % (int) limits.y), (rand() % (int) limits.z)), vector3(), framerate);
         fishList.push_back(newFish);
     }
@@ -215,7 +216,6 @@ vector<whale *> evolutionSim::unassignedBNFWhales()
 
     for (int ww = 0; ww < whaleList.size(); ww++){
         if(whaleList[ww].bnfCurrently && !whaleList[ww].isAssignedToPod) {
-            cout << whaleList[ww].id << " is in need of a pod" << ", position: " << whaleList[ww].position.x << ", " << whaleList[ww].position.y << ", " << whaleList[ww].position.z << endl;
             v.push_back(&whaleList[ww]);
         }
     }
@@ -233,22 +233,15 @@ void evolutionSim::updateBNFPods()
     */
 
     vector<whale *> unassigned = unassignedBNFWhales();
-    if(unassigned.size() > 0) {cout << "unassigned whales: ";}
-    for (int uu = 0; uu < unassigned.size(); uu ++)
-    {
-        cout << (* (unassigned[uu])).id << ", ";
-    }
-    cout << endl << endl;
 
     bool whaleGotAssigned;
 
     for(whale * w: unassigned) {
-        cout<<"Trying to assign whale "<<(*w).id<<" at position ("<<(*w).position.x<<", "<<(*w).position.y<<", "<<(*w).position.z<<")"<<endl;
         whaleGotAssigned = false;
 
         //go through each bnfGroup
-        for(int ii = 0; ii < bnfPods.size(); ii ++) {
-            //cout<<"     Checking pod at location ("<<bnfPods[ii].center.x<<", "<<bnfPods[ii].center.y<<", "<<bnfPods[ii].center.z<<") with radius "<<bnfPods[ii].radius<<" and "<<bnfPods[ii].pod.size()<<" whales"<<endl;
+        for(int ii = 0; ii < bnfPods.size(); ii ++)
+        {
             bool podIsCloseEnough = bnfPods[ii].center.distance((*w).position) < bnfPods[ii].radius;
             bool podIsSmallEnough = bnfPods[ii].pod.size() < 5; //could change this number
 
@@ -256,11 +249,8 @@ void evolutionSim::updateBNFPods()
             if(podIsCloseEnough && podIsSmallEnough) {
                 bnfPods[ii].addWhale(w);
                 whaleGotAssigned = true;
-                //cout<<"     * This pod works! It now has "<<bnfPods[ii].pod.size()<<" whales"<<endl;
-                break; //Should just break out of inner loop according to the internet
-            }
-            else{
-                //cout<<"     * This pod is too far away or has too many whales in it"<<endl;
+
+                break;
             }
         }
 
