@@ -21,35 +21,42 @@ This file sets up the whale class, which is a child of the agent class.
 
 class whale : public agent {
 public:
-    whale(int, int, vector3, vector3, vector3, int);
+    whale(int, int, int, vector3, vector3, vector3, int);
     int fishCounter; //how many fish the whale has eaten, used for ranking
-    void decision (vector<fish>&); //using its traits, decide what to do on a turn
+    void decision (vector<fish>&, vector<whale>&); //using its traits, decide what to do on a turn
     vector<int> foodList; //reports which fish the whale might eat
     bool eat = false; //whether or not to eat the fish
     int age;
     int speed;
 
-    //both of these are on a scale of 1-10
+    //these are on a scale of 1-10
     int eatCloseFish; //trait that decides how much the whale is willing to move
     int eatDenseFish; //trait that determines how efficient the whale is
+    int bubbleNetFeed; //trait that determines how likely the whale is to bnf
+    bool bnfCurrently; //whether the whale is bubble net feeding
+    bool isAssignedToPod; //whether the whale is assigned to a bnfGroup
+    int radius; //how far around the whale it can eat
+    bool distributeFish; //after bnf session ends
 
 private:
-    int radius; //how far around the whale it can eat
     long int volume; //the volume of water the fish can eat from
     int frameCounter;
     vector3 edges; //the bottom corner of the board
     vector3 destination; //where the whale wants to go
     int fishTarget; //the fish whose location is the destination
-    bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
+    //bool closeEnough(vector3, vector3, int); //given 2 positions and a radius, compares distance
     vector<int> sight(vector<fish>&, int); //sees which fish are within eating distance
     void updateDestination (vector<fish>&); //updates based on target fish
     void updatePosition(vector<fish>&); //update position every frame based on velocity and time
     void decisionEat (int); //sees if the fish around it match its traits to eat
     void decisionMove(vector<fish>&); //finds a new target fish
+    int bubbleNetStart; //what frame the bubble net feeding started on
+    void decisionBubbleNet(vector<fish>&, vector<whale>&); //decides whether to start bubble net feeding
+
 };
 
-whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
-    int randChangeClose, randChangeDense;
+whale::whale(int givenTraitClose, int givenTraitDense, int givenTraitbnf, vector3 pos, vector3 vel, vector3 boundary, int _framerate) : agent(pos, vel, _framerate) {
+    int randChangeClose, randChangeDense, randChangebnf;
 
     fishCounter = 0;
     radius = 5;
@@ -60,13 +67,19 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
     vector3 destination (50, 50, 50);
     frameCounter = 0;
     fishTarget = 0;
+    bnfCurrently = false;
+    isAssignedToPod = false;
+    bubbleNetStart = 0;
+    distributeFish = false;
 
     //set up traits with some randomness, based on a given initial value
     randChangeClose = (rand() % 5) - 2;
     randChangeDense = (rand() % 5) - 2;
+    randChangebnf = (rand() % 5) - 2;
 
     eatCloseFish = givenTraitClose + randChangeClose;
     eatDenseFish = givenTraitDense + randChangeDense;
+    bubbleNetFeed = givenTraitbnf + randChangebnf;
 
     if (eatCloseFish > 10) {
         eatCloseFish = 10;
@@ -80,28 +93,60 @@ whale::whale(int givenTraitClose, int givenTraitDense, vector3 pos, vector3 vel,
         eatDenseFish = 1;
     }
 
+    if (bubbleNetFeed > 10) {
+        bubbleNetFeed = 10;
+    } else if (bubbleNetFeed < 1) {
+        bubbleNetFeed = 1;
+    }
+
     //set velocity and position
     velocity = vel;
     position = pos;
 }
 
-void whale::decision(vector<fish> &fishList) {
-    foodList.clear();
-    foodList = sight(fishList, radius);
-    decisionEat(fishList.size());
-
+void whale::decision(vector<fish> &fishList, vector<whale> &whaleList) {
     age++;
+    frameCounter ++;
 
-    //eat fish
-    if (eat)
+    if (!bnfCurrently)
     {
-        //don't move, in main go through foodList and remove those IDs
-        fishCounter += foodList.size();
+        decisionBubbleNet(fishList, whaleList);
     }
-    //find destination to move
+
+    //bubble net feed
+    if (bnfCurrently or distributeFish)
+    {
+        //only bubble net feed for 20 frames
+        if (bnfCurrently && ((frameCounter - bubbleNetStart) == 50))
+        {
+            bnfCurrently = false;
+        }
+
+        if(!bnfCurrently and distributeFish)
+        {
+            eat = true;
+            fishCounter += foodList.size();
+            distributeFish = false;
+        }
+    }
+
     else
     {
-        updatePosition(fishList);
+        foodList.clear();
+        foodList = sight(fishList, radius);
+        decisionEat(fishList.size());
+
+        //eat fish
+        if (eat)
+        {
+            //don't move, in main go through foodList and remove those IDs
+            fishCounter += foodList.size();
+        }
+        //find destination to move
+        else
+        {
+            updatePosition(fishList);
+        }
     }
 
     //only change destination if it reached the old one
@@ -112,8 +157,6 @@ void whale::decision(vector<fish> &fishList) {
 }
 
 void whale::updatePosition (vector<fish> &fishList) {
-    frameCounter ++;
-
     //every 5 frames, update destination and velocity
     if (frameCounter % 5 == 0)
     {
@@ -185,7 +228,7 @@ void whale::decisionMove(vector<fish> &fishList) {
             //fish sees density of nearby fish (within a mouthful)
             for (int of = 0; of < fishList.size(); of ++)
             {
-                if (closeEnough(fishList[ff].position, fishList[of].position, radius))
+                if (closeEnough(fishList[ff].position, fishList[of].position, radius*2))
                 {
                     fishInReach ++;
                 }
@@ -201,23 +244,38 @@ void whale::decisionMove(vector<fish> &fishList) {
     }
 }
 
-bool whale::closeEnough(vector3 otherPos, vector3 myPos, int maxDist)
+void whale::decisionBubbleNet(vector<fish> &fishList, vector<whale> &whaleList)
 {
-    bool withinDist = false;
-    vector3 difference;
-    double actualRadius;
+    int decisionValue = 0;
+    int numWhales;
 
-    //use 3D Pythagorean theorem to find the radius value
-    difference = otherPos - myPos;
-    actualRadius = sqrt(pow(difference.x, 2) + pow(difference.y, 2)+ pow(difference.z, 2));
-
-    //if it's less than r the fish is close enough
-    if (actualRadius <= maxDist) {
-        withinDist = true;
+    //find #whales nearby
+    for (int ww = 0; ww < whaleList.size(); ww++)
+    {
+        if(whaleList[ww].id != id)
+        {
+            //could change radius value
+            if(closeEnough(whaleList[ww].position, position, radius))
+            {
+                numWhales ++;
+            }
+        }
     }
 
-    //return a bool
-    return withinDist;
+    //find random number
+    decisionValue += (rand() % 5);
+
+    //add bubbleNetFeed trait
+    decisionValue += bubbleNetFeed;
+
+    //add #whales nearby
+    decisionValue += numWhales;
+
+    if (decisionValue > 11)
+    {
+        bnfCurrently = true;
+        bubbleNetStart = frameCounter;
+    }
 }
 
 void whale:: updateDestination (vector<fish> &fishList)

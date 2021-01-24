@@ -25,6 +25,7 @@
 #include "scene.hpp"
 #include "loadDataFunctions.hpp"
 #include "garbage.hpp"
+#include "bnfGroup.hpp"
 //#include "ResourcePath.hpp"
 
 using namespace sf;
@@ -49,8 +50,8 @@ int main(int, char const**) {
                vector3(0.185644, 0.805622, 0.560449).normalized(),
                vector3(-0.948137, 0, 0.314062).normalized(), 3.14159 / 3, 1);
     Font font;
-    if(!font.loadFromFile("/Users/michael/Downloads/oswald.ttf")){
-//    if(!font.loadFromFile("oswald.ttf")){
+//    if(!font.loadFromFile("/Users/michael/Downloads/oswald.ttf")){
+    if(!font.loadFromFile("Resources/oswald.ttf")){
         cout<< "font error \n";
     }
     int numWhales = 10;
@@ -179,8 +180,12 @@ int main(int, char const**) {
             world.meshes.clear();
             for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
                 if (i < simulation.fishList.size()) {
-                    quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                    world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
+                    if (simulation.fishList[i].velocity.magnitude() > 0) {
+                        quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+                        world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
+                    } else {
+                        world.meshes.push_back(simulation.fishList[i].position + fish_mesh);
+                    }
                 } else {
                     quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
                     world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));

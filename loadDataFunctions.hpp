@@ -22,11 +22,11 @@
 using namespace std;
 
 //static string file_path = "/Users/michael/Downloads/";
-static string file_path = "";
+static string file_path = "Resources/";
 
 vector<vector3> getPoints() {
     return {
-        
+
     };
 }
 
