@@ -30,7 +30,7 @@ public:
 
     //constructor. Assigns vision, framerate, etc.
     fish(vector3 pos, vector3 vel, int _framerate, int _vision = 10) : agent(pos, vel, _framerate), vision(_vision) {
-        inBubbleNet = true; ///change this to false when done debugging
+        inBubbleNet = false; ///change this to false when done debugging
     }
 
     void updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos);

@@ -89,6 +89,8 @@ void evolutionSim::updateSim(float coh, float sep, float ali, float avo)
         fishList[i].alignment = ali;
         fishList[i].avoidance = avo;
         fishList[i].updateFish(fishList, whalePositions);
+
+        fishList[i].inBubbleNet = false;
     }
 
     for (int ww = 0; ww < whaleList.size(); ww++) {

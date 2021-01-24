@@ -110,7 +110,6 @@ void bnfGroup::calculateRadius()
 }
 
 void bnfGroup::trapFish(vector<fish> &fishList) {
-    fishCounter = 0;
 
     //cout << "   fish in bnf: ";
     for (int ff = 0; ff < fishList.size(); ff ++)
@@ -119,10 +118,11 @@ void bnfGroup::trapFish(vector<fish> &fishList) {
         if (!fishList[ff].inBubbleNet && fishList[ff].closeEnough(fishList[ff].position, center, radius))
         {
             //cout << fishList[ff].id << ", ";
-            fishCounter ++;
             //fishList[ff].velocity = vector3();
             fishList[ff].inBubbleNet = true;
         }
+
+
     }
     //cout << endl << "      " << fishCounter << endl;
 }
@@ -171,25 +171,34 @@ void bnfGroup::endSession(vector<fish> &fishList)
 
 void bnfGroup::bnfUpdate(vector<fish> &fishList)
 {
-    cout<< "Pod with: ";
-
-    for (int w = 0; w < pod.size(); w ++)
-    {
-        cout << pod[w] -> id << ", ";
+    //check if the pod still has whales. If not, set radius to 0 to ensure no fish remain trapped
+    if(pod.size() == 0) {
+        radius = 0;
+        endSession(fishList);
     }
-    cout << "..... at location ("<<center.x<<","<<center.y<<","<<center.z<<") with radius "<<radius<<endl;
-    calculateCenter();
-    calculateRadius();
-    trapFish(fishList);
 
-    //check if the bnf session is over
-    for (int ww = 0; ww < pod.size(); ww++)
-    {
-        if (!pod[ww]->bnfCurrently)
+    else{
+        cout<< "Pod with: ";
+
+        for (int w = 0; w < pod.size(); w ++)
         {
-            endSession(fishList);
+            cout << pod[w] -> id << ", ";
+        }
+        cout << "..... at location ("<<center.x<<","<<center.y<<","<<center.z<<") with radius "<<radius<<endl;
+        calculateCenter();
+        calculateRadius();
+        trapFish(fishList);
+
+        //check if the bnf session is over
+        for (int ww = 0; ww < pod.size(); ww++)
+        {
+            if (!pod[ww]->bnfCurrently)
+            {
+                endSession(fishList);
+            }
         }
     }
+
 }
 
 void bnfGroup::redoPointers(vector<whale*> whalePointers)
