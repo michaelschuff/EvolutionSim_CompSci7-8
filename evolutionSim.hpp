@@ -33,8 +33,8 @@ public:
     void updateSim(float, float, float, float);
 
 private:
-    int numReproduce;
-    int numDie;
+    float numReproduce;
+    float numDie;
     int frameCounter;
     int framerate;
     int fishNum;
@@ -53,8 +53,9 @@ private:
 
 evolutionSim::evolutionSim(int numWhales, int numFish, vector3 lim, int rate) {
     limits = lim;
-    numReproduce = numWhales * 0.10;
-    numDie = numWhales * 0.10;
+    //numReproduce = floor(numWhales * 0.10);
+    numDie = floor(numWhales * 0.10);
+    numReproduce = numDie;
     frameCounter = 0;
     framerate = rate;
     fishNum = numFish;
@@ -140,6 +141,8 @@ void evolutionSim::whaleReproduction()
     //every 500 frames whales reproduce/die
     if ((frameCounter % 500) == 0)
     {
+        cout << endl;
+
         //sort the whales based on number of fish they've eaten
         for (int i = 0; i < whaleList.size(); i++) {
             int j = i;
@@ -155,9 +158,10 @@ void evolutionSim::whaleReproduction()
         }
 
         //top 10% reproduce
-        for (int r = whaleList.size() - 1; r > whaleList.size() - numReproduce - 1; r--) {
+        for (int r = whaleList.size() - 1; r >= whaleList.size() - numReproduce; r--) {
             whale newWhale(whaleList[r].eatCloseFish, whaleList[r].eatDenseFish, whaleList[r].bubbleNetFeed, whaleList[r].position, whaleList[r].velocity, limits, framerate);
             whaleList.push_back(newWhale);
+            r ++;
         }
 
         //make a vector of pointers
@@ -179,7 +183,6 @@ void evolutionSim::whaleReproduction()
         cout << endl;
 
         cout << "num fish: " << fishList.size() << endl<< endl;
-
     }
 }
 

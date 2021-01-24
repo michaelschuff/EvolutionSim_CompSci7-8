@@ -93,11 +93,11 @@ int main(int, char const**) {
     sep.setSliderValue(1);
     ali.setSliderValue(0.25);
     avo.setSliderValue(0);
-    whaleInpTxt.setString("Adjust the amount of whales 1 to 20");
+    whaleInpTxt.setString("Adjust the amount of whales 10 to 20");
     whaleInpTxt.setFont(font);
     whaleInpTxt.setPosition(50,390);
     SliderSFML whaleInp(50, 370);
-    whaleInp.create(1,20);
+    whaleInp.create(10,20);
     whaleInp.setSliderValue(10);
 
     double sensitivity = 0.05, speed = 20;
@@ -192,7 +192,7 @@ int main(int, char const**) {
                 }
             }
 
-            
+
             // MARK: Get SFML Shapes
             vector<triangle> tris = cam.get_view(world);
             for (triangle tri: tris) {
