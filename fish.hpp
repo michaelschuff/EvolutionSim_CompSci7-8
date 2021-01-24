@@ -75,7 +75,7 @@ void fish::updateFish(vector<fish> &allFish, vector<vector3> &allWhalePos) {
     fixOffScreen();
     updatePosition();
     if(inBubbleNet) {
-        cout<<"ID: "<<id<<" is in a bubble net. I am at position "<<position.x<<","<<position.y<<","<<position.z<<endl;
+        ///cout<<"ID: "<<id<<" is in a bubble net. I am at position "<<position.x<<","<<position.y<<","<<position.z<<endl;
     }
 }
 

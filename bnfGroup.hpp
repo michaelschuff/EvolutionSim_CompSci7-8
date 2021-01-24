@@ -106,7 +106,7 @@ void bnfGroup::calculateRadius()
     avgClose = avgClose / pod.size();
 
     radius = 5*(pod.size() + (avgBNF * avgDense)/avgClose);
-    //cout << "   radius: " << radius << endl;
+    cout << "   radius: " << radius << endl;
 }
 
 void bnfGroup::trapFish(vector<fish> &fishList) {
@@ -121,7 +121,7 @@ void bnfGroup::trapFish(vector<fish> &fishList) {
             //cout << fishList[ff].id << ", ";
             fishCounter ++;
             //fishList[ff].velocity = vector3();
-            fishList[ff].inBubbleNet == true;
+            fishList[ff].inBubbleNet = true;
         }
     }
     //cout << endl << "      " << fishCounter << endl;
