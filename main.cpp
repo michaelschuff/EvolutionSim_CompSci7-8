@@ -158,8 +158,12 @@ int main(int, char const**) {
             world.meshes.clear();
             for (int i = 0; i < simulation.fishList.size() + simulation.whaleList.size(); i++) {
                 if (i < simulation.fishList.size()) {
-                    quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
-                    world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
+                    if (simulation.fishList[i].velocity.magnitude() > 0) {
+                        quaternion q = get_quaternion(vector3(1, 0, 0), simulation.fishList[i].velocity);
+                        world.meshes.push_back(simulation.fishList[i].position + fish_mesh.rotated(q));
+                    } else {
+                        world.meshes.push_back(simulation.fishList[i].position + fish_mesh);
+                    }
                 } else {
                     quaternion q = get_quaternion(vector3(1, 0, 0), simulation.whaleList[i-simulation.fishList.size()].velocity);
                     world.meshes.push_back(simulation.whaleList[i-simulation.fishList.size()].position + whale_mesh.rotated(q));
